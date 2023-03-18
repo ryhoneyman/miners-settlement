@@ -7,11 +7,11 @@ if (0) {
    error_reporting(E_ALL);
 }
 
-include_once 'debug.class.php';
-include_once 'input.class.php';
-include_once 'html.class.php';
-include_once 'constants.class.php';
-include_once 'item.class.php';
+include_once 'common/debug.class.php';
+include_once 'common/input.class.php';
+include_once 'common/html.class.php';
+include_once 'local/constants.class.php';
+include_once 'local/item.class.php';
 
 $debug     = new Debug(9,DEBUG_COMMENT);
 $input     = new Input($debug);
