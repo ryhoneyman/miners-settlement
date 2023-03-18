@@ -430,8 +430,6 @@ function itemInputOverall($itemId, $itemBase, $itemInfo)
 
 function itemInputQuality($itemInfo)
 {
-   global $constants;
-
    if (!$itemInfo) { return ''; }
 
    $return = "<table border=0 cellpadding=5 style='width:100%;'>";
