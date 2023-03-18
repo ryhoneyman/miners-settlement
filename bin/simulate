@@ -30,8 +30,29 @@ $uIterations   = $opts['iterations'] ?: 100;
 
 $simulateType = strtolower($simulateType);
 
-if (1) {
-   $setup01a = array(
+
+if (preg_match('/^(pve|pvp)$/i',$simulateType) && $attackerBuild && $defenderBuild) { 
+   $setup = array(
+      'type'       => $simulateType,
+      'attacker'   => array('id' => $attackerBuild),
+      'defender'   => array('id' => $defenderBuild),
+      'iterations' => $uIterations,
+   );
+}
+else if ($simulateType == 'test-builds' && $attackerBuild && $defenderBuild) {
+   $buildList = array();
+   foreach (explode(',',$attackerBuild) as $build) { $buildList[$build]['id'] = $build; }
+
+   $setup = array(
+      'type'       => 'pve',
+      'attacker'   => array('tests' => $buildList),
+      'defender'   => array('id' => $defenderBuild),
+      'iterations' => $uIterations,
+   );
+}
+else { 
+   // Sample two weapon test setup
+   $setup = array(
       'type' => 'pve',
       'iterations' => $uIterations,
       'attacker' => array(
@@ -60,130 +81,42 @@ if (1) {
          'gear' => array(),
       ),
    );
+}
 
-   if (preg_match('/^(pve|pvp)$/i',$simulateType) && $attackerBuild && $defenderBuild) { 
-      $setup = array(
-         'type'       => $simulateType,
-         'attacker'   => array('id' => $attackerBuild),
-         'defender'   => array('id' => $defenderBuild),
-         'iterations' => $uIterations,
-      );
-   }
-   else if ($simulateType == 'test-builds' && $attackerBuild && $defenderBuild) {
-      $buildList = array();
-      foreach (explode(',',$attackerBuild) as $build) { $buildList[$build]['id'] = $build; }
-
-      $setup = array(
-         'type'       => 'pve',
-         'attacker'   => array('tests' => $buildList),
-         'defender'   => array('id' => $defenderBuild),
-         'iterations' => $uIterations,
-      );
-   }
-   else { $setup = $setup01a; }
-
-   $debug->level($debugLevel);
+$debug->level($debugLevel);
 
 
-   $tests = array();
+$tests = array();
 
-   $baseConfig = array(
-      'attacker'   => array('id' => $setup['attacker']['id'], 'gear' => $setup['attacker']['gear']),
-      'defender'   => array('id' => $setup['defender']['id'], 'gear' => $setup['defender']['gear']),
-      'type'       => $setup['type'],
-      'iterations' => $setup['iterations'],
-   );
-   $testList = ($setup['attacker']['tests']) ? array_keys($setup['attacker']['tests']) : array($setup['type']);
+$baseConfig = array(
+   'attacker'   => array('id' => $setup['attacker']['id'], 'gear' => $setup['attacker']['gear']),
+   'defender'   => array('id' => $setup['defender']['id'], 'gear' => $setup['defender']['gear']),
+   'type'       => $setup['type'],
+   'iterations' => $setup['iterations'],
+);
 
-   foreach ($testList as $testName) {
-      $testConfig = $baseConfig;
-      $overrides  = $setup['attacker']['tests'][$testName];
+$testList = ($setup['attacker']['tests']) ? array_keys($setup['attacker']['tests']) : array($setup['type']);
+
+foreach ($testList as $testName) {
+   $testConfig = $baseConfig;
+   $overrides  = $setup['attacker']['tests'][$testName];
  
-      if ($overrides['id'])   { $testConfig['attacker']['id'] = $overrides['id']; }
-      if ($overrides['gear']) { $testConfig['attacker']['gear'] = $overrides['gear']; }
+   if ($overrides['id'])   { $testConfig['attacker']['id'] = $overrides['id']; }
+   if ($overrides['gear']) { $testConfig['attacker']['gear'] = $overrides['gear']; }
 
-      $testConfig['label'] = $testName;
+   $testConfig['label'] = $testName;
 
-      $tests[$testName] = $testConfig;
-   }
-
-   foreach ($tests as $testName => $testInfo) {
-      //print "\nStarting test $testName ".json_encode($testInfo)."\n\n";
-
-      $results = $simulator->start($testInfo);
-
-      if ($verbose) { print json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n"; }
-
-      print $simulator->formatResults($results,$testName)."\n\n\n";
-   }
+   $tests[$testName] = $testConfig;
 }
 
-if (0) {
+foreach ($tests as $testName => $testInfo) {
+   //print "\nStarting test $testName ".json_encode($testInfo)."\n\n";
 
-   $itemData = json_decode('{"data": { "health": 632, "attack": 151, "defense": 74, "speed": 0.82, "earth.damage": 420, "lightning.resist": 90 }, "options": { "level": 7 }}',true);
+   $results = $simulator->start($testInfo);
 
-   $itemValues  = $itemData['data'];
-   $itemOptions = $itemData['options'];
+   if ($verbose) { print json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n"; }
 
-   $item->load('spear-of-the-gods');
-   $item->generate($itemValues,$itemOptions);
-   print $item->display();
-   print "\n\n";
-   $item->enhance(1);
-   print $item->display();
-   print "\n\n";
-   $item->enhance(5);
-   print $item->display();
-   print "\n\n";
-   $item->enhance(7);
-   print $item->display();
-   print "\n\n";
-   $item->enhance(10);
-   print $item->display();
-   print "\n\n";
-}
-
-if (0) {
-   $attacker->load('player-blank');
-   $defender->load('raghor');
-
-}
-
-if (0) {
-   $attacker->load('player-ng-peace');
-   $defender->load('raghor');
-
-   $outcome = $battle->start($attacker,$defender);
-
-   print json_encode($outcome,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n";
-}
-
-if (0) {
-   $attacker->load('player-sotg-03');
-   //$attacker->load('player-sotg-02');
-   $defender->load('wind-dragon-38');
-
-   $outcome = $battle->start($attacker,$defender);
-
-   print json_encode($outcome,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n";
-}
-
-if (0) {
-   $attacker->load('player');
-   $defender->load('troll');
-
-   $outcome = $battle->start($attacker,$defender);
-
-   print json_encode($outcome,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n";
-}
-
-if (0) {
-   $item->load('thousand-soul');
-   $item->attachRune('one-shot-one-kill');
-
-   $item->generate();
-
-   print $item->export()."\n";
+   print $simulator->formatResults($results,$testName)."\n\n\n";
 }
 
 ?>
