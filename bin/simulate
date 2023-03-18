@@ -1,13 +1,13 @@
 #!/usr/bin/php
 <?php
-set_include_path('/opt/game/lib');
+include_once 'miners-settlement-init.php';
 
-include_once 'debug.class.php';
-include_once 'MinersSettlement/simulator.class.php';
-include_once 'MinersSettlement/battle.class.php';
-include_once 'MinersSettlement/entity.class.php';
-include_once 'MinersSettlement/item.class.php';
-include_once 'MinersSettlement/rune.class.php';
+include_once 'common/debug.class.php';
+include_once 'local/simulator.class.php';
+include_once 'local/battle.class.php';
+include_once 'local/entity.class.php';
+include_once 'local/item.class.php';
+include_once 'local/rune.class.php';
 
 $debug     = new Debug(9,DEBUG_CLI);
 $item      = new Item($debug);
