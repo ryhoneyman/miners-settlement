@@ -1,0 +1,16 @@
+{
+    "name": "TRUE POTENTIAL",
+    "requires": "SPEAR OF THE GODS",
+    "attribs": {
+        "myself": {
+            "stun.resist": {
+                "percent.chance": 70,
+                "percent.adjust": 100
+            },
+            "lifesteal": {
+                "percent.chance": 100,
+                "percent.adjust": 15
+            }
+        }
+    }
+}

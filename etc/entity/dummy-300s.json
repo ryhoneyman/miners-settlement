@@ -1,0 +1,9 @@
+{
+    "name": "Dummy 300s",
+    "type": "monster",
+    "max.timer": 300,
+    "health": 10000000,
+    "defense": 0,
+    "attack": 0,
+    "speed": 1
+}

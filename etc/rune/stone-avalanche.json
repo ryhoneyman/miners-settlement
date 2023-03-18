@@ -1,0 +1,12 @@
+{
+    "name": "STONE AVALANCHE",
+    "requires": "ULDREDS PEACE",
+    "attribs": {
+        "myself": {
+            "earth.damage": {
+                "percent.chance": 100,
+                "flat.adjust": 80
+            }
+        }
+    }
+}

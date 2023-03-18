@@ -1,0 +1,12 @@
+{
+    "name": "Troll",
+    "type": "monster",
+    "location": {},
+    "loot": {},
+    "xp": 50,
+    "respawn": 10800,
+    "health": 1000,
+    "defense": 10,
+    "attack": 40,
+    "speed": 1
+}

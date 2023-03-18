@@ -1,0 +1,34 @@
+{
+    "name": "Sunshine",
+    "description": "SOTG Dragon Build",
+    "type": "player",
+    "weapon": {
+        "id": "spear-of-the-gods",
+        "data": { "health": 933, "attack": 228, "defense": 50, "speed": 0.85, "earth.damage": 408, "lightning.resist": 168 },
+        "options": {
+            "level": 7
+        }
+    },
+    "shield": {
+        "id": "uldreds-peace",
+        "data": { "health": 1418, "attack": 47, "defense": 93, "speed": -0.44, "earth.damage": 117 },
+        "options": {
+            "level": 7
+        }
+    },
+    "amulet": {
+        "id": "power-of-mitar",
+        "data": { "health": 1201, "attack": 0, "defense": 49, "speed": 0, "earth.damage": 153 },
+        "options": {
+            "level": 8
+        }
+    },
+    "ring": {
+        "id": "ring-of-light",
+        "data": { "health": 717, "attack": 0, "defense": 0, "speed": 0, "lightning.damage": 79 },
+        "options": {
+            "level": 5
+        }
+    },
+    "runes": ["rising-power","true-potential","will-of-mitar","stone-avalanche","dwarven-force"]
+}

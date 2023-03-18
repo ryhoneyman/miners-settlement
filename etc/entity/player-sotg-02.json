@@ -1,0 +1,21 @@
+{
+    "name": "PlayerSOTG02",
+    "type": "player",
+    "weapon": {
+        "id": "spear-of-the-gods",
+        "data": { "health": 332, "attack": 107, "defense": 35, "speed": 0.93, "earth.damage": 232, "lightning.resist": 67 }
+    },
+    "shield": {
+        "id": "uldreds-peace",
+        "data": { "health": 1333, "attack": 63, "defense": 90, "speed": -0.44, "earth.damage": 114 } 
+    },
+    "amulet": {
+        "id": "power-of-mitar",
+        "data": { "health": 307, "attack": 0, "defense": 65, "speed": 0, "earth.damage": 150 }
+    },
+    "ring": {
+        "id": "ring-of-light",
+        "data": { "health": 478, "attack": 0, "defense": 65, "speed": 0, "lightning.damage": 90 }
+    },
+    "runes": ["true-potential","rising-power","earths-power","stone-avalanche","will-of-mitar"]
+}

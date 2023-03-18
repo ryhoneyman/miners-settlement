@@ -1,0 +1,17 @@
+{
+    "name": "MINOTAUR'S PRIDE",
+    "type": "weapon",
+    "image": "https://funventure.eu/wiki/minerssettlement/images/3/3c/MinotaursPride.jpg",
+    "health.min": 100,
+    "health.max": 800,
+    "attack.min": 50,
+    "attack.max": 400,
+    "defense.min": 10,
+    "defense.max": 50,
+    "speed.min": 3.00,
+    "speed.max": 1.20,
+    "wind.damage.min": 20,
+    "wind.damage.max": 250,
+    "water.resist.min": 10,
+    "water.resist.max": 50
+}

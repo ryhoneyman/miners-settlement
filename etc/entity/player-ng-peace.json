@@ -1,0 +1,7 @@
+{
+    "name": "Player001",
+    "type": "player",
+    "weapon": { "id": "nightguard" },
+    "shield" : { "id": "uldreds-peace" },
+    "runes": ["defenders-luck","nightstrike","earths-power","stone-avalanche"]
+}

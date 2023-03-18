@@ -1,0 +1,9 @@
+{
+    "name": "RING OF LIGHT",
+    "type": "ring",
+    "image": "https://funventure.eu/wiki/minerssettlement/images/4/47/RingOfLight.jpg",
+    "health.min": 200,
+    "health.max": 500,
+    "lightning.damage.min": 30,
+    "lightning.damage.max": 60
+}

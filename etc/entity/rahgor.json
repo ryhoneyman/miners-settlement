@@ -1,0 +1,40 @@
+{
+    "name": "Rahgor",
+    "type": "monster",
+    "location": {},
+    "loot": {},
+    "xp": 200,
+    "respawn": 1800,
+    "health": 5000,
+    "defense": 50000,
+    "attack": 200,
+    "speed": 4,
+    "fire.damage": 400,
+    "earth.damage": 200,
+    "fire.resist": 300,
+    "water.resist": 1000,
+    "wind.resist": 1000,
+    "lightning.resist": 1000,
+    "effects": {
+       "myself": { 
+          "stun.resist": {
+             "percent.chance": 100,
+             "percent.adjust": 100
+          },
+          "critical.hit": {
+             "percent.chance": 20,
+             "percent.adjust": 500
+          }
+       },
+       "enemy": { 
+           "stun": {
+              "percent.chance": 100,
+              "flat.adjust": 2
+           },
+           "speed": {
+              "percent.chance": 100,
+              "percent.adjust": -75
+          }
+       }
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "name": "Uber Spartan",
+    "type": "monster",
+    "location": {},
+    "loot": {},
+    "xp": null,
+    "respawn": null,
+    "health": 20000,
+    "defense": 25000,
+    "attack": 0,
+    "speed": 1.5,
+    "water.damage": 150,
+    "fire.resist": 2000,
+    "water.resist": 2000,
+    "wind.resist": 2000,
+    "earth.resist": 2000,
+    "lightning.resist": 120,
+    "effects": {
+        "myself": {
+            "stun.resist": {
+                "percent.chance": 100,
+                "percent.adjust": 100
+            },
+            "critical.hit": {
+                "percent.chance": 10,
+                "percent.adjust": 500
+            }
+        },
+        "enemy": {
+            "stun": {
+                "percent.chance": 20,
+                "flat.adjust": 3
+            },
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": -50
+            }
+        }
+    }
+}

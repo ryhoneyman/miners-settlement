@@ -1,0 +1,12 @@
+{
+    "name": "DWARVEN FORCE",
+    "requires": "POWER OF MITAR",
+    "attribs": {
+        "enemy": {
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": -40
+            }
+        }
+    }
+}

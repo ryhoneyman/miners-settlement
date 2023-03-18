@@ -1,0 +1,36 @@
+<?php
+
+//    Copyright 2023 - Ryan Honeyman
+
+include_once 'base.class.php';
+
+class Rune extends Base
+{
+   public function __construct($debug = null, $options = null)
+   {
+      parent::__construct($debug,$options);
+   }
+
+   public function name()     { return $this->get('name'); }
+   public function requires() { return $this->get('requires'); }
+   public function attribs()  { return $this->get('attribs'); }
+
+   public function load($runeName)
+   {
+      $this->debug(8,"called");
+
+      $fileName = sprintf('/opt/game/etc/ms/rune/%s.json',strtolower($runeName));
+
+      if (!file_exists($fileName)) { $this->debug(7,"could not find file for $runeName"); return false; }
+
+      $info = file_get_contents($fileName);
+
+
+      if ($this->is_json($info)) { $info = json_decode($info,true); }
+
+      if (is_array($info)) { foreach ($info as $name => $value) { $this->set($name,$value); } }
+
+      return true;
+   }
+}
+?>

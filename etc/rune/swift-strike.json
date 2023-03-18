@@ -1,0 +1,12 @@
+{
+    "name": "SWIFT STRIKE",
+    "requires": "EYES OF MITAR",
+    "attribs": {
+        "myself": {
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": 10
+            }
+        }
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "name": "Mardkhora",
+    "description": "SOTG Build",
+    "type": "player",
+    "weapon": {
+        "id": "spear-of-the-gods",
+        "data": { "health": 837, "attack": 173, "defense": 35, "speed": 0.82, "earth.damage": 157, "lightning.resist": 149 },
+        "options": {
+            "level": 6
+        }
+    },
+    "shield": {
+        "id": "uldreds-peace",
+        "data": { "health": 1064, "attack": 48, "defense": 73, "speed": -0.42, "earth.damage": 82 },
+        "options": {
+            "level": 5
+        }
+    },
+    "amulet": {
+        "id": "power-of-mitar",
+        "data": { "health": 1134, "attack": 0, "defense": 118, "speed": 0, "earth.damage": 122 },
+        "options": {
+            "level": 6
+        }
+    },
+    "ring": {
+        "id": "ring-of-light",
+        "data": { "health": 597, "attack": 0, "defense": 0, "speed": 0, "lightning.damage": 84 },
+        "options": {
+            "level": 6
+        }
+    },
+    "runes": ["rising-power","true-potential","will-of-mitar","stone-avalanche","dwarven-force"]
+}

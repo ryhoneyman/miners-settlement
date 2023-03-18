@@ -1,0 +1,16 @@
+{
+    "name": "ONE SHOT ONE KILL",
+    "requires": "THOUSAND SOUL",
+    "attribs": {
+        "myself": {
+            "critical.hit": {
+                "percent.chance": 15,
+                "percent.adjust": 1200
+            },
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": 40
+            }
+        }
+    }
+}

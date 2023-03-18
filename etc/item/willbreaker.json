@@ -1,0 +1,15 @@
+{
+    "name": "WILLBREAKER",
+    "type": "weapon",
+    "image": "https://funventure.eu/wiki/minerssettlement/images/6/66/Willbreaker.png",
+    "health.min": 50,
+    "health.max": 135,
+    "attack.min": 5,
+    "attack.max": 195,
+    "defense.min": 14,
+    "defense.max": 23,
+    "speed.min": 1.0,
+    "speed.max": 0.8,
+    "water.damage.min": 5,
+    "water.damage.max": 34
+}

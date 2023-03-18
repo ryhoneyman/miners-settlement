@@ -1,0 +1,9 @@
+{
+    "name": "EYES OF MITAR",
+    "type": "amulet",
+    "image": "https://funventure.eu/wiki/minerssettlement/images/0/0c/EyesOfMitar.png",
+    "defense.min": 55,
+    "defense.max": 80,
+    "fire.damage.min": 30,
+    "fire.damage.max": 70
+}

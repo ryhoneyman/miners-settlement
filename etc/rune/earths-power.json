@@ -1,0 +1,12 @@
+{
+    "name": "EARTH'S POWER",
+    "requires": "ULDREDS PEACE",
+    "attribs": {
+        "myself": {
+            "earth.damage": {
+                "percent.chance": 100,
+                "flat.adjust": 50
+            }
+        }
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "name": "RISING POWER",
+    "requires": "SPEAR OF THE GODS",
+    "attribs": {
+        "myself": {
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": 10
+            }
+        },
+        "enemy": {
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": -25
+            }
+        }
+    }
+}

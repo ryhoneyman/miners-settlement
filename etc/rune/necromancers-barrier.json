@@ -1,0 +1,16 @@
+{
+    "name": "NECROMANCER'S BARRIER",
+    "requires": "NECROMANCER TEETH",
+    "attribs": {
+        "myself": {
+            "stun.resist": {
+                "percent.chance": 100,
+                "percent.adjust": 50
+            },
+            "extra.defense": {
+                "percent.chance": 100,
+                "percent.adjust": 10
+            }
+        }
+    }
+}

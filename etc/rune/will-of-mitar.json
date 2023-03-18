@@ -1,0 +1,12 @@
+{
+    "name": "WILL OF MITAR",
+    "requires": "ULDREDS SHIELD",
+    "attribs": {
+        "myself": {
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": 40
+            }
+        }
+    }
+}

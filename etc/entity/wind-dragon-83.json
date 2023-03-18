@@ -1,0 +1,37 @@
+{
+    "name": "Wind Dragon L83",
+    "type": "monster",
+    "max.timer": 15,
+    "allow.revive": false,
+    "location": {},
+    "loot": {},
+    "xp": null,
+    "respawn": null,
+    "health": 2325000,
+    "defense": 92000,
+    "attack": 0,
+    "speed": 0.6,
+    "wind.damage": 444,
+    "water.resist": 10000,
+    "wind.resist": 10000,
+    "earth.resist": 174,
+    "lightning.resist": 435,
+    "effects": {
+        "myself": {
+            "stun.resist": {
+                "percent.chance": 100,
+                "percent.adjust": 100
+            }
+        },
+        "enemy": {
+            "stun": {
+                "percent.chance": 30,
+                "flat.adjust": 2
+            },
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": -100
+            }
+        }
+    }
+}

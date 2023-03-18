@@ -1,0 +1,12 @@
+{
+    "name": "BLOODTHIRSTY",
+    "requires": "SOULEATER",
+    "attribs": {
+        "myself": {
+            "lifesteal": {
+                "percent.chance": 100,
+                "percent.adjust": 75
+            }
+        }
+    }
+}

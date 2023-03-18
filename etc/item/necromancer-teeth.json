@@ -1,0 +1,17 @@
+{
+    "name": "NECROMANCER TEETH",
+    "type": "weapon",
+    "image": "https://funventure.eu/wiki/minerssettlement/images/4/4d/NecromancerTeeth.png",
+    "health.min": 50,
+    "health.max": 500,
+    "attack.min": 25,
+    "attack.max": 250,
+    "defense.min": 10,
+    "defense.max": 50,
+    "speed.min": 2.00,
+    "speed.max": 0.80,
+    "water.damage.min": 15,
+    "water.damage.max": 180,
+    "fire.resist.min": 10,
+    "fire.resist.max": 50
+}

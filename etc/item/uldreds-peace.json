@@ -1,0 +1,15 @@
+{
+    "name": "ULDREDS PEACE",
+    "type": "shield",
+    "image": "https://funventure.eu/wiki/minerssettlement/images/0/0a/UldredsPeace.png",
+    "health.min": 525,
+    "health.max": 840,
+    "attack.min": 30,
+    "attack.max": 50,
+    "defense.min": 50,
+    "defense.max": 70,
+    "speed.min": -0.30,
+    "speed.max": -0.45,
+    "earth.damage.min": 30,
+    "earth.damage.max": 70
+}

@@ -1,0 +1,37 @@
+{
+    "name": "Wind Dragon L104",
+    "type": "monster",
+    "max.timer": 15,
+    "allow.revive": false,
+    "location": {},
+    "loot": {},
+    "xp": null,
+    "respawn": null,
+    "health": 2580000,
+    "defense": 113000,
+    "attack": 0,
+    "speed": 0.6,
+    "wind.damage": 486,
+    "water.resist": 10000,
+    "wind.resist": 10000,
+    "earth.resist": 216,
+    "lightning.resist": 540,
+    "effects": {
+        "myself": {
+            "stun.resist": {
+                "percent.chance": 100,
+                "percent.adjust": 100
+            }
+        },
+        "enemy": {
+            "stun": {
+                "percent.chance": 30,
+                "flat.adjust": 3
+            },
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": -100
+            }
+        }
+    }
+}

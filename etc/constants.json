@@ -1,0 +1,207 @@
+{
+    "effectDesc": {
+        "myself": {
+            "stun.resist": {
+                "format": "STUN RESIST: %d%%", 
+                "vars": ["percent.chance"]
+            },
+            "speed": {
+                "format": "INCREASE ATTACK SPEED BY %d%%",
+                "vars": ["percent.adjust"]
+            },
+            "lifesteal": {
+                "format": "LIFE STEAL %d%% OF BASE ATTACK",
+                "vars": ["percent.adjust"]
+            },
+            "extra.defense": {
+                "format": "%d%% CHANCE FOR %d%% EXTRA DEFENSE",
+                "vars": ["percent.chance","percent.adjust"]
+            },
+            "critical.hit": {
+                "format": "%d%% CHANCE FOR %d%% CRITICAL HIT",
+                "vars": ["percent.chance","percent.adjust"]
+            }
+        },
+        "enemy": {
+            "stun": {
+                "format": "%s%% CHANCE FOR %dS ENEMY STUN",
+                "vars": ["percent.chance","flat.adjust"]
+            },
+            "speed": {
+                "format": "ENEMY ATTACK SLOWER BY %d%%",
+                "vars": ["percent.adjust"]
+            },
+            "defense": {
+                "format": "ENEMY DEFENSE LOWER BY %d%%",
+                "vars": ["percent.adjust"]
+            }
+        }
+    }, 
+    "baseAttribs": {
+        "attack": {"innateGear": "weapon", "innateValue": 1},
+        "speed": {"innateGear": "weapon", "innateValue": 1},
+        "health": {"innateGear": null, "innateValue": 500}
+    },
+    "primaryAttribs": ["health","attack","defense","speed"],
+    "gearTypes": ["weapon","shield","amulet","ring"],
+    "elements": ["fire","earth","wind","water","lightning"],
+    "attribs": {
+        "health": {
+            "type": "health",
+            "format": "int",
+            "min": 0,
+            "abbr": "HP",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            }
+        },
+        "attack": {
+            "type": "attack",
+            "format": "int",
+            "min": 0,
+            "abbr": "ATK",
+            "enhance": {
+                "percent": 5,
+                "round": true
+            }
+        },
+        "defense": {
+            "type": "defense",
+            "format": "int",
+            "min": 0,
+            "abbr": "DEF",
+            "enhance": {
+                "percent": 5,
+                "round": true
+            }
+        },
+        "speed": {
+            "type": "speed",
+            "format": "float",
+            "min": 0,
+            "abbr": "SPD",
+            "reversed": true,
+            "enhance": {
+                "percent": 0,
+                "round": false
+            }
+        },
+        "fire.damage": {
+            "type": "elemental.damage",
+            "format": "int",
+            "min": 0,
+            "abbr": "FIR.DMG",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            }
+        },
+        "earth.damage": {
+            "type": "elemental.damage",
+            "format": "int",
+            "min": 0,
+            "abbr": "EAR.DMG",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            }
+        },
+        "lightning.damage": {
+            "type": "elemental.damage",
+            "format": "int",
+            "min": 0,
+            "abbr": "LIT.DMG",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            }
+        },
+        "wind.damage": {
+            "type": "elemental.damage",
+            "format": "int",
+            "min": 0,
+            "abbr": "WND.DMG",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            }
+        },
+        "water.damage": {
+            "type": "elemental.damage",
+            "format": "int",
+            "min": 0,
+            "abbr": "WTR.DMG",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            }
+        },
+        "fire.resist": {
+            "type": "elemental.resist",
+            "format": "int",
+            "abbr": "FIR.RES",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            }
+        },
+        "earth.resist": {
+            "type": "elemental.resist",
+            "format": "int",
+            "abbr": "EAR.RES",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            }
+        },
+        "lightning.resist": {
+            "type": "elemental.resist",
+            "format": "int",
+            "abbr": "LIT.RES",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            }
+        },
+        "wind.resist": {
+            "type": "elemental.resist",
+            "format": "int",
+            "abbr": "WND.RES",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            }
+        },
+        "water.resist": {
+            "type": "elemental.resist",
+            "format": "int",
+            "abbr": "WTR.RES",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            }
+        },
+        "lifesteal": {
+            "format": "float",
+            "initialize": 1
+        },
+        "extra.defense": {
+            "format": "int",
+            "initialize": 1,
+            "until.hit": true
+        },
+        "critical.hit": {
+            "format": "int",
+            "initialize": 1,
+            "only.once": true
+        },
+        "stun": {
+            "format": "int"
+        },
+        "stun.resist": {
+            "format": "float",
+            "initialize": 1
+        }
+    }
+}

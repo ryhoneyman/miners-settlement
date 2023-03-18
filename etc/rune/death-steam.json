@@ -1,0 +1,12 @@
+{
+    "name": "DEATH STEAM",
+    "requires": "NECROMANCER TEETH",
+    "attribs": {
+        "myself": {
+            "water.damage": {
+                "percent.chance": 100,
+                "flat.adjust": 25
+            }
+        }
+    }
+}

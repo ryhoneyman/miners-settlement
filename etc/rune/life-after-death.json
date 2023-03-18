@@ -1,0 +1,16 @@
+{
+    "name": "LIFE AFTER DEATH",
+    "requires": "NECROMANCER TEETH",
+    "attribs": {
+        "myself": {
+            "lifesteal": {
+                "percent.chance": 100,
+                "percent.adjust": 20
+            },
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": 10
+            }
+        }
+    }
+}

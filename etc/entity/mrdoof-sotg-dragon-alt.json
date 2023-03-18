@@ -1,0 +1,34 @@
+{
+    "name": "MrDoof",
+    "description": "SOTG Dragon Build",
+    "type": "player",
+    "weapon": {
+        "id": "spear-of-the-gods",
+        "data": { "health": 315, "attack": 225, "defense": 62, "speed": 0.91, "earth.damage": 155, "lightning.resist": 57 },
+        "options": {
+            "enhance": 4
+        }
+    },
+    "shield": {
+        "id": "uldreds-peace",
+        "data": { "health": 1149, "attack": 42, "defense": 65, "speed": -0.41, "earth.damage": 70 },
+        "options": {
+            "level": 4
+        }
+    },
+    "amulet": {
+        "id": "amulet-of-protection",
+        "data": { "health": 143, "attack": 0, "defense": 0, "speed": 0, "fire.resist": 30 },
+        "options": {
+            "level": 0
+        }
+    },
+    "ring": {
+        "id": "ring-of-light",
+        "data": { "health": 363, "attack": 0, "defense": 0, "speed": 0, "lightning.damage": 60 },
+        "options": {
+            "level": 3
+        }
+    },
+    "runes": ["rising-power","true-potential","will-of-mitar","stone-avalanche"]
+}

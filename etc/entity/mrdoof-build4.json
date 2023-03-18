@@ -1,0 +1,33 @@
+{
+    "name": "MrDoof",
+    "type": "player",
+    "weapon": {
+        "id": "spiders-claw",
+        "data": { "health": 214, "attack": 279, "defense": 42, "speed": 1.26, "lightning.damage": 167, "earth.resist": 14 },
+        "options": {
+            "level": 4
+        }
+    },
+    "shield": {
+        "id": "final-stand",
+        "data": { "health": 870, "attack": 42, "defense": 65, "speed": -0.43, "fire.resist": 34, "wind.resist": 60 },
+        "options": {
+            "level": 4
+        }
+    },
+    "amulet": {
+        "id": "amulet-of-protection",
+        "data": { "health": 143, "attack": 0, "defense": 0, "speed": 0, "fire.resist": 30 },
+        "options": {
+            "level": 0
+        }
+    },
+    "ring": {
+        "id": "ring-of-light",
+        "data": { "health": 363, "attack": 0, "defense": 0, "speed": 0, "lightning.damage": 60 },
+        "options": {
+            "level": 3
+        }
+    },
+    "runes": ["blink-of-an-eye"]
+}

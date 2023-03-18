@@ -1,0 +1,13 @@
+{
+    "name": "Dragon Test",
+    "type": "monster",
+    "allow.revive": false,
+    "location": {},
+    "loot": {},
+    "xp": null,
+    "respawn": null,
+    "health": 100000000,
+    "defense": 10,
+    "attack": 1,
+    "speed": 1
+}

@@ -1,0 +1,17 @@
+{
+    "name": "FIRE TONGUE",
+    "type": "weapon",
+    "image": "https://funventure.eu/wiki/minerssettlement/images/1/14/FireTongue.jpg",
+    "health.min": 50,
+    "health.max": 300,
+    "attack.min": 50,
+    "attack.max": 300,
+    "defense.min": 10,
+    "defense.max": 30,
+    "speed.min": 3.3,
+    "speed.max": 1.3,
+    "fire.damage.min": 35,
+    "fire.damage.max": 215,
+    "water.resist.min": 15,
+    "water.resist.max": 25
+}

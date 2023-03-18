@@ -1,0 +1,15 @@
+{
+    "name": "SILENT STRING",
+    "type": "weapon",
+    "image": "https://funventure.eu/wiki/minerssettlement/images/b/b3/SilentString.png",
+    "health.min": 150,
+    "health.max": 225,
+    "attack.min": 455,
+    "attack.max": 490,
+    "defense.min": 8,
+    "defense.max": 14,
+    "speed.min": 2.4,
+    "speed.max": 2.0,
+    "wind.damage.min": 5,
+    "wind.damage.max": 105
+}

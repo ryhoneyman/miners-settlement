@@ -1,0 +1,17 @@
+{
+    "name": "SPIDER'S CLAW",
+    "type": "weapon",
+    "image": "https://funventure.eu/wiki/minerssettlement/images/2/24/SpidersClaw.jpg",
+    "health.min": 150,
+    "health.max": 600,
+    "attack.min": 35,
+    "attack.max": 350,
+    "defense.min": 10,
+    "defense.max": 50,
+    "speed.min": 2.2,
+    "speed.max": 1.0,
+    "lightning.damage.min": 20,
+    "lightning.damage.max": 225,
+    "earth.resist.min": 10,
+    "earth.resist.max": 50
+}

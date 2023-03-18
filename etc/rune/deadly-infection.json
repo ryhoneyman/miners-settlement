@@ -1,0 +1,18 @@
+{
+    "name": "DEADLY INFECTION",
+    "requires": "SOULEATER",
+    "attribs": {
+        "myself": {
+            "lifesteal": {
+                "percent.chance": 100,
+                "percent.adjust": 50
+            }
+        },
+        "enemy": {
+            "defense": {
+                "percent.chance": 100,
+                "percent.adjust": -40
+            }
+        }
+    }
+}

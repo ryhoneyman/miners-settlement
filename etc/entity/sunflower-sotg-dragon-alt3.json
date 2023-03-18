@@ -1,0 +1,35 @@
+{
+    "name": "Sunflower",
+    "description": "SOTG Dragon Build",
+    "type": "player",
+    "weapon": {
+        "id": "spear-of-the-gods",
+        "data": { "health": 400, "attack": 237, "defense": 45, "speed": 1.06, "earth.damage": 225, "lightning.resist": 84 },
+        "options": {
+            "enhance": 7,
+            "level": 0
+        }
+    },
+    "shield": {
+        "id": "uldreds-peace",
+        "data": { "health": 1333, "attack": 63, "defense": 90, "speed": -0.44, "earth.damage": 114 },
+        "options": {
+            "level": 7
+        }
+    },
+    "amulet": {
+        "id": "power-of-mitar",
+        "data": { "health": 349, "attack": 0, "defense": 70, "speed": 0, "earth.damage": 170 },
+        "options": {
+            "level": 7
+        }
+    },
+    "ring": {
+        "id": "ring-of-light",
+        "data": { "health": 819, "attack": 0, "defense": 0, "speed": 0, "lightning.damage": 77 },
+        "options": {
+            "level": 7
+        }
+    },
+    "runes": ["rising-power","true-potential","will-of-mitar","stone-avalanche","dwarven-force"]
+}

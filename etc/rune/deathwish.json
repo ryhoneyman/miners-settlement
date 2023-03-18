@@ -1,0 +1,16 @@
+{
+    "name": "DEATHWISH",
+    "requires": "SPEAR OF THE GODS",
+    "attribs": {
+        "myself": {
+            "critical.hit": {
+                "percent.chance": 10,
+                "percent.adjust": 2000
+            },
+            "wind.damage": {
+                "percent.chance": 100,
+                "flat.adjust": 100
+            }
+        }
+    }
+}

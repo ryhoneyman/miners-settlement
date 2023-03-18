@@ -1,0 +1,33 @@
+{
+    "name": "Sunshine",
+    "type": "player",
+    "weapon": {
+        "id": "necromancer-teeth",
+        "data": { "health": 587, "attack": 162, "defense": 59, "speed": 0.87, "water.damage": 223, "fire.resist": 39 },
+        "options": {
+            "level": 7
+        }
+    },
+    "shield": {
+        "id": "final-stand",
+        "data": { "health": 938, "attack": 51, "defense": 75, "speed": -0.44, "fire.resist": 35, "wind.resist": 78 },
+        "options": {
+            "level": 6
+        }
+    },
+    "amulet": {
+        "id": "eyes-of-mitar",
+        "data": { "health": 0, "attack": 0, "defense": 78, "speed": 0, "fire.damage": 96 },
+        "options": {
+            "level": 6
+        }
+    },
+    "ring": {
+        "id": "ring-of-light",
+        "data": { "health": 717, "attack": 0, "defense": 0, "speed": 0, "lightning.damage": 79 },
+        "options": {
+            "level": 5
+        }
+    },
+    "runes": ["life-after-death","death-steam","blink-of-an-eye","swift-strike","necromancers-barrier"]
+}

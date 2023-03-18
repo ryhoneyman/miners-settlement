@@ -1,0 +1,13 @@
+{
+    "name": "SOULEATER",
+    "type": "weapon",
+    "image": "https://funventure.eu/wiki/minerssettlement/images/a/a9/Souleater.png",
+    "attack.min": 75,
+    "attack.max": 240,
+    "defense.min": 12,
+    "defense.max": 20,
+    "speed.min": 1,
+    "speed.max": 1,
+    "fire.damage.min": 5,
+    "fire.damage.max": 45
+}
