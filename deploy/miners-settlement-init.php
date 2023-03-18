@@ -10,7 +10,7 @@ define('APP_VARDIR',APP_BASEDIR.'/var');       // dynamic file data
 define('APP_LOGDIR',APP_BASEDIR.'/log');       // logs
 define('APP_LOCALDIR',APP_BASEDIR.'/local');   // scripts for cron, daemons, scheduler
 
-set_include_path(get_include_path().PATH_SEPARATOR.COMMON_LIBDIR.PATH_SEPARATOR.APP_LIBDIR);
+set_include_path(get_include_path().PATH_SEPARATOR.APP_LIBDIR);
 
 ?>
 
