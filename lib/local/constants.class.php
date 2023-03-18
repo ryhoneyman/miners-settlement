@@ -15,6 +15,9 @@ class Constants extends Base
       $this->list = json_decode(file_get_contents(APP_CONFIGDIR.'/constants.json'),true);
    }
 
+   public function attribDisplay()  { return $this->fetch('attribDisplay'); }
+   public function elementDisplay() { return $this->fetch('elementDisplay'); }
+   public function percentColors()  { return $this->fetch('percentColors'); }
    public function effectDesc()     { return $this->fetch('effectDesc'); }
    public function baseAttribs()    { return $this->fetch('baseAttribs'); }
    public function primaryAttribs() { return $this->fetch('primaryAttribs'); }

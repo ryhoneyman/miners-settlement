@@ -188,185 +188,9 @@ function itemInputOverall($itemId, $itemBase, $itemInfo)
 
    $return = "<table border=0 cellpadding=5 style='width:100%;'>";
 
-   $percentColors = array(
-      '5'   => array('color' => '#ff0000', 'label' => 'Horrible'),
-      '25'  => array('color' => '#ff9900', 'label' => 'Poor'),
-      '50'  => array('color' => '#ffaa00', 'label' => 'Below-Average'),
-      '75'  => array('color' => '#ffff00', 'label' => 'Average'),
-      '95'  => array('color' => '#aaff00', 'label' => 'Good'),
-      '100' => array('color' => '#66ff00', 'label' => 'Godly'),
-   );
+   $percentColors = $constants->percentColors();
 
-   $weights = array( 
-      'ring' => array(
-         'general' => array(
-            'label' => 'General Use',
-            'list' => array(
-               'default' => array(
-                  'health'  => 30,
-                  'attack'  => 0,
-                  'defense' => 0,
-                  'speed'   => 0,
-                  'elemental.damage' => 70,
-                  'elemental.resist' => 0,
-               ),
-            ),
-         ),
-      ),
-      'shield' => array(
-         'general' => array(
-            'label' => 'General Use',
-            'list' => array(
-               'default' => array(
-                  'health'  => 20,
-                  'attack'  => 0,
-                  'defense' => 10,
-                  'speed'   => 50,
-                  'elemental.damage' => 20,
-                  'elemental.resist' => 0,
-               ),
-               'uldreds-peace' => array(
-                  'health'  => 5,
-                  'attack'  => 0,
-                  'defense' => 0,
-                  'speed'   => 70,
-                  'elemental.damage' => 25,
-                  'elemental.resist' => 0,
-               ),
-               'thousand-soul' => array(
-                  'health'  => 20,
-                  'attack'  => 10,
-                  'defense' => 0,
-                  'speed'   => 70,
-                  'elemental.damage' => 0,
-                  'elemental.resist' => 0,
-               ),
-               'final-stand' => array(
-                  'health'  => 20,
-                  'attack'  => 0,
-                  'defense' => 0,
-                  'speed'   => 80,
-                  'elemental.damage' => 0,
-                  'elemental.resist' => 0,
-               ),
-            ),
-         ),
-         'red-dragon' => array(
-            'label' => 'Red Dragon',
-            'list' => array(
-               'default' => array(
-                  'health'  => 30,
-                  'attack'  => 0,
-                  'defense' => 0,
-                  'speed'   => 40,
-                  'elemental.damage' => 0,
-                  'elemental.resist' => 30,
-               ),
-            ),
-         ),
-      ),
-      'amulet' => array(
-         'general' => array(
-            'label' => 'General Use',
-            'list' => array(
-               'default' => array(
-                  'health'  => 50,
-                  'attack'  => 0,
-                  'defense' => 0,
-                  'speed'   => 0,
-                  'elemental.damage' => 50,
-                  'elemental.resist' => 0,
-               ),
-               'eyes-of-mitar' => array(
-                  'health'  => 0,
-                  'attack'  => 0,
-                  'defense' => 20,
-                  'speed'   => 0,
-                  'elemental.damage' => 80,
-                  'elemental.resist' => 0,
-               ),
-               'power-of-mitar' => array(
-                  'health'  => 50,
-                  'attack'  => 0,
-                  'defense' => 0,
-                  'speed'   => 0,
-                  'elemental.damage' => 50,
-                  'elemental.resist' => 0,
-               ),
-            ),
-         ),
-      ),
-      'weapon' => array(
-         'general' => array(
-            'label' => 'General Use',
-            'list' => array(
-               'default' => array(
-                  'health'  => 20,
-                  'attack'  => 20,
-                  'defense' => 10,
-                  'speed'   => 25,
-                  'elemental.damage' => 25,
-                  'elemental.resist' => 0,
-               ),
-            ),
-         ),
-         'crit' => array(
-            'label' => 'Crit Weapon',
-            'list' => array(
-               'default' => array(
-                  'health'  => 0,
-                  'attack'  => 80,
-                  'defense' => 0,
-                  'speed'   => 20,
-                  'elemental.damage' => 0,
-                  'elemental.resist' => 0,
-               ),
-            ),
-         ),
-         'low-dragon' => array(
-            'label' => 'Low-level Dragon',
-            'list' => array(
-               'default' => array(
-                  'health'  => 0,
-                  'attack'  => 0,
-                  'defense' => 0,
-                  'speed'   => 80,
-                  'elemental.damage' => 20,
-                  'elemental.resist' => 0,
-               ),
-               'spear-of-the-gods' => array(
-                  'health'  => 0,
-                  'attack'  => 0,
-                  'defense' => 0,
-                  'speed'   => 80,
-                  'elemental.damage' => 20,
-                  'elemental.resist' => 0,
-               ),
-            ),
-         ),
-         'high-dragon' => array(
-            'label' => 'High-level Dragon',
-            'list' => array(
-               'default' => array(
-                  'health'  => 15,
-                  'attack'  => 0,
-                  'defense' => 0,
-                  'speed'   => 70,
-                  'elemental.damage' => 15,
-                  'elemental.resist' => 0,
-               ),
-               'spear-of-the-gods' => array(
-                  'health'  => 15,
-                  'attack'  => 0,
-                  'defense' => 0,
-                  'speed'   => 70,
-                  'elemental.damage' => 15,
-                  'elemental.resist' => 0,
-               ),
-            ),
-         ),
-      ),
-   );
+   $weights = json_decode(file_get_contents(APP_CONFIGDIR.'/weights.json'),true);
 
    $attribList = $constants->attribs();
    $itemType   = $itemBase['type'];
@@ -430,18 +254,13 @@ function itemInputOverall($itemId, $itemBase, $itemInfo)
 
 function itemInputQuality($itemInfo)
 {
+   global $constants;
+
    if (!$itemInfo) { return ''; }
 
    $return = "<table border=0 cellpadding=5 style='width:100%;'>";
 
-   $percentColors = array(
-      '5'   => array('color' => '#ff0000'),
-      '25'  => array('color' => '#ff9900'),
-      '50'  => array('color' => '#ffaa00'),
-      '75'  => array('color' => '#ffff00'),
-      '95'  => array('color' => '#aaff00'),
-      '100' => array('color' => '#66ff00'),
-   );
+   $percentColors = $constants->percentColors();
 
    foreach ($itemInfo as $attribName => $attribInfo) {
       if ($attribName == 'level' || !$attribInfo['value']) { continue; }
@@ -540,28 +359,7 @@ function itemDisplayElements($itemInfo, $limit = null, $options = null)
 
    $background = $options['background'] ?: '#6f4e37';
 
-   $elementDisplay = array(
-      'fire' => array(
-         'color' => '#ff0000',
-         'icon' => 'fire',
-      ),
-      'water' => array(
-         'color' => '#aaaaff',
-         'icon' => 'tint',
-      ),
-      'wind' => array(
-         'color' => '#00ffff',
-         'icon' => 'wind',
-      ),
-      'earth' => array(
-         'color' => '#00ff00',
-         'icon' => 'leaf',
-      ),
-      'lightning' => array(
-         'color' => '#ffff00',
-         'icon' => 'bolt',
-      ),
-   );
+   $elementDisplay = $constants->elementDisplay();
 
    $itemElements = array();
    foreach ($constants->elements() as $element) {
@@ -596,24 +394,7 @@ function itemDisplayPrimary($itemInfo, $limit = null)
 
    $limit = (is_null($limit)) ? '' : ".$limit";
 
-   $attribDisplay = array(
-      'health' => array(
-         'color' => '#aa0000',
-         'icon'  => 'heart',
-      ),
-      'attack' => array(
-         'color' => '#ff6600',
-         'icon'  => 'sword',
-      ),
-      'defense' => array(
-         'color' => '#0000ff',
-         'icon'  => 'shield',
-      ),
-      'speed' => array(
-         'color' => '#00aa00',
-         'icon'  => 'clock',
-      ),
-   );
+   $attribDisplay = $constants->attribDisplay();
 
    $return = "<tr>";
 

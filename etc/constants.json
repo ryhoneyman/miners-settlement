@@ -1,4 +1,70 @@
 {
+    "attribDisplay": {
+        "health": {
+            "color": "#aa0000",
+            "icon": "heart"
+        },
+        "attack": {
+            "color": "#ff6600",
+            "icon": "sword"
+        },
+        "defense": {
+            "color": "#0000ff",
+            "icon": "shield"
+        },
+        "speed": {
+            "color": "#00aa00",
+            "icon": "clock"
+        }
+    },
+    "elementDisplay": {
+        "fire": {
+            "color": "#ff0000",
+            "icon": "fire"
+        },
+        "water": {
+            "color": "#aaaaff",
+            "icon": "tint"
+        },
+        "wind": {
+            "color": "#00ffff",
+            "icon": "wind"
+        },
+        "earth": {
+            "color": "#00ff00",
+            "icon": "leaf"
+        },
+        "lightning": {
+            "color": "#ffff00",
+            "icon": "bolt"
+        }
+    },
+    "percentColors": {
+        "5": {
+            "color": "#ff0000",
+            "label": "Horrible"
+        },
+        "25": {
+            "color": "#ff9900",
+            "label": "Poor"
+        },
+        "50": {
+            "color": "#ffaa00",
+            "label": "Below-Average"
+        },
+        "75": {
+            "color": "#ffff00",
+            "label": "Average"
+        },
+        "95": {
+            "color": "#aaff00",
+            "label": "Good"
+        },
+        "100": {
+            "color": "#66ff00",
+            "label": "Godly"
+        }
+    },
     "effectDesc": {
         "myself": {
             "stun.resist": {
