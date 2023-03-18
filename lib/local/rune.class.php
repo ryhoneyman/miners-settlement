@@ -19,7 +19,7 @@ class Rune extends Base
    {
       $this->debug(8,"called");
 
-      $fileName = sprintf('/opt/game/etc/ms/rune/%s.json',strtolower($runeName));
+      $fileName = sprintf(APP_CONFIGDIR.'/rune/%s.json',strtolower($runeName));
 
       if (!file_exists($fileName)) { $this->debug(7,"could not find file for $runeName"); return false; }
 

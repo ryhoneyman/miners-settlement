@@ -216,7 +216,7 @@ class Entity extends Base
 
       $entityId = strtolower($entityId);
 
-      $fileName = sprintf('/opt/game/etc/ms/entity/%s.json',$entityId);
+      $fileName = sprintf(APP_CONFIGDIR.'/entity/%s.json',$entityId);
 
       if (!file_exists($fileName)) { $this->debug(7,"could not find file for $entityId"); return false; }
 

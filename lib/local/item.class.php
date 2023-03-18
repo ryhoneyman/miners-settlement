@@ -230,7 +230,7 @@ class Item extends Base
 
       $itemId = strtolower($itemId);
 
-      $fileName = sprintf('/opt/game/etc/ms/item/%s.json',$itemId);
+      $fileName = sprintf(APP_CONFIGDIR.'/item/%s.json',$itemId);
 
       if (!file_exists($fileName)) { $this->debug(7,"could not find file for $itemId"); return false; }
 
