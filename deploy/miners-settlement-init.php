@@ -1,8 +1,7 @@
 <?php
 
-define('COMMON_LIBDIR','/opt/common/lib')
 define('APP_BASEDIR','/opt/miners-settlement');
-define('APP_LIBDIR','/opt/miners-settlement/lib');
+define('APP_LIBDIR',APP_BASEDIR.'/lib');
 define('APP_WEBDIR',APP_BASEDIR.'/www');
 define('APP_CACHEDIR',APP_BASEDIR.'/cache');   // dynamic cache
 define('APP_CONFIGDIR',APP_BASEDIR.'/etc');    // static configurations
