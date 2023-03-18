@@ -1,5 +1,5 @@
 <?php
-include_once 'miner-settlement-init.php';
+include_once 'miners-settlement-init.php';
 
 include 'ui/header.php';
 
