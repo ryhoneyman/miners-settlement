@@ -12,7 +12,7 @@ class Constants extends Base
    {
       parent::__construct($debug,$options);
 
-      $this->list = json_decode(file_get_contents('/opt/game/etc/ms/constants.json'),true);
+      $this->list = json_decode(file_get_contents(APP_CONFIGDIR.'/constants.json'),true);
    }
 
    public function effectDesc()     { return $this->fetch('effectDesc'); }
