@@ -1,5 +1,5 @@
 <?php
-include_once 'miner-settlement-init.php';
+include_once 'miners-settlement-init.php';
 
 if (0) {
    ini_set('display_errors', '1');
