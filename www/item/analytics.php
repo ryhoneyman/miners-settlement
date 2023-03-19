@@ -61,7 +61,7 @@ print "<p>\n";
 
 ?>
 <div class="row">
-   <div class="col-12 col-lg-3 col-sm-12">
+   <div class="col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12">
        <div class="card card-outline card-success">
           <div class="card-header"><b>Item Ranges</b></div>
           <div class="card-body">
@@ -70,7 +70,7 @@ print "<p>\n";
       </div>
    </div>
 
-   <div class="col-12 col-lg-3 col-sm-12">
+   <div class="col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12">
        <div class="card card-outline card-primary">
           <div class="card-header"><b>Item Input</b></div>
           <div class="card-body">
@@ -86,7 +86,7 @@ print "<p>\n";
       </div>
    </div>
 
-   <div class="col-12 col-lg-3 col-sm-12">
+   <div class="col-12 col-xl-4 col-lg-6 col-md-12 col-sm-12">
       <div class="card card-outline card-secondary">
           <div class="card-header"><b>Item Quality</b></div>
           <div class="card-body">
@@ -110,7 +110,7 @@ print "<p>\n";
    </div>
 </div>
 <div class="row">
-   <div class="col-12 col-lg-10 col-sm-12">
+   <div class="col-12 col-xl-10 col-lg-10 col-md-12 col-sm-12">
        <div class="card card-outline card-danger">
           <div class="card-header"><b>Item Results</b></div>
           <div class="card-body">
@@ -143,7 +143,7 @@ function itemResultsDisplay($selectedItem, $itemInput)
    for ($level = 0; $level <= 10; $level++) {
       $item->enhance(0);
       $item->enhance($level);
-      $return .= "<div class='card col-9 col-lg-3 col-sm-9'>".itemDisplay($item)."</div>";
+      $return .= "<div class='card col-9 col-xl-3 col-lg-4 col-md-6 col-sm-9'>".itemDisplay($item)."</div>";
    }
 
    $return .= "</div>";
