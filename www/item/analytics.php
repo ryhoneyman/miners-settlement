@@ -143,7 +143,7 @@ function itemResultsDisplay($selectedItem, $itemInput)
    for ($level = 0; $level <= 10; $level++) {
       $item->enhance(0);
       $item->enhance($level);
-      $return .= "<div class='card col-8 col-lg-3 col-sm-8'>".itemDisplay($item)."</div>";
+      $return .= "<div class='card col-9 col-lg-3 col-sm-9'>".itemDisplay($item)."</div>";
    }
 
    $return .= "</div>";
