@@ -186,7 +186,7 @@ function itemInputOverall($itemId, $itemBase, $itemInfo)
 
    if (!$itemInfo) { return ''; }
 
-   $return = "<table border=0 cellpadding=5 style='width:100%;'>";
+   $return = "";
 
    $percentColors = $constants->percentColors();
 
@@ -241,13 +241,10 @@ function itemInputOverall($itemId, $itemBase, $itemInfo)
       $labelColor   = $labelInfo['color'];
       $labelDesc    = $labelInfo['desc'];
 
-      $percentBar = sprintf("<div style='width:100%%; background-color:#ddd;'>".
-                            "<div style='text-align:right; padding-top:5px; padding-bottom:5px; color:white; width:%d%%; background-color:%s; font-size:0.8em;'></div></div>",$labelPercent,$labelColor);
-
-      $return .= "<tr><td style='width:20%; font-size:0.8em;'>$labelName</td><td style='width:60%;'>$percentBar</td><td style='width:20%; font-size:0.8em;'>$labelDesc</td></tr>";
+      $return .= sprintf("<div class='progress-group'><span class='progress-text' style='font-size:0.8em;'>%s</span><span class='float-right' style='font-size:0.8em;'>%d%%</span>".
+                         "<div class='progress progress-sm'><div class='progress-bar' style='background-color:%s; width:%d%%;'></div></div></div>",
+                         $labelName,$labelPercent,$labelColor,$labelPercent);
    }
-
-   $return .= "</table>";
 
    return $return;
 }
@@ -258,7 +255,7 @@ function itemInputQuality($itemInfo)
 
    if (!$itemInfo) { return ''; }
 
-   $return = "<table border=0 cellpadding=5 style='width:100%;'>";
+   $return = "";
 
    $percentColors = $constants->percentColors();
 
@@ -272,13 +269,10 @@ function itemInputQuality($itemInfo)
          if ($levelPercent <= $percent) { $percentColor = $percentInfo['color']; break; }
       }
 
-      $percentBar = sprintf("<div style='width:100%%; background-color:#ddd;'>".
-                            "<div style='text-align:right; padding-top:5px; padding-bottom:5px; color:white; width:%d%%; background-color:%s; font-size:0.8em;'></div></div>",$levelPercent,$percentColor);
-      
-      $return .= "<tr><td style='width:20%; font-size:0.8em;'>$attribLabel</td><td style='width:80%;'>$percentBar</td></tr>";
+      $return .= sprintf("<div class='progress-group'><span class='progress-text' style='font-size:0.8em;'>%s</span><span class='float-right' style='font-size:0.8em;'>%d%%</span>".
+                         "<div class='progress progress-sm'><div class='progress-bar' style='background-color:%s; width:%d%%;'></div></div></div>",
+                         $attribLabel,$levelPercent,$percentColor,$levelPercent);
    }
-
-   $return .= "</table>";
 
    return $return;
 }
