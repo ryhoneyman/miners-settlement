@@ -61,7 +61,7 @@ print "<p>\n";
 
 ?>
 <div class="row">
-   <div class="col-3">
+   <div class="col-3 col-mb-12">
        <div class="card card-outline card-success">
           <div class="card-header"><b>Item Ranges</b></div>
           <div class="card-body">
@@ -70,7 +70,7 @@ print "<p>\n";
       </div>
    </div>
 
-   <div class="col-3">
+   <div class="col-3 col-mb-12">
        <div class="card card-outline card-primary">
           <div class="card-header"><b>Item Input</b></div>
           <div class="card-body">
@@ -86,7 +86,7 @@ print "<p>\n";
       </div>
    </div>
 
-   <div class="col-4">
+   <div class="col-4 col-mb-12">
       <div class="card card-outline card-secondary">
           <div class="card-header"><b>Item Quality</b></div>
           <div class="card-body">
@@ -110,7 +110,7 @@ print "<p>\n";
    </div>
 </div>
 <div class="row">
-   <div class="col-10">
+   <div class="col-10 col-mb-12">
        <div class="card card-outline card-danger">
           <div class="card-header"><b>Item Results</b></div>
           <div class="card-body">
