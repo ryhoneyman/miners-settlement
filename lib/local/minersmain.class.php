@@ -25,9 +25,9 @@ class MinersMain extends Main
 
       $this->userName = $userId;
  
-      $userDir = APP_CONFIGDIR."/profile/$userId";
+      //$userDir = APP_CONFIGDIR."/profile/$userId";
 
-      if (!is_dir($userDir)) { mkdir($userDir,0755); }
+      //if (!is_dir($userDir)) { mkdir($userDir,0755); }
    }
 
    private function generateUserId()
