@@ -8,7 +8,7 @@
     "attack.max": 80,
     "defense.min": 50,
     "defense.max": 120,
-    "speed.min": -0.3,
+    "speed.min": 0,
     "speed.max": -0.4,
     "wind.resist.min": 75,
     "wind.resist.max": 150,
