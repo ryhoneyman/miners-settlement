@@ -1,5 +1,5 @@
 {
-    "name": "Wind Dragon L38",
+    "name": "Red Dragon L84",
     "type": "monster",
     "max.timer": 15,
     "allow.revive": false,
@@ -7,15 +7,15 @@
     "loot": {},
     "xp": null,
     "respawn": null,
-    "health": 1510000,
-    "defense": 52000,
+    "health": 2337500,
+    "defense": 93000,
     "attack": 0,
     "speed": 3.5,
-    "fire.damage": 525,
-    "fire.resist": 52000,
-    "wind.resist": 235,
-    "earth.resist": 235,
-    "lightning.resist": 235,
+    "fire.damage": 646,
+    "fire.resist": 93000,
+    "wind.resist": 440,
+    "earth.resist": 440,
+    "lightning.resist": 440,
     "effects": {
         "myself": {
             "stun.resist": {
@@ -25,12 +25,12 @@
         },
         "enemy": {
             "stun": {
-                "percent.chance": 50,
-                "flat.adjust": 2
+                "percent.chance": 30,
+                "flat.adjust": 3
             },
             "speed": {
                 "percent.chance": 100,
-                "percent.adjust": -50
+                "percent.adjust": -100
             }
         }
     }

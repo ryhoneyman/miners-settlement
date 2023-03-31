@@ -1,6 +1,13 @@
 {
     "name": "TRUE POTENTIAL",
     "requires": "SPEAR OF THE GODS",
+    "cost": {
+        "item": {
+            "rune-xii": 2,
+            "rune-xi": 1,
+            "rune-x": 1
+        }
+    },
     "attribs": {
         "myself": {
             "stun.resist": {

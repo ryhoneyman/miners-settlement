@@ -1,6 +1,12 @@
 {
     "name": "ENERGY GRAB",
     "requires": "POWER OF MITAR",
+    "cost": {
+        "item": {
+            "rune-ix": 4,
+            "rune-iii": 1
+        }
+    },
     "attribs": {
         "myself": {
             "lifesteal": {

@@ -1,0 +1,33 @@
+{
+    "name": "Sunflower (Mino + 1ks Tower Build)",
+    "type": "player",
+    "weapon": {
+        "id": "minotaurs-pride",
+        "data": { "health": 364, "attack": 443, "defense": 68, "speed": 1.23, "wind.damage": 236, "water.resist": 37 },
+        "options": {
+            "level": 7
+        }
+    },
+    "shield": {
+        "id": "thousand-soul",
+        "data": { "health": 1120, "attack": 69, "defense": 94, "speed": -0.40, "wind.resist": 46, "lightning.resist": 29 },
+        "options": {
+            "level": 7
+        }
+    },
+    "amulet": {
+        "id": "power-of-mitar",
+        "data": { "health": 1249, "attack": 0, "defense": 49, "speed": 0, "earth.damage": 151 },
+        "options": {
+            "level": 7
+        }
+    },
+    "ring": {
+        "id": "ring-of-light",
+        "data": { "health": 847, "attack": 0, "defense": 0, "speed": 0, "lightning.damage": 93 },
+        "options": {
+            "level": 7
+        }
+    },
+    "runes": ["ban-hammer","forbidden-love","one-shot-one-kill","dwarven-force","berserker-wrath"]
+}

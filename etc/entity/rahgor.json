@@ -27,10 +27,6 @@
           }
        },
        "enemy": { 
-           "stun": {
-              "percent.chance": 100,
-              "flat.adjust": 2
-           },
            "speed": {
               "percent.chance": 100,
               "percent.adjust": -75

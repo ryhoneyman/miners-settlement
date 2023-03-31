@@ -1,0 +1,19 @@
+{
+    "name": "Player02",
+    "type": "player",
+    "weapon": {
+       "id": "titanslayer",
+       "data": { "health": 276, "attack": 509, "defense": 18, "speed": 1.82, "earth.damage": 115 },
+       "options": {
+            "level": 4
+        }
+    },
+    "shield": {
+        "id": "thousand-soul",
+        "data": { "health": 841, "attack": 64, "defense": 72, "speed": -0.40, "wind.resist": 64, "lightning.resist": 25  },
+        "options": {
+             "level": 4
+         }
+    },
+    "runes": ["one-shot-one-kill","infatuation","perfect-hit","patience-is-gold","berserker-wrath"]
+}

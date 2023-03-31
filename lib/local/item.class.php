@@ -81,7 +81,9 @@ class Item extends Base
    {
       $this->debug(8,"called");
 
-      if ($level < 0 || $level > 10) { $this->debug(9,"enhance level out of range [0-10]"); return false; }
+      $maxEnhanceLevel = $this->constants->maxEnhanceLevel();
+
+      if ($level < 0 || $level > $maxEnhanceLevel) { $this->debug(9,"enhance level out of range [0-$maxEnhanceLevel]"); return false; }
 
       $currentLevel = $this->level();
 
@@ -142,7 +144,7 @@ class Item extends Base
          if (array_key_exists("$attribName.min",$this->data) && array_key_exists("$attribName.max",$this->data)) {
             $minValue    = $this->get("$attribName.min");
             $maxValue    = $this->get("$attribName.max");
-            $maxEValue   = $maxValue * 2;  
+            $maxEValue   = $maxValue * 2.2;  
 
             if ($godRoll) { $values[$attribName] = $maxValue; }
 
@@ -156,7 +158,7 @@ class Item extends Base
          }
       }
 
-      $this->set('level',$level);
+      $this->set('level',"$level");
 
       if ($enhance) { $this->enhance($enhance); }
    }
@@ -234,20 +236,20 @@ class Item extends Base
 
       if (!file_exists($fileName)) { $this->debug(7,"could not find file for $itemId"); return false; }
 
-      $itemInfo = file_get_contents($fileName);
+      $itemInfo = json_decode(file_get_contents($fileName),true);
 
-      return $this->import($itemInfo,$itemId);
+      $itemInfo['id'] = $itemId;
+
+      return $this->import($itemInfo);
    }
 
-   public function import($itemInfo, $itemId)
+   public function import($itemInfo)
    {
       $this->debug(8,"called");
 
       if ($this->is_json($itemInfo)) { $itemInfo = json_decode($itemInfo,true); }
 
       if (!is_array($itemInfo)) { $this->debug(7,"invalid info info provided"); return false; }
-
-      $info['id'] = $itemId;
 
       foreach ($itemInfo as $name => $value) { $this->set($name,$value); } 
 

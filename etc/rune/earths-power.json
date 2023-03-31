@@ -1,6 +1,12 @@
 {
     "name": "EARTH'S POWER",
-    "requires": "ULDREDS PEACE",
+    "requires": "POWER OF MITAR",
+    "cost": {
+        "item": {
+            "rune-ix": 4,
+            "rune-ii": 1
+        }
+    },
     "attribs": {
         "myself": {
             "earth.damage": {

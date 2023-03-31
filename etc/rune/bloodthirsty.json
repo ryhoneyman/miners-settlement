@@ -1,6 +1,12 @@
 {
     "name": "BLOODTHIRSTY",
     "requires": "SOULEATER",
+    "cost": {
+        "item": {
+            "rune-v": 1,
+            "rune-ix": 1 
+        }
+    },
     "attribs": {
         "myself": {
             "lifesteal": {

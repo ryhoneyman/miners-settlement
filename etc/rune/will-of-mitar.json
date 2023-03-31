@@ -1,6 +1,13 @@
 {
     "name": "WILL OF MITAR",
     "requires": "ULDREDS SHIELD",
+    "cost": {
+        "item": {
+            "rune-ix": 2,
+            "rune-vii": 1,
+            "rune-v": 1
+        }
+    },
     "attribs": {
         "myself": {
             "speed": {

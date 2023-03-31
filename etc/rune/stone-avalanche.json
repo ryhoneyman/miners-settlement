@@ -1,6 +1,13 @@
 {
     "name": "STONE AVALANCHE",
     "requires": "ULDREDS PEACE",
+    "cost": {
+        "item": {
+            "rune-ix": 2,
+            "rune-viii": 1,
+            "rune-i": 1
+        }
+    },
     "attribs": {
         "myself": {
             "earth.damage": {

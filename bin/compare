@@ -1,0 +1,97 @@
+#!/usr/bin/php
+<?php
+include_once 'miners-settlement-init.php';
+
+include_once 'common/debug.class.php';
+include_once 'local/simulator.class.php';
+include_once 'local/battle.class.php';
+include_once 'local/entity.class.php';
+include_once 'local/item.class.php';
+include_once 'local/rune.class.php';
+
+$debug     = new Debug(9,DEBUG_CLI);
+$item      = new Item($debug);
+$item1     = new Item($debug);
+$item2     = new Item($debug);
+$attacker  = new Entity($debug);
+$defender  = new Entity($debug);
+$battle    = new Battle($debug);
+$constants = new Constants($debug);
+$simulator = new Simulator($debug);
+
+$opts = getopt(null,array('verbose','short','debug:','attacker:','defender:','aname:','iterations:','godroll','enhance:'));
+
+$debugLevel     = $opts['debug'] ?: 0;
+$verbose        = (isset($opts['verbose'])) ? true : false;
+$shortResults   = (isset($opts['short'])) ? true : false;
+$attackerBuilds = $opts['attacker'] ?: null;
+$defenderBuilds = $opts['defender'] ?: null;
+$attackerName   = $opts['aname'] ?: null;
+$uIterations    = $opts['iterations'] ?: 100;
+$uGodroll       = (isset($opts['godroll'])) ? true : false;
+$uEnhance       = $opts['enhance'] ?: null;
+
+$debug->level($debugLevel);
+
+$baseConfig = array(
+   'type'       => 'pve',
+   'iterations' => $uIterations,
+   'godroll'    => $uGodroll,
+   'enhance'    => $uEnhance,
+);
+
+$testList = array();
+
+foreach (array_filter(preg_split('/,/',$attackerBuilds)) as $attackerBuild) {
+   foreach (array_filter(preg_split('/,/',$defenderBuilds)) as $defenderBuild) {
+      $testConfig = $baseConfig;
+
+      $testConfig['attacker'] = array('id' => $attackerBuild);
+      $testConfig['defender'] = array('id' => $defenderBuild);
+      $testConfig['label']    = $attackerBuild.'/'.$defenderBuild;
+
+      $testList[$testConfig['label']] = $testConfig;
+   }
+}
+
+$testResults = array();
+
+foreach ($testList as $testName => $testInfo) {
+   $results = $simulator->start($testInfo);
+
+   if ($verbose) { json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n"; }
+
+   list($attackerId,$defenderId) = explode('/',$testName);
+
+   $testResults['data'][$attackerId][$defenderId] = $results;
+
+   $attackerLabel       = $results['attacker']['name'];
+   $defenderLabel       = $results['defender']['name'];
+   $attackerLabelLength = strlen($attackerLabel);
+
+   if ($attackerLabelLength > $testResults['aMaxLength']) { $testResults['aMaxLength'] = $attackerLabelLength; }
+   
+   $testResults['aLabels'][$attackerId] = $attackerLabel;
+   $testResults['dLabels'][$defenderId] = $defenderLabel;
+}
+
+printf("%s  ",str_repeat(' ',$testResults['aMaxLength']));
+
+foreach ($testResults['dLabels'] as $dId => $dLabel) { printf("%".strlen($dLabel)."s ",$dLabel); }
+print "\n";
+
+printf("%s  ",str_repeat('=',$testResults['aMaxLength']));
+
+foreach ($testResults['dLabels'] as $dId => $dLabel) { printf("%".strlen($dLabel)."s ",str_repeat('=',strlen($dLabel))); }
+print "\n";
+
+foreach ($testResults['data'] as $attackerId => $defenderList) {
+   printf("%".$testResults['aMaxLength']."s: ",$testResults['aLabels'][$attackerId]);
+
+   foreach ($defenderList as $defenderId => $resultData) {
+      printf("%".strlen($testResults['dLabels'][$defenderId])."s ",$resultData['attacker']['chance.win']); 
+   }
+   print "\n";
+}
+
+?>

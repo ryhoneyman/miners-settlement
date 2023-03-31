@@ -1,0 +1,23 @@
+{
+    "name": "BAN HAMMER",
+    "requires": "MINOTAUR'S PRIDE",
+    "cost": {
+        "item": {
+            "rune-xii": 2,
+            "rune-xi": 1,
+            "rune-x": 1
+        }
+    },
+    "attribs": {
+        "myself": {
+            "critical.hit": {
+                "percent.chance": 20,
+                "percent.adjust": 2000
+            },
+            "wind.damage": {
+                "percent.chance": 100,
+                "flat.adjust": 40
+            }
+        }
+    }
+}

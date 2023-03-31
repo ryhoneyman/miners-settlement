@@ -1,0 +1,15 @@
+{
+    "name": "BERSERKER WRATH",
+    "cost": {
+        "item": {
+        }
+    },
+    "attribs": {
+        "myself": {
+            "critical.hit": {
+                "percent.chance": 10,
+                "percent.adjust": 200 
+            }
+        }
+    }
+}

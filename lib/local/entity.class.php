@@ -84,6 +84,7 @@ class Entity extends Base
       return $currentHealth;
    }
    
+   public function id()   { return $this->get('id'); }
    public function name() { return $this->get('name'); }
    public function type() { return $this->get('type'); }
    public function description() { return $this->get('description'); }
@@ -196,6 +197,7 @@ class Entity extends Base
 
       return $itemList;
    }
+
    public function weapon()  { return $this->get('weapon'); }
    public function shield()  { return $this->get('shield'); }
    public function amulet()  { return $this->get('amulet'); }
@@ -210,7 +212,7 @@ class Entity extends Base
       return json_encode($this->data,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
    }
 
-   public function load($entityId)
+   public function load($entityId, $options = null)
    {
       $this->debug(9,"called");
 
@@ -220,12 +222,23 @@ class Entity extends Base
 
       if (!file_exists($fileName)) { $this->debug(7,"could not find file for $entityId"); return false; }
 
-      $entityInfo = file_get_contents($fileName);
+      $entityInfo = json_decode(file_get_contents($fileName),true);
 
-      return $this->import($entityInfo);
+      $entityInfo['id'] = $entityId;
+
+      // Monsters don't get option adjustments
+      if ($entityInfo['type'] == 'monster') { $options = array(); }
+
+      if ($options['name']) { $entityInfo['name'] = $options['name']; }
+      else {
+         if ($options['godroll'])      { $entityInfo['name'] .= " [GODROLL]"; }
+         if ($options['enhance'])      { $entityInfo['name'] .= " [ENHANCE=".$options['enhance']."]"; }
+      }
+
+      return $this->import($entityInfo,$options);
    }
 
-   public function import($entityInfo)
+   public function import($entityInfo, $options = null)
    {
       $this->debug(9,"called");
 
@@ -242,7 +255,10 @@ class Entity extends Base
 
             foreach ($value as $itemId => $itemInfo) {
                $itemData    = $itemInfo['data'] ?: null;
-               $itemOptions = $itemInfo['options'] ?: null;
+               $itemOptions = $itemInfo['options'] ?: array();
+
+               if ($options['godroll']) { $itemOptions['godroll'] = true; } 
+               if ($options['enhance']) { $itemOptions['enhance'] = $options['enhance']; } 
 
                $this->equipItem($itemId,$itemData,$itemOptions);
             }
@@ -251,7 +267,10 @@ class Entity extends Base
             $itemType     = $name;
             $itemId       = $value['id'];
             $itemData     = $value['data'] ?: null;
-            $itemOptions  = $value['options'] ?: null;
+            $itemOptions  = $value['options'] ?: array();
+
+            if ($options['godroll']) { $itemOptions['godroll'] = true; } 
+            if ($options['enhance']) { $itemOptions['enhance'] = $options['enhance']; } 
 
             $this->equipItem($itemId,$itemData,$itemOptions);
          }

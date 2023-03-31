@@ -1,0 +1,31 @@
+{
+    "name": "Master | Tower LVL 161",
+    "type": "monster",
+    "location": {},
+    "loot": {},
+    "xp": 40,
+    "respawn": null,
+    "health": 93891,
+    "defense": 165,
+    "attack": 2862,
+    "speed": 3,
+    "water.resist": 2000,
+    "fire.resist": 2000,
+    "wind.resist": 2000,
+    "earth.resist": 2000,
+    "lightning.resist": 2000,
+    "effects": {
+        "myself": {
+            "stun.resist": {
+                "percent.chance": 100,
+                "percent.adjust": 100
+            }
+        },
+        "enemy": {
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": -15
+            }
+        }
+    }
+}

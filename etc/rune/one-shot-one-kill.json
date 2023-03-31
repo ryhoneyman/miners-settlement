@@ -1,6 +1,13 @@
 {
     "name": "ONE SHOT ONE KILL",
     "requires": "THOUSAND SOUL",
+    "cost": {
+        "item": {
+            "rune-ii": 1,
+            "rune-iv": 1,
+            "rune-ix": 1
+        }
+    },
     "attribs": {
         "myself": {
             "critical.hit": {

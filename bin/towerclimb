@@ -1,0 +1,73 @@
+#!/usr/bin/php
+<?php
+include_once 'miners-settlement-init.php';
+
+include_once 'common/debug.class.php';
+include_once 'local/simulator.class.php';
+include_once 'local/battle.class.php';
+include_once 'local/entity.class.php';
+include_once 'local/item.class.php';
+include_once 'local/rune.class.php';
+
+$debug     = new Debug(9,DEBUG_CLI);
+$item      = new Item($debug);
+$item1     = new Item($debug);
+$item2     = new Item($debug);
+$attacker  = new Entity($debug);
+$defender  = new Entity($debug);
+$battle    = new Battle($debug);
+$constants = new Constants($debug);
+$simulator = new Simulator($debug);
+
+$opts = getopt(null,array('verbose','short','debug:','attacker:','aname:','iterations:','godroll','enhance:'));
+
+$debugLevel    = $opts['debug'] ?: 0;
+$verbose       = (isset($opts['verbose'])) ? true : false;
+$shortResults  = (isset($opts['short'])) ? true : false;
+$attackerBuild = $opts['attacker'] ?: null;
+$attackerName  = $opts['aname'] ?: null;
+$uIterations   = $opts['iterations'] ?: 100;
+$uGodroll      = (isset($opts['godroll'])) ? true : false;
+$uEnhance      = $opts['enhance'] ?: null;
+
+$debug->level($debugLevel);
+
+$baseConfig = array(
+   'attacker'   => array('id' => $attackerBuild),
+   'type'       => 'pve',
+   'iterations' => $uIterations,
+   'godroll'    => $uGodroll,
+   'enhance'    => $uEnhance,
+   'aname'      => $attackerName,
+);
+
+$testList   = array();
+$towerMobs  = array();
+$towerFiles = glob(APP_CONFIGDIR."/entity/tower-*.json");
+
+foreach ($towerFiles as $filePath) {
+   $fileName = basename($filePath,".json");
+   $floor    = sprintf("%03d",preg_replace('/^tower\-/','',$fileName));
+   $towerMobs[$floor] = $fileName;
+}
+
+ksort($towerMobs);
+
+foreach ($towerMobs as $floor => $mobFile) {
+   $testConfig = $baseConfig;
+
+   $testConfig['defender'] = array('id' => $mobFile);
+   $testConfig['label']    = $mobFile;
+
+   $testList[$mobFile] = $testConfig;
+}
+
+foreach ($testList as $testName => $testInfo) {
+   $results = $simulator->start($testInfo);
+
+   if ($verbose) { json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n"; }
+
+   printf("%25s: %s\n",$results['defender']['name'],$results['attacker']['chance.win']);
+}
+
+?>

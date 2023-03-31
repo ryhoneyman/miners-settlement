@@ -1,6 +1,13 @@
 {
     "name": "DEATH STEAM",
     "requires": "NECROMANCER TEETH",
+    "cost": {
+        "item": {
+            "rune-x1": 1,
+            "rune-viii": 1,
+            "rune-vii": 1
+        }
+    },
     "attribs": {
         "myself": {
             "water.damage": {

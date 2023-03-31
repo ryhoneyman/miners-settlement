@@ -15,7 +15,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
-
+// V2-2018 : Mrotar updated to use semantic ui elements
 //======================================================================================================
 // Overview:
 //======================================================================================================
@@ -31,6 +31,19 @@ include_once 'base.class.php';
 class HTML extends Base
 {
    protected $version = 1.2;
+   protected $tagData = array();
+
+   public function autofill($divname, $autovalues)
+   {
+      return '<script TYPE="text/javascript">'."\n".
+             '$(function() {'."\n".
+             '  var availableValues = '.json_encode($autovalues).';'."\n".
+             '  $("#'.$divname.'").autocomplete({'."\n".
+             '    source: availableValues'."\n".
+             '  });'."\n".
+             '});'."\n".
+             '</script>'."\n";
+   }
 
    public function table($data, $index = array(), $options = array())
    {
@@ -51,9 +64,9 @@ class HTML extends Base
          $header[$hid] = $hval;
       }
 
-      $tid     = ($options['table.id'])    ? $options['table.id']    : 'epictable';
-      $tclass  = ($options['table.class']) ? $options['table.class'] : 'epictable';
-      $tstyle  = ($options['table.style']) ? $options['table.style'] : '';
+      $tid     = ($options['table.id'])    ? $options['table.id']     : '';
+      $tclass  = ($options['table.class']) ? $options['table.class']  :'ui unstackable teal celled striped compact small table';
+      $tstyle  = ($options['table.style']) ? $options['table.style']  : '';
       $thclass = ($options['datatable'])   ? " class='cursorpointer'" : '';
 
       $htrclass = ($options['compatibility.zebra']) ? " class='header'" : '';
@@ -76,6 +89,7 @@ class HTML extends Base
       foreach ($data as $id => $info) {
          $rowcount++;
          $trid = ($options['tr']['id'][$id]) ? $options['tr']['id'][$id] : '';
+         $trstyle = ($options['tr']['style'][$id]) ? $options['tr']['style'][$id] : '';
          $trclass = ($options['tr']['class'][$id]) ?
                      $options['tr']['class'][$id] :
                      (($options['table.tr.class']) ? $options['table.tr.class'] : '');
@@ -84,8 +98,9 @@ class HTML extends Base
 
          if ($trid) { $trid = " id='$trid'"; }
          if ($trclass) { $trclass = " class='$trclass'"; }
+         if ($trstyle) { $trstyle = " style='$trstyle'"; }
 
-         $return .= "<tr{$trid}{$trclass}>\n";
+         $return .= "<tr{$trid}{$trclass}{$trstyle}>\n";
 
          foreach ($header as $hid => $column) {
             $tdclass = ($options['td']['class']['cell'][$column][$id]) ?
@@ -95,10 +110,16 @@ class HTML extends Base
                          (($options['table.td.class']) ?
                            $options['table.td.class'] : ''));
 
+            $tdstyle = ($options['td']['style']['cell'][$column][$id]) ?
+                        $options['td']['style']['cell'][$column][$id] :
+                        (($options['td']['style']['column'][$column]) ?
+                         $options['td']['style']['column'][$column]:'');
+
             if ($tdclass) { $tdclass = " class='$tdclass'"; }
+            if ($tdstyle) { $tdstyle = " style='$tdstyle'"; }
 
             $tdval   = $info[$hid];
-            $return .= "<td{$tdclass}>$tdval</td>\n";
+            $return .= "<td{$tdclass}{$tdstyle}>$tdval</td>\n";
          }
 
          $return .= "</tr>\n";
@@ -234,24 +255,32 @@ class HTML extends Base
       return $return;
    }
 
-   public function divbox($name, $content = null, $options = null)
+   public function divBox($name, $content = null, $options = null)
    {
-      $background   = ($options['background']) ? $options['background'] : 'ffffff';
-      $width        = ($options['width']) ? $options['width']."px" : 'auto';
-      $display      = ($options['display']) ? $options['display'] : 'inline-block';
-      $bordercolor  = ($options['border.color']) ? $options['border.color'] : '000000';
-      $bordersize   = ($options['border.size']) ? $options['border.size'] : '1';
-      $padding      = ($options['padding']) ? $options['padding'] : '10';
-      $borderradius = ($options['border.radius']) ? $options['border.radius'] : '5';
 
-      return "<div id='$name' style='background-color: #$background; width: $width; ".
+      if($options) {
+
+         $background   = ($options['background']) ? $options['background'] : 'ffffff';
+         $width        = ($options['width']) ? $options['width']."px" : 'auto';
+         $display      = ($options['display']) ? $options['display'] : 'inline-block';
+         $bordercolor  = ($options['border.color']) ? $options['border.color'] : '000000';
+         $bordersize   = ($options['border.size']) ? $options['border.size'] : '1';
+         $padding      = ($options['padding']) ? $options['padding'] : '10';
+         $borderradius = ($options['border.radius']) ? $options['border.radius'] : '5';
+
+         return "<div id='$name' class='ui raised segment' style='background-color: #$background; width: $width; ".
                   "display: $display; ".
                   "border: ${bordersize}px #${bordercolor} solid; padding: ${padding}px; ".
                   "-moz-border-radius: ${borderradius}px; -webkit-border-radius: ${borderradius}px; ".
                   "border-radius: ${borderradius}px;'>$content</div>\n";
+
+       }
+
+      else return "<div id='$name' class='ui raised padded segment'>$content</div>\n";
+
    }
 
-   public function startform($properties = null)
+   public function startForm($properties = null)
    {
       $form   = "<form%s>\n";
       $fields = "";
@@ -268,7 +297,7 @@ class HTML extends Base
       return $html;
    }
 
-   public function endform()
+   public function endForm()
    {
       return "</form>\n";
    }
@@ -286,43 +315,80 @@ class HTML extends Base
       return $html;
    }
 
-   public function textarea($name, $text='', $cols=30, $rows=5)
+   public function inputTextarea($name, $text='', $cols=30, $rows=5, $options = null)
    {
-      $this->debug(5,"textarea called, name=$name, text=$text, cols=$cols, rows=$rows");
+      $this->debug(5,"name=$name, text=$text, cols=$cols, rows=$rows");
 
-      $html = "<textarea id='$name' name='$name' cols='$cols' rows='$rows'>$text</textarea>\n";
+      $placeholder = ($options['placeholder']) ? $options['placeholder'] : $name;
+      $disabled    = ($options['disabled']) ? 'disabled' : '';
+
+      $html = "<textarea $disabled id='$name' name='$name' placeholder='$placeholder' cols='$cols' rows='$rows'>$text</textarea>\n";
 
       return $html;
    }
 
-   public function input_text($name, $text='', $maxlength=2048, $size=20, $options = null)
+   public function inputCalendar($name, $text='',$options = null, $mindate = 'null', $maxdate = 'null', $size=10)
    {
-      $this->debug(5,"input_text called, name=$name, text=$text, maxlength=$maxlength, size=$size");
+      $this->debug(5,"name=$name, text=$text, dt=$mindate/$maxdate, size=$size");
 
-      $params = array("type=text","id='$name'","name='$name'","value='$text'","maxlength='$maxlength'","size='$size'");
-
-      if (is_array($options['params'])) { 
-         foreach ($options['params'] as $param => $paramValue) { $params[] = sprintf("%s='%s'",$param,$paramValue); }
+      if($options) {
+         $magnitude = $options['magnitude']?$options['magnitude']:'';
       }
 
-      $html = sprintf("<input %s>\n",implode(' ',$params));
+      $html =  "<item class='ui $magnitude input'><input type=text id='$name' name='$name' value='$text' placeholder='$name'>\n".
+                "<script>$('#$name').datepicker({minDate: $mindate, maxDate:$maxdate})</script>\n".
+                "</item>";
 
       return $html;
    }
 
-   public function hidden_text($name, $value)
+   public function inputText($name, $text='', $maxlength=2048, $size=null, $options = null)
    {
-      $html = "<input type=hidden id='$name' name='$name' value='$value'>\n";
+      $this->debug(5,"name=$name, text=$text, maxlength=$maxlength, size=$size");
+
+      $error     = ($options['error']) ? 'error' : '';
+      $style     = ($options['style']) ? $options['style'] : '';
+      $class     = ($options['class']) ? $options['class'] : 'form-control';
+      $disabled  = ($options['disabled']) ? 'disabled' : '';
+      $required  = ($options['required']) ? 'required="required"' : '';
+      $autocomplete  = ($options['autocomplete']) ? 'autocomplete="'.$options['autocomplete'].'"' : '';
+      $onchange = ($options['onchange']) ? 'onchange="'.$options['onchange'].'"' : '';
+
+      $placeholder = ($options['placeholder']) ? $options['placeholder'] : '';
+
+      $html = "<input type=text id='$name' name='$name' $required $autocomplete value='$text' class='$class $disabled' style='$style'.
+                      placeholder='$placeholder' maxlength='$maxlength' $onchange ".((!is_null($size)) ? "size='$size'" : '').">\n";
+
+      return $html;
+   }
+
+   public function inputFile($name)
+   {
+      $this->debug(5,"name=$name");
+
+      $html = "<item class='ui input'><input type=file id='$name' name='$name'></item>\n";
+
+      return $html;
+   }
+
+   public function inputHidden($name, $value)
+   {
+      $html = "<item class='ui input'><input type=hidden id='$name' name='$name' value='$value'></item>\n";
 
       return $html;
    }
 
    function select($name, $values, $select = array(), $attrib = array())
    {
-      $size   = ($attrib['size'])   ? $attrib['size']   : 1;
-      $multi  = ($attrib['multi'])  ? $attrib['multi']  : 0;
-      $script = ($attrib['script']) ? $attrib['script'] : '';
-      $assoc  = ($attrib['assoc'])  ? $attrib['assoc']  : 0;
+      $size     = ($attrib['size'])     ? $attrib['size']       : 1;
+      $multi    = ($attrib['multi'])    ? $attrib['multi']      : 0;
+      $script   = ($attrib['script'])   ? $attrib['script']     : '';
+      $assoc    = ($attrib['assoc'])    ? $attrib['assoc']      : 0;
+      $style    = ($attrib['style'])    ? $attrib['style']      : '';
+      $class    = ($attrib['class'])    ? $attrib['class']      : 'form-control';
+      $disabled = ($attrib['disabled']) ? 'disabled'            : '';
+      $required = ($attrib['required']) ? 'required="required"' : '';
+      $keyopts  = ($attrib['keyopts'])  ? $attrib['keyopts']    : array();
 
       if (isset($select)) {
          if (is_array($select)) {
@@ -338,7 +404,7 @@ class HTML extends Base
 
       if (!is_array($options)) { $options = array(); }
 
-      $html = sprintf("<select id='%s' name='%s%s' size='%s'%s%s>\n",
+      $html = sprintf("<select $disabled $required class='$class' id='%s' style='$style' name='%s%s' size='%s'%s%s>\n",
                       $name,$name,($multi) ? "[]" : "",$size,($multi) ? " multiple" : "",
                       ($script) ? " $script" : "");
 
@@ -346,6 +412,9 @@ class HTML extends Base
          if (is_array($value)) {
             $html .= "<optgroup label='$key'>\n";
             foreach ($value as $gkey => $gvalue) {
+               //$disabled     = (isset($keyopts['disabled'][$gkey])) ? true : false;
+               //$disabledText = ($disabled) ? $keyopts['disabled'][$gkey] : '';
+
                if (!$gvalue) { $gvalue = $gkey; }
                $html .= sprintf("<option value='%s'%s>%s</option>\n",
                                 $gkey,(isset($selected[$gkey])) ? " selected" : "",$gvalue);
@@ -353,17 +422,24 @@ class HTML extends Base
             $html .= "</optgroup>\n";
          }
          else {
-            $html .= sprintf("<option value='%s'%s>%s</option>\n",
-                             $key,(isset($selected[$key])) ? " selected" : "",$value);
+            $disabled     = (isset($keyopts['disabled'][$key])) ? true : false;
+            $disabledText = ($disabled) ? $keyopts['disabled'][$key] : '';
+
+            $html .= sprintf("<option value='%s'%s%s>%s</option>\n",
+                             $key,
+                             (isset($selected[$key])) ? " selected" : "",
+                             ($disabled) ? " disabled" : "",
+                             $value.(($disabled) ? $disabledText : ''));
          }
       }
 
       $html .= "</select>\n";
 
+
       return $html;
    }
 
-   public function checkbox($name, $value = 1, $checked = '')
+   public function checkBox($name, $value = 1, $checked = '')
    {
       $ischecked = 0;
 
@@ -377,21 +453,23 @@ class HTML extends Base
       }
       else if ($checked == $value) { $ischecked = 1; }
 
-      return "<input type=checkbox name='$name' value='$value'".
+      return "<input type=checkbox class='ui checkbox'  id='$name' name='$name' value='$value'".
              (($ischecked) ? ' checked' : '').">\n";
    }
 
    public function set($key,$value) {
-      if (isset($key)) { $this->self["data.$key"] = $value; }
+      if (isset($key)) { $this->tagData[$key] = $value; }
    }
 
    public function get($key) {
-      if (isset($key)) { return $this->self["data.$key"]; }
+      if (isset($key)) { return $this->tagData[$key]; }
    }
 
    public function clear($key) {
-      if (isset($key)) { unset($this->self["data.$key"]); }
+      if (isset($key)) { unset($this->tagData[$key]); }
    }
+
+   public function clearall() { unset($this->tagData); }
 
    public function dynamictags($data)
    {
@@ -423,46 +501,10 @@ class HTML extends Base
       return $return;
    }
 
-   public function update_text($id, $text)
+   public function updateText($id, $text)
    {
       return "<script type='text/javascript'>\n".
              "document.getElementById('$id').innerHTML = '$text';\n</script>\n";
-   }
-
-   public function pulsate_text($id, $count = 5, $speed = 500)
-   {
-      return "<script type='text/javascript'>\n".
-             "$(document).ready(function() {\n".
-             "   var i = 0;\n".
-             "   function pulsate() {\n".
-             "      if(i >= $count) return;\n".
-             "      $('.$id').\n".
-             "         animate({opacity: 0.2}, $speed, 'linear').\n".
-             "         animate({opacity: 1}, $speed, 'linear', pulsate);\n".
-             "      i++;\n".
-             "   }\n".
-             "   pulsate();\n".
-             "});\n".
-             "</script>\n";
-   }
-
-   public function tipbox($type, $text)
-   {
-      $items = array(
-         'tip' =>  array('title' => 'HELPFUL TIP', 'icon' => 'tip-lightbulb.png'),
-         'note' => array('title' => 'INTERESTING NOTE', 'icon' => 'tip-pencil.png')
-      );
-
-      $return = "<table border=0 width=400><tr>\n".
-                "<td valign=top><img src='/images/tip-icons/".$items[$type]['icon']."'></td>\n".
-                "<td>\n".
-                "<table border=1 width=400><tr id='tableevenrow'>\n".
-                "<td valign=top><b>".$items[$type]['title'].":</b><br>\n".
-                "$text</td>\n".
-                "</tr></table>\n".
-                "</td></tr></table>\n";
-
-      return $return;
    }
 }
 

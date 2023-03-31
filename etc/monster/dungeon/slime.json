@@ -1,0 +1,15 @@
+{
+    "name": "Slime",
+    "type": "monster",
+    "image": "https://funventure.eu/wiki/minerssettlement/images/thumb/3/38/Slime.png/50px-Slime.png",
+    "location": { "dungeon": { "floor": { "2nd": { "count": 5 }  } } },
+    "loot": { 
+        "material/slime-drop" : { "frequency": 100, "min": 1, "max": 1 }
+    },
+    "xp": 3,
+    "respawn": 300,
+    "health": 180,
+    "defense": 1,
+    "attack": 8,
+    "speed": 1
+}

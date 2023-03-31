@@ -1,0 +1,33 @@
+{
+    "name": "Godroll (Mino Tower Build)",
+    "type": "player",
+    "weapon": {
+        "id": "minotaurs-pride",
+        "data": { "health": 1680, "attack": 620, "defense": 78, "speed": 1.2, "wind.damage": 525, "water.resist": 105 },
+        "options": {
+            "level": 11
+        }
+    },
+    "shield": {
+        "id": "thousand-soul",
+        "data": { "health": 1350, "attack": 89, "defense": 108, "speed": -0.40, "wind.resist": 100, "lightning.resist": 100 },
+        "options": {
+            "level": 10
+        }
+    },
+    "amulet": {
+        "id": "power-of-mitar",
+        "data": { "health": 1500, "attack": 0, "defense": 150, "speed": 0, "earth.damage": 160 },
+        "options": {
+            "level": 10
+        }
+    },
+    "ring": {
+        "id": "ring-of-light",
+        "data": { "health": 850, "attack": 0, "defense": 0, "speed": 0, "lightning.damage": 102 },
+        "options": {
+            "level": 7
+        }
+    },
+    "runes": ["ban-hammer","forbidden-love","one-shot-one-kill","dwarven-force","berserker-wrath"]
+}

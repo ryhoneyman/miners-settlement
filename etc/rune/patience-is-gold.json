@@ -1,0 +1,15 @@
+{
+    "name": "PATIENCE IS GOLD",
+    "cost": {
+        "item": {
+        }
+    },
+    "attribs": {
+        "enemy": {
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": -10
+            }
+        }
+    }
+}

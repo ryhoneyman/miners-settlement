@@ -1,6 +1,14 @@
 {
     "name": "LIFE AFTER DEATH",
     "requires": "NECROMANCER TEETH",
+    "cost": {
+        "item": {
+            "rune-xii": 1,
+            "rune-x": 1,
+            "rune-ix": 1,
+            "rune-vii": 1
+        }
+    },
     "attribs": {
         "myself": {
             "lifesteal": {

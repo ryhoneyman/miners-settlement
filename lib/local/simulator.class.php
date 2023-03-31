@@ -31,12 +31,17 @@ class Simulator extends Base
    {
       $this->debug(8,"called");
 
+      $this->debug(9,"config = ".json_encode($config));
+
       $baseAttacker = new Entity($this->debug);
       $baseDefender = new Entity($this->debug);
       $battle       = new Battle($this->debug);
 
       $simType    = $config['type'] ?: 'general';
       $iterations = $config['iterations'] ?: 1;
+      $godroll    = ($config['godroll']) ? true : false;
+      $enhance    = $config['enhance'] ?: null;
+      $aName      = $config['aname'] ?: null;
 
       $stats = array(
          'type'  => $simType,
@@ -51,11 +56,14 @@ class Simulator extends Base
 
       // load in entities and equip them
       foreach ($baseRoles as $role => $entity) {
-         if (!$entity->load($config[$role]['id'])) { $this->debug(0,"Could not find $role profile for ".$config[$role][$id]); exit; }
+         if (!$entity->load($config[$role]['id'],array('godroll' => $godroll, 'enhance' => $enhance, 'name' => $aName))) { 
+            $this->debug(0,"Could not find $role profile for ".$config[$role][$id]); 
+            exit; 
+         }
 
          if ($config[$role]['gear']) {
             foreach ($config[$role]['gear'] as $itemId => $itemInfo) {
-               $baseRoles[$role]->equipItem($itemId,$itemInfo['values'],$itemInfo['options']);
+               $entity->equipItem($itemId,$itemInfo['values'],$itemInfo['options']);
             }
          }
       }
@@ -105,10 +113,14 @@ class Simulator extends Base
             $stats[$role]['results']['reason'][sprintf("%s/%s",$results['results'][$role]['final'],$results['results'][$role]['reason'])]++;
 
             $damage = $resultStats[$role]['damage']['total'];
+            $dps    = $resultStats[$role]['dps'];
             $hits   = $resultStats[$role]['hits'];
 
             if      ($damage < $stats[$role]['damage']['min']) { $stats[$role]['damage']['min'] = $damage; }
             else if ($damage > $stats[$role]['damage']['max']) { $stats[$role]['damage']['max'] = $damage; }
+
+            if      ($dps < $stats[$role]['dps']['min']) { $stats[$role]['dps']['min'] = $dps; }
+            else if ($dps > $stats[$role]['dps']['max']) { $stats[$role]['dps']['max'] = $dps; }
 
             if      ($hits < $stats[$role]['hits']['min']) { $stats[$role]['hits']['min'] = $hits; }
             else if ($hits > $stats[$role]['hits']['max']) { $stats[$role]['hits']['max'] = $hits; }
@@ -116,6 +128,9 @@ class Simulator extends Base
 
             $stats[$role]['damage']['total'] += $damage;
             $stats[$role]['damage']['spread'][$damage]++;
+
+            $stats[$role]['dps']['total'] += $dps;
+            $stats[$role]['dps']['spread'][$dps]++;
 
             $stats[$role]['hits']['total'] += $hits;
             $stats[$role]['hits']['spread'][$hits]++;
@@ -132,6 +147,7 @@ class Simulator extends Base
 
       foreach ($roles as $role => $entity) {
          $stats[$role]['damage']['average'] = floor($stats[$role]['damage']['total'] / $stats['iterations']);
+         $stats[$role]['dps']['average']    = sprintf("%1.1f",($stats[$role]['dps']['total'] / $stats['iterations']));
          $stats[$role]['hits']['average']   = floor($stats[$role]['hits']['total'] / $stats['iterations']);
          $stats[$role]['chance.win']        = sprintf("%1.1f%%",($stats[$role]['results']['final']['won'] / $stats['iterations'])*100);
       }
@@ -144,20 +160,24 @@ class Simulator extends Base
       return $stats;
    }
 
-   public function formatResults($results)
+   public function formatResults($results, $options = null)
    {
       $return = '';
 
-      if ($results['type'] == 'pvp')      { return $this->formatResultsPVP($results); }
-      else if ($results['type'] == 'pve') { return $this->formatResultsPVE($results); }
+      if ($results['type'] == 'pvp')      { return $this->formatResultsPVP($results,$options); }
+      else if ($results['type'] == 'pve') { return $this->formatResultsPVE($results,$options); }
    }
 
-   public function formatResultsPVE($results)
+   public function formatResultsPVE($results, $options = null)
    {
       $output = sprintf("=== Monster Simulation Results after %d iteration%s (%s) [%1.3f secs] ==========\n\n",
                         $results['iterations'],(($results['iterations'] == 1) ? '' : 's'),$results['label'],$results['time']['total']);
 
+      $shortOutput = ($options['short']) ? true : false;
+
       foreach (array('attacker','defender') as $role) {
+         if ($shortOutput && $role == 'defender') { continue; }
+ 
          $output .= sprintf("%s%s\n------------------------------------------------\n",
                             $results[$role]['name'],(($results[$role]['description']) ? ' ('.$results[$role]['description'].')' : ''));
 
@@ -177,7 +197,7 @@ class Simulator extends Base
 
          $effectList = $results[$role]['effects'];
 
-         if ($effectList) {
+         if ($effectList && !$shortOutput) {
             $effectDesc = $this->constants->effectDesc();
 
             foreach ($effectList as $affects => $effectAttribList) {
@@ -205,35 +225,57 @@ class Simulator extends Base
       $output .= "=== Results =======================\n\n";
 
       foreach (array('attacker','defender') as $role) {
-         $damageSort = $results[$role]['damage']['spread'];
-         $hitsSort   = $results[$role]['hits']['spread'];
+         if ($shortOutput && $role == 'defender') { continue; }
+
+         $enemyRole   = ($role == 'attacker') ? 'defender' : 'attacker';
+         $damageSort  = $results[$role]['damage']['spread'];
+         $dpsSort     = $results[$role]['dps']['spread'];
+         $hitsSort    = $results[$role]['hits']['spread'];
+         $resultsSort = $results[$role]['results']['reason'];
 
          arsort($damageSort);
+         arsort($dpsSort);
          arsort($hitsSort);
+         arsort($resultsSort);
 
-         $damageList = array();
-         $hitsList   = array();
+         $damageList  = array();
+         $dpsList     = array();
+         $hitsList    = array();
+         $resultsList = array();
 
-         foreach ($damageSort as $damage => $occurance) { $damageList[] = sprintf("%6d: %4dx",$damage,$occurance); }
-         foreach ($hitsSort as $hits => $occurance) { $hitsList[] = sprintf("%6d: %4dx",$hits,$occurance); }
+         foreach ($damageSort as $damage => $occurance) { $damageList[] = sprintf("%8d: %6dx",$damage,$occurance); }
+         foreach ($dpsSort as $dps => $occurance) { $dpsList[] = sprintf("%8.1f: %6dx",$dps,$occurance); }
+         foreach ($hitsSort as $hits => $occurance) { $hitsList[] = sprintf("%8d: %6dx",$hits,$occurance); }
+         foreach ($resultsSort as $result => $occurance) { $resultsList[] = sprintf("%13s: %6dx",$result,$occurance); }
 
-         $maxPercent = $damageSort[$results[$role]['damage']['max']] / $results['iterations'] * 100;
+         $maxPercentDamage = $damageSort[$results[$role]['damage']['max']] / $results['iterations'] * 100;
+         $maxPercentDps    = $dpsSort[$results[$role]['dps']['max']] / $results['iterations'] * 100;
+
+         $output .= sprintf("%s wins %s of the time against %s\n",$results[$role]['name'],$results[$role]['chance.win'],$results[$enemyRole]['name']);
+
+         $output .= sprintf("%s average DPS: %1.1f (%1.1f%% chance for max dps %1.1f)\n",$results[$role]['name'],
+                            $results[$role]['dps']['average'],$maxPercentDps,$results[$role]['dps']['max']);
 
          $output .= sprintf("%s averaged %d damage with %d hits (%1.1f%% chance for max damage %d / %d hits) over %1.2f seconds.\n\n",
                             $results[$role]['name'],$results[$role]['damage']['average'],$results[$role]['hits']['average'],
-                            $maxPercent,$results[$role]['damage']['max'],$results[$role]['hits']['max'],$results['duration']['average']);
+                            $maxPercentDamage,$results[$role]['damage']['max'],$results[$role]['hits']['max'],$results['duration']['average']);
 
-         $formatDisplay = "%13s %13s\n";
+         if (!$shortOutput) {
+            $formatDisplay = "%17s %17s %17s %22s\n";
 
-         $output .= sprintf($formatDisplay,'Damage','Hits').
-                    sprintf($formatDisplay,str_repeat("=",13),str_repeat("=",13));
+            $output .= sprintf($formatDisplay,'Damage','DPS','Hits','Results').
+                       sprintf($formatDisplay,str_repeat("=",17),str_repeat("=",17),str_repeat("=",17),str_repeat("=",22));
 
-         while ($damageList || $hitsList) {
-            $nextDamage = ($damageList) ? array_shift($damageList) : '';
-            $nextHits   = ($hitsList) ? array_shift($hitsList) : '';
+            while ($damageList || $hitsList || $resultsList) {
+               $nextDamage = ($damageList) ? array_shift($damageList) : '';
+               $nextDps    = ($dpsList) ? array_shift($dpsList) : '';
+               $nextHits   = ($hitsList) ? array_shift($hitsList) : '';
+               $nextResult = ($resultsList) ? array_shift($resultsList) : '';
  
-            $output .= sprintf($formatDisplay,$nextDamage,$nextHits);
+               $output .= sprintf($formatDisplay,$nextDamage,$nextDps,$nextHits,$nextResult);
+            }
          }
+
          $output .= "\n\n";
       }
 

@@ -11,18 +11,22 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2" style='font-size:0.9em;'>
          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+
+<!--
+            <li class="nav-header"><b>BEASTIARY</b></li>
+
             <li class="nav-item">
-               <a href="/index.php" class="nav-link<?php if(preg_match("~^(|/index.php)$~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fad fa-home-alt"></i>
-                  <p> Home </p>
+               <a href="/beastiary/list?area=dungeon" class="nav-link<?php if (preg_match('~^/beastiary/list/\?area=dungeon~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
+                  <i class="nav-icon fal fa-skull"></i>
+                  <p> Dungeon </p>
                </a>
             </li>
+-->
 
             <li class="nav-header"><b>ITEMS</b></li>
 
             <li class="nav-item">
-               <a href="/item/analytics.php" class="nav-link<?php if (preg_match('~^/item/analytics.php~i',$_SERVER['PHP_SELF'])) { echo " active"; } ?>">
+               <a href="/item/analytics" class="nav-link<?php if (preg_match('~^/item/analytics/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
                   <i class="nav-icon fal fa-analytics"></i>
                   <p> Item Analytics </p>
                </a>

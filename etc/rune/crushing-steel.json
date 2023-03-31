@@ -1,0 +1,23 @@
+{
+    "name": "CRUSHING STEEL",
+    "requires": "GLORY SHIELD",
+    "cost": {
+        "item": {
+            "rune-xii": 2,
+            "rune-xi": 1,
+            "rune-viii": 1
+        }
+    },
+    "attribs": {
+        "myself": {
+            "critical.hit": {
+                "percent.chance": 10,
+                "percent.adjust": 1400
+            },
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": 40
+            }
+        }
+    }
+}

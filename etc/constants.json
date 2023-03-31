@@ -103,6 +103,7 @@
             }
         }
     }, 
+    "maxEnhanceLevel": 15,
     "baseAttribs": {
         "attack": {"innateGear": "weapon", "innateValue": 1},
         "speed": {"innateGear": "weapon", "innateValue": 1},

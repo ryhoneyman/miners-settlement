@@ -162,6 +162,8 @@ class Battle extends Base
          }
       }
 
+      $this->battleInfo['stats'][$role]['dps'] = (float)sprintf("%1.1f",$this->battleInfo['stats'][$role]['damage']['total'] / $this->battleInfo['stats']['duration']);
+
       return true;
    }
 
@@ -229,6 +231,29 @@ class Battle extends Base
          if (!array_key_exists('myself',$entityEffects)) { $entityEffects['myself'] = array(); }
          if (!array_key_exists('enemy',$entityEffects))  { $entityEffects['enemy'] = array(); }
 
+         foreach ($entityEffects as $affects => $effectAttribList) {
+            foreach ($effectAttribList as $attribName => $effectInfo) {
+               if (preg_match('/^critical.hit$/i',$attribName)) {
+                  $critPChance = 0;
+                  $critPAdjust = 0;
+                  $critFAdjust = 0;
+                  $critMaxPChance = 0;
+
+                  foreach ($effectInfo as $effectName => $effectValues) {
+                     $critPChance += $effectValues['pChance'];
+                     $critPAdjust += $effectValues['pAdjust'];
+                     $critFAdjust += $effectValues['fAdjust'];
+
+                     if ($effectValues['pChance'] > $critMaxPChance) { $critMaxPChance = $effectValues['pChance']; }
+                  }
+
+                  $newEffectValues = array('pChance' => $critPChance, 'pAdjust' => $critPAdjust, 'fAdjust' => $critFAdjust);
+
+                  $entityEffects[$affects][$attribName] = array('CRITICAL HIT' => $newEffectValues);
+               }
+            }
+         }
+
          $this->battleInfo['base'][$role]["effects"] = $entityEffects;
       } 
    }
@@ -262,6 +287,7 @@ class Battle extends Base
          $this->debug(9,"$role has ".count($this->battleInfo['base'][$role]['effects']['myself'])." self and ".
                                      count($this->battleInfo['base'][$role]['effects']['enemy'])." enemy effects");
 
+
          foreach ($this->battleInfo['base'][$role]['effects'] as $affects => $effectAttribList) {
             foreach ($effectAttribList as $attribName => $effectInfo) {
                // stun resist and extra defense are rolled on-demand, not every turn
@@ -270,6 +296,7 @@ class Battle extends Base
                $attribInfo = $this->attribList[$attribName];
 
                foreach ($effectInfo as $effectName => $effectValues) { 
+                  $this->debug(9,"EFFECT: $role/$affects/$effectName/$attribName ".json_encode($effectValues));
                   $pChance = $effectValues['pChance'];
                   $pAdjust = $effectValues['pAdjust'];
                   $fAdjust = $effectValues['fAdjust'];
@@ -277,7 +304,7 @@ class Battle extends Base
                   if ($this->rollChance($pChance)) { 
                      if ($pChance != 1) { $this->debug(9,"made a successful roll for $attribName"); }
    
-                     if ($attribInfo['only.once'] && $battleInfo[$role]['effects'][$affects][$attribName]) { $this->debug(9,"we already have a $attribName loaded"); continue; }
+                     if ($attribInfo['only.once'] && $this->battleInfo[$role]['effects'][$affects][$attribName]) { $this->debug(9,"we already have a $attribName loaded"); continue; }
 
                      $this->debug(9,"BEFORE - $affects/$attribName: ".json_encode($this->battleInfo[$role]['effects'][$affects][$attribName]));
 
@@ -387,10 +414,14 @@ class Battle extends Base
          foreach ($entityRunes as $runeName => $rune) {
             $itemRequired = $rune->requires();
 
-            $this->debug(9,"processing $runeName for $entityName (requires $itemRequired)");
+            if ($itemRequired) {
+               $this->debug(9,"processing $runeName for $entityName (requires $itemRequired)");
 
-            if (!array_key_exists($rune->requires(),$entityItems)) {
-               $this->debug(9,"required item $itemRequired not equipped, will not use rune");
+               if (!array_key_exists($rune->requires(),$entityItems)) {
+                  $this->debug(9,"required item $itemRequired not equipped, will not use rune");
+                  print "REQUIRED ITEM NOT EQUIPED FOR $runeName (needs $itemRequired)\n";
+                  exit;
+               }
             }
  
             $runeList[$runeName] = $rune->attribs();
@@ -416,8 +447,10 @@ class Battle extends Base
 
                   $currentEffects[$affects][$runeAttribName][] = $runeAttribValue;
 
-                  // speed is slowing down or speeding up from 100% where other attributes are directly applied
-                  $percentAdjustBase = (preg_match('/^(speed)$/i',$runeAttribName)) ? (100 - $runePAdjust) : $runePAdjust;
+                  if ($runePAdjust) {
+                     // speed is inversely applied (more = slower, less = faster)
+                     $percentAdjustBase = (preg_match('/^(speed)$/i',$runeAttribName)) ? (100 - $runePAdjust) : (($runePAdjust < 0) ? (100 + $runePAdjust) : $runePAdjust);
+                  }
 
                   $percentChance = ($runePChance) ? (float)sprintf("%1.2f",$runePChance/100) : 1;
                   $percentAdjust = ($runePAdjust) ? (float)sprintf("%1.2f",$percentAdjustBase/100) : 0;

@@ -1,0 +1,34 @@
+{
+    "name": "Tower Test (Mino + Glory Build)",
+    "type": "player",
+    "weapon": {
+        "id": "minotaurs-pride",
+        "data": { "health": 364, "attack": 443, "defense": 68, "speed": 1.23, "wind.damage": 236, "water.resist": 37 },
+        "options": {
+            "level": 7
+        }
+    },
+    "shield": {
+        "id": "glory-shield",
+        "data": { "health": 1311, "attack": 78, "defense": 86, "speed": -0.40, "wind.resist": 218, "lightning.resist": 189 },
+        "options": {
+            "level": 7,
+            "enhance": 10
+        }
+    },
+    "amulet": {
+        "id": "power-of-mitar",
+        "data": { "health": 1482, "attack": 0, "defense": 126, "speed": 0, "earth.damage": 146 },
+        "options": {
+            "level": 10
+        }
+    },
+    "ring": {
+        "id": "ring-of-light",
+        "data": { "health": 813, "attack": 0, "defense": 0, "speed": 0, "lightning.damage": 75 },
+        "options": {
+            "level": 7
+        }
+    },
+    "runes": ["ban-hammer","forbidden-love","crushing-steel","dwarven-force","berserker-wrath"]
+}

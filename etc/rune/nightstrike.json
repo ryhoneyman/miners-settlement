@@ -1,6 +1,12 @@
 {
     "name": "NIGHTSTRIKE",
     "requires": "NIGHTGUARD",
+    "cost": {
+        "item": {
+            "rune-i": 1,
+            "rune-ix": 1
+        }
+    },
     "attribs": {
         "myself": {
             "speed": {

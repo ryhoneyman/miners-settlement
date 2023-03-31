@@ -1,6 +1,12 @@
 {
     "name": "DWARVEN FORCE",
     "requires": "POWER OF MITAR",
+    "cost": {
+        "item": {
+            "rune-ix": 4,
+            "rune-i": 1
+        }
+    },
     "attribs": {
         "enemy": {
             "speed": {

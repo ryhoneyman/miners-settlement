@@ -1,6 +1,12 @@
 {
     "name": "SWIFT STRIKE",
     "requires": "EYES OF MITAR",
+    "cost": {
+        "item": {
+            "rune-ix": 3,
+            "rune-iv": 1
+        }
+    },
     "attribs": {
         "myself": {
             "speed": {

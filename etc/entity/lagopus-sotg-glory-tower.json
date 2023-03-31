@@ -1,0 +1,34 @@
+{
+    "name": "Lagopus (SOTG Tower Build)",
+    "type": "player",
+    "weapon": {
+        "id": "spear-of-the-gods",
+        "data": { "health": 1109, "attack": 395, "defense": 39, "speed": 0.8, "earth.damage": 130, "lightning.resist": 189 },
+        "options": {
+            "level": 11
+        }
+    },
+    "shield": {
+        "id": "glory-shield",
+        "data": { "health": 843, "attack": 56, "defense": 58, "speed": -0.36, "wind.resist": 94, "lightning.resist": 98 },
+        "options": {
+            "level": 0,
+            "enhance": 10
+        }
+    },
+    "amulet": {
+        "id": "power-of-mitar",
+        "data": { "health": 1482, "attack": 0, "defense": 126, "speed": 0, "earth.damage": 146 },
+        "options": {
+            "level": 10
+        }
+    },
+    "ring": {
+        "id": "ring-of-light",
+        "data": { "health": 813, "attack": 0, "defense": 0, "speed": 0, "lightning.damage": 75 },
+        "options": {
+            "level": 7
+        }
+    },
+    "runes": ["deathwish","true-potential","berserker-wrath","one-shot-one-kill","dwarven-force"]
+}
