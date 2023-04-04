@@ -15,12 +15,11 @@ include_once 'common/input.class.php';
 include_once 'common/html.class.php';
 include_once 'local/constants.class.php';
 
+$main->title('Beastiary - Dungeon');
+
 $input     = new Input($main->debug);
 $html      = new HTML($main->debug);
 $constants = new Constants($main->debug);
-
-$title    = 'Beastiary';
-$subtitle = ' - Dungeon';
 
 $area = $input->get('area','alphanumeric');
 
