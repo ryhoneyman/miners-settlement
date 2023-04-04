@@ -89,7 +89,8 @@ foreach ($testResults['data'] as $attackerId => $defenderList) {
    printf("%".$testResults['aMaxLength']."s: ",$testResults['aLabels'][$attackerId]);
 
    foreach ($defenderList as $defenderId => $resultData) {
-      printf("%".strlen($testResults['dLabels'][$defenderId])."s ",$resultData['attacker']['chance.win']); 
+      $chanceGap = strlen($testResults['dLabels'][$defenderId]) - 8;
+      printf("%7d %".$chanceGap."s ",$resultData['attacker']['dps']['average'],$resultData['attacker']['chance.win']); 
    }
    print "\n";
 }
