@@ -302,17 +302,21 @@ class HTML extends Base
       return "</form>\n";
    }
 
-   public function submit($name = 'submit', $value = 'Go', $options = null)
+   public function submit($name = 'submit', $value = 'Go', $values = null)
    {
-      $this->debug(5,"name=$name, value=$value");
+      if (!is_array($values)) { $values = array(); }
 
-      $class    = ($options['class']) ? $options['class'] : 'btn-wide btn btn-primary';
-      $disabled = ($options['disabled']) ? $options['disabled'] : '';
-      $type     = ($options['type']) ? $options['type'] : 'submit';
+      $values['name']  = $name;
+      $values['value'] = $value;
+ 
+      if (!$values['type'])  { $values['type']  = 'submit'; }
+      if (!$values['class']) { $values['class'] = 'btn-wide btn btn-primary'; }
 
-      $html = "<input type=$type class='$class $disabled' id='$name' name='$name' value='$value'>\n";
+      $valueList = array();
 
-      return $html;
+      foreach ($values as $k => $v) { $valueList[] = "$k='$v'"; }
+
+      return sprintf("<input %s>",implode(' ',$valueList));
    }
 
    public function inputTextarea($name, $text='', $cols=30, $rows=5, $options = null)
