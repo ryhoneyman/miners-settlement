@@ -24,15 +24,15 @@ class Entity extends Base
 
    public function baseValue($attribName)
    {
-      $value = $this->get($attribName);
+      $value = $this->var($attribName);
 
       if (!$value && is_null($this->baseAttribs[$attribName]['innateGear'])) { $value = $this->baseAttribs[$attribName]['innateValue']; }
 
       foreach ($this->constants->gearTypes() as $gearType) {
-         $gearItem = $this->get($gearType);
+         $gearItem = $this->var($gearType);
 
          if (is_a($gearItem,'Item')) { 
-            $gearValue = $gearItem->get($attribName); 
+            $gearValue = $gearItem->var($attribName); 
 
             if (!$gearValue && $this->baseAttribs[$attribName]['innateGear'] == $gearType) { $gearValue = $this->baseAttribs[$attribName]['innateValue']; }
 
@@ -51,16 +51,16 @@ class Entity extends Base
    { 
       //$this->debug(8,"called");
 
-      if (!$this->get('healthMax')) { $this->set('healthMax',$this->baseValue('health')); }
+      if (!$this->var('healthMax')) { $this->var('healthMax',$this->baseValue('health')); }
 
-      return $this->get('healthMax'); 
+      return $this->var('healthMax'); 
    }
 
    public function health($value = null, $set = false)
    {
       //$this->debug(8,"called");
 
-      $currentHealth = $this->get('current.health');
+      $currentHealth = $this->var('current.health');
 
       $maxHealth = $this->healthMax();
 
@@ -79,30 +79,30 @@ class Entity extends Base
 
       $this->debug(9,$this->name()." current health: $currentHealth");
 
-      $this->set('current.health',$currentHealth);
+      $this->var('current.health',$currentHealth);
 
       return $currentHealth;
    }
    
-   public function id()   { return $this->get('id'); }
-   public function name() { return $this->get('name'); }
-   public function type() { return $this->get('type'); }
-   public function description() { return $this->get('description'); }
+   public function id()   { return $this->var('id'); }
+   public function name() { return $this->var('name'); }
+   public function type() { return $this->var('type'); }
+   public function description() { return $this->var('description'); }
 
    public function isMonster() { return (($this->type() == 'monster') ? true : false); }
 
    public function role($role = null) 
    { 
-      if (!is_null($role)) { $this->set('role',$role); }
+      if (!is_null($role)) { $this->var('role',$role); }
 
-      return $this->get('role'); 
+      return $this->var('role'); 
    }
 
-   public function revivable() { return (($this->isMonster() || $this->get('revived')) ? false : true); }
+   public function revivable() { return (($this->isMonster() || $this->var('revived')) ? false : true); }
 
    public function revived() { 
       $this->health(floor($this->healthMax() / 2),true);
-      $this->set('revived',true); 
+      $this->var('revived',true); 
    }
 
    public function dead() 
@@ -114,7 +114,7 @@ class Entity extends Base
 
    public function removeRunes($runeIds)
    {
-      $currentRunes = $this->get('runes');
+      $currentRunes = $this->var('runes');
 
       if (!$currentRunes)      { return null; }
       if (!is_array($runeIds)) { $runeIds = array($runeIds); }
@@ -125,12 +125,12 @@ class Entity extends Base
          unset($runeList[$runeId]);
       }
 
-      $this->set('runes',$runeList);
+      $this->var('runes',$runeList);
    }
 
    public function addRunes($runeIds)
    {
-      $currentRunes = $this->get('runes');
+      $currentRunes = $this->var('runes');
   
       if (!$currentRunes)      { $currentRunes = array(); }
       if (!is_array($runeIds)) { $runeIds = array($runeIds); }
@@ -147,7 +147,7 @@ class Entity extends Base
          $runeList[$runeId] = $rune;
       }
 
-      $this->set('runes',$runeList); 
+      $this->var('runes',$runeList); 
    }
 
    public function unequipItem($itemType)
@@ -156,7 +156,7 @@ class Entity extends Base
 
       if (!in_array($itemType,$this->constants->gearTypes())) { $this->debug(9,"unknown gear type"); return false; }
 
-      $this->set($itemType,null);
+      $this->var($itemType,null);
     
       return true;
    }
@@ -171,7 +171,7 @@ class Entity extends Base
 
       $this->debug(9,"equipping ".$item->export('json'));
 
-      $this->set($item->type(),$item);
+      $this->var($item->type(),$item);
 
       return true;
    }
@@ -182,7 +182,7 @@ class Entity extends Base
 
       if (!in_array($itemType,$this->constants->gearTypes())) { $this->debug(9,"unknown gear type"); return false; }
 
-      return ((is_a($this->get($itemType),'Item')) ? $this->get($itemType) : null);
+      return ((is_a($this->var($itemType),'Item')) ? $this->var($itemType) : null);
    }
 
    public function items($key = 'id')   
@@ -190,20 +190,20 @@ class Entity extends Base
       $itemList = array();
 
       foreach ($this->constants->gearTypes() as $gearType) {
-         $gearItem = $this->get($gearType);
+         $gearItem = $this->var($gearType);
 
-         if (is_a($gearItem,'Item')) { $itemList[$gearItem->get($key)] = $gearItem; }
+         if (is_a($gearItem,'Item')) { $itemList[$gearItem->var($key)] = $gearItem; }
       }
 
       return $itemList;
    }
 
-   public function weapon()  { return $this->get('weapon'); }
-   public function shield()  { return $this->get('shield'); }
-   public function amulet()  { return $this->get('amulet'); }
-   public function ring()    { return $this->get('ring'); }
-   public function runes()   { return $this->get('runes'); }
-   public function effects() { return $this->get('effects'); }
+   public function weapon()  { return $this->var('weapon'); }
+   public function shield()  { return $this->var('shield'); }
+   public function amulet()  { return $this->var('amulet'); }
+   public function ring()    { return $this->var('ring'); }
+   public function runes()   { return $this->var('runes'); }
+   public function effects() { return $this->var('effects'); }
 
    public function export()
    {
@@ -277,7 +277,7 @@ class Entity extends Base
          else if (preg_match('/^runes$/i',$name)) {
             $this->addRunes($value);
          }
-         else { $this->set($name,$value); }
+         else { $this->var($name,$value); }
       }
 
       // heal to max on load

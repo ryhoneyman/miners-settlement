@@ -11,9 +11,9 @@ class Rune extends Base
       parent::__construct($debug,$options);
    }
 
-   public function name()     { return $this->get('name'); }
-   public function requires() { return $this->get('requires'); }
-   public function attribs()  { return $this->get('attribs'); }
+   public function name()     { return $this->var('name'); }
+   public function requires() { return $this->var('requires'); }
+   public function attribs()  { return $this->var('attribs'); }
 
    public function load($runeName)
    {
@@ -28,7 +28,7 @@ class Rune extends Base
 
       if ($this->is_json($info)) { $info = json_decode($info,true); }
 
-      if (is_array($info)) { foreach ($info as $name => $value) { $this->set($name,$value); } }
+      if (is_array($info)) { foreach ($info as $name => $value) { $this->var($name,$value); } }
 
       return true;
    }

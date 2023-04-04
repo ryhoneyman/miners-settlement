@@ -17,65 +17,65 @@ class Item extends Base
       $this->constants = new Constants($debug);
    }
 
-   public function id()          { return $this->get('id'); }
-   public function name()        { return $this->get('name'); }
-   public function type()        { return $this->get('type'); }
-   public function level()       { return $this->get('level'); }
-   public function description() { return $this->get('description'); }
-   public function image()       { return $this->get('image'); }
+   public function id()          { return $this->var('id'); }
+   public function name()        { return $this->var('name'); }
+   public function type()        { return $this->var('type'); }
+   public function level()       { return $this->var('level'); }
+   public function description() { return $this->var('description'); }
+   public function image()       { return $this->var('image'); }
 
-   public function health()  { return $this->get('health'); }
-   public function attack()  { return $this->get('attack'); }
-   public function defense() { return $this->get('defense'); }
-   public function speed()   { return $this->get('speed'); }
+   public function health()  { return $this->var('health'); }
+   public function attack()  { return $this->var('attack'); }
+   public function defense() { return $this->var('defense'); }
+   public function speed()   { return $this->var('speed'); }
 
-   public function damageFire()      { return $this->get('fire.damage'); }
-   public function damageEarth()     { return $this->get('earth.damage'); }
-   public function damageLightning() { return $this->get('lightning.damage'); }
-   public function damageWind()      { return $this->get('wind.damage'); }
-   public function damageWater()     { return $this->get('water.damage'); }
+   public function damageFire()      { return $this->var('fire.damage'); }
+   public function damageEarth()     { return $this->var('earth.damage'); }
+   public function damageLightning() { return $this->var('lightning.damage'); }
+   public function damageWind()      { return $this->var('wind.damage'); }
+   public function damageWater()     { return $this->var('water.damage'); }
 
-   public function resistFire()      { return $this->get('fire.resist'); }
-   public function resistEarth()     { return $this->get('earth.resist'); }
-   public function resistLightning() { return $this->get('lightning.resist'); }
-   public function resistWind()      { return $this->get('wind.resist'); }
-   public function resistWater()     { return $this->get('water.resist'); }
+   public function resistFire()      { return $this->var('fire.resist'); }
+   public function resistEarth()     { return $this->var('earth.resist'); }
+   public function resistLightning() { return $this->var('lightning.resist'); }
+   public function resistWind()      { return $this->var('wind.resist'); }
+   public function resistWater()     { return $this->var('water.resist'); }
 
-   public function healthMax()  { return $this->get('health.max'); }
-   public function attackMax()  { return $this->get('attack.max'); }
-   public function defenseMax() { return $this->get('defense.max'); }
-   public function speedMax()   { return $this->get('speed.max'); }
+   public function healthMax()  { return $this->var('health.max'); }
+   public function attackMax()  { return $this->var('attack.max'); }
+   public function defenseMax() { return $this->var('defense.max'); }
+   public function speedMax()   { return $this->var('speed.max'); }
 
-   public function damageFireMax()      { return $this->get('fire.damage.max'); }
-   public function damageEarthMax()     { return $this->get('earth.damage.max'); }
-   public function damageLightningMax() { return $this->get('lightning.damage.max'); }
-   public function damageWindMax()      { return $this->get('wind.damage.max'); }
-   public function damageWaterMax()     { return $this->get('water.damage.max'); }
+   public function damageFireMax()      { return $this->var('fire.damage.max'); }
+   public function damageEarthMax()     { return $this->var('earth.damage.max'); }
+   public function damageLightningMax() { return $this->var('lightning.damage.max'); }
+   public function damageWindMax()      { return $this->var('wind.damage.max'); }
+   public function damageWaterMax()     { return $this->var('water.damage.max'); }
 
-   public function resistFireMax()      { return $this->get('fire.resist.max'); }
-   public function resistEarthMax()     { return $this->get('earth.resist.max'); }
-   public function resistLightningMax() { return $this->get('lightning.resist.max'); }
-   public function resistWindMax()      { return $this->get('wind.resist.max'); }
-   public function resistWaterMax()     { return $this->get('water.resist.max'); }
+   public function resistFireMax()      { return $this->var('fire.resist.max'); }
+   public function resistEarthMax()     { return $this->var('earth.resist.max'); }
+   public function resistLightningMax() { return $this->var('lightning.resist.max'); }
+   public function resistWindMax()      { return $this->var('wind.resist.max'); }
+   public function resistWaterMax()     { return $this->var('water.resist.max'); }
 
-   public function healthMin()  { return $this->get('health.min'); }
-   public function attackMin()  { return $this->get('attack.min'); }
-   public function defenseMin() { return $this->get('defense.min'); }
-   public function speedMin()   { return $this->get('speed.min'); }
+   public function healthMin()  { return $this->var('health.min'); }
+   public function attackMin()  { return $this->var('attack.min'); }
+   public function defenseMin() { return $this->var('defense.min'); }
+   public function speedMin()   { return $this->var('speed.min'); }
 
-   public function damageFireMin()      { return $this->get('fire.damage.min'); }
-   public function damageEarthMin()     { return $this->get('earth.damage.min'); }
-   public function damageLightningMin() { return $this->get('lightning.damage.min'); }
-   public function damageWindMin()      { return $this->get('wind.damage.min'); }
-   public function damageWaterMin()     { return $this->get('water.damage.min'); }
+   public function damageFireMin()      { return $this->var('fire.damage.min'); }
+   public function damageEarthMin()     { return $this->var('earth.damage.min'); }
+   public function damageLightningMin() { return $this->var('lightning.damage.min'); }
+   public function damageWindMin()      { return $this->var('wind.damage.min'); }
+   public function damageWaterMin()     { return $this->var('water.damage.min'); }
 
-   public function resistFireMin()      { return $this->get('fire.resist.min'); }
-   public function resistEarthMin()     { return $this->get('earth.resist.min'); }
-   public function resistLightningMin() { return $this->get('lightning.resist.min'); }
-   public function resistWindMin()      { return $this->get('wind.resist.min'); }
-   public function resistWaterMin()     { return $this->get('water.resist.min'); }
+   public function resistFireMin()      { return $this->var('fire.resist.min'); }
+   public function resistEarthMin()     { return $this->var('earth.resist.min'); }
+   public function resistLightningMin() { return $this->var('lightning.resist.min'); }
+   public function resistWindMin()      { return $this->var('wind.resist.min'); }
+   public function resistWaterMin()     { return $this->var('water.resist.min'); }
 
-   public function runes() { return $this->get('runes'); }
+   public function runes() { return $this->var('runes'); }
 
    public function enhance($level)
    {
@@ -99,7 +99,7 @@ class Item extends Base
       foreach ($this->constants->attribs() as $attribName => $attribInfo) {
          if (!$attribInfo['enhance']['percent']) { continue; }
 
-         $currentValue = $this->get($attribName);
+         $currentValue = $this->var($attribName);
 
          // we don't adjust attributes that are not present on the item
          if (!$currentValue) { continue; }
@@ -113,10 +113,10 @@ class Item extends Base
 
          $this->debug(9,"  $attribName: $currentValue -> $adjustedValue");
 
-         $this->set($attribName,$adjustedValue);
+         $this->var($attribName,$adjustedValue);
       }
 
-      $this->set('level',$level);
+      $this->var('level',$level);
 
       return true;
    }
@@ -141,9 +141,9 @@ class Item extends Base
       $this->debug(9,'Building item ['.$this->name().'] options:'.json_encode($options));
 
       foreach ($this->constants->attribs() as $attribName => $attribInfo) {
-         if (array_key_exists("$attribName.min",$this->data) && array_key_exists("$attribName.max",$this->data)) {
-            $minValue    = $this->get("$attribName.min");
-            $maxValue    = $this->get("$attribName.max");
+         if (array_key_exists("$attribName.min",$this->vars) && array_key_exists("$attribName.max",$this->vars)) {
+            $minValue    = $this->var("$attribName.min");
+            $maxValue    = $this->var("$attribName.max");
             $maxEValue   = $maxValue * 2.2;  
 
             if ($godRoll) { $values[$attribName] = $maxValue; }
@@ -154,11 +154,11 @@ class Item extends Base
 
             $this->debug(9,"Generate: $attribName = $attribValue ".((is_null($givenValue)) ? "(random $minValue ~ $maxValue)" : ''));
             
-            $this->set($attribName,$attribValue);
+            $this->var($attribName,$attribValue);
          }
       }
 
-      $this->set('level',"$level");
+      $this->var('level',"$level");
 
       if ($enhance) { $this->enhance($enhance); }
    }
@@ -194,12 +194,12 @@ class Item extends Base
       );
 
       foreach ($this->constants->primaryAttribs() as $attribName) {
-         $data[$attribName] = $this->get($attribName);
+         $data[$attribName] = $this->var($attribName);
       }
 
       foreach ($this->constants->elements() as $element) {
-         if ($this->data["$element.damage"]) { $data["$element.damage"] = $this->get("$element.damage"); }
-         if ($this->data["$element.resist"]) { $data["$element.resist"] = $this->get("$element.resist"); }
+         if ($this->var("$element.damage")) { $data["$element.damage"] = $this->var("$element.damage"); }
+         if ($this->var("$element.resist")) { $data["$element.resist"] = $this->var("$element.resist"); }
       }
 
       return (($encoding == 'json') ? json_encode($data,JSON_UNESCAPED_SLASHES) : $data);
@@ -251,7 +251,7 @@ class Item extends Base
 
       if (!is_array($itemInfo)) { $this->debug(7,"invalid info info provided"); return false; }
 
-      foreach ($itemInfo as $name => $value) { $this->set($name,$value); } 
+      foreach ($itemInfo as $name => $value) { $this->var($name,$value); } 
 
       return true;
    }

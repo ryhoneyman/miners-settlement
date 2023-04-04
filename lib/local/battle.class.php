@@ -53,8 +53,8 @@ class Battle extends Base
 
             if ($this->battleInfo['timer']['battle'] == 0) { 
                foreach ($this->constants->gearTypes() as $gearType) {
-                  if (is_a($this->entityList['attacker']->get($gearType),'Item')) {
-                     $this->debug(9,$this->entityList['attacker']->get($gearType)->display());
+                  if (is_a($this->entityList['attacker']->var($gearType),'Item')) {
+                     $this->debug(9,$this->entityList['attacker']->var($gearType)->display());
                   }
                }
                $this->debug(7,"ATTACKER BATTLEINFO: ".json_encode($this->battleInfo['attacker'],JSON_UNESCAPED_SLASHES));
@@ -225,7 +225,7 @@ class Battle extends Base
             }
          }
 
-         $roleEffects   = $this->get("$role.effects");
+         $roleEffects   = $this->var("$role.effects");
          $entityEffects = ($roleEffects) ? $roleEffects : array();
 
          if (!array_key_exists('myself',$entityEffects)) { $entityEffects['myself'] = array(); }
@@ -463,9 +463,9 @@ class Battle extends Base
             }
          }
 
-         $entity->set('effects',$currentEffects);
+         $entity->var('effects',$currentEffects);
 
-         $this->set("$role.effects",$processedEffects);
+         $this->var("$role.effects",$processedEffects);
       }
 
       return true;
