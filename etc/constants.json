@@ -110,7 +110,7 @@
         "health": {"innateGear": null, "innateValue": 500}
     },
     "primaryAttribs": ["health","attack","defense","speed"],
-    "gearTypes": ["weapon","shield","amulet","ring"],
+    "gearTypes": ["weapon","shield","amulet","ring","weapon.skin","shield.skin"],
     "elements": ["fire","earth","wind","water","lightning"],
     "attribs": {
         "health": {
