@@ -48,7 +48,7 @@ function dataDisplay($main)
 function areaDisplay($main, $areaName, $areaPosts)
 {
    $return = '<div class="row">'.
-             '<div class="col-12 col-xl-9 col-lg-9 col-md-10 col-sm-12">'.
+             '<div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">'.
              '<div class="card card-outline card-success">'.
              '<div class="card-header"><b class="text-xl">'.$areaName.'</b></div>'.
              '<div class="card-body">'.
@@ -73,18 +73,19 @@ function runepostDisplay($main, $postName, $postInfo)
              '<div class="card card-outline card-warning">'.
              '<div class="card-header"><b class="text-lg">'.$postName.'</b></div>'.
              '<div class="card-body">'.
-             '<table border=0 cellpadding=10>'.
-             '<tr class="text-yellow"><th>Name</th><th>Gear</th><th>Effects</th><th>Required Runes</th></tr>';
+             '<table class="table table-striped table-hover" border=0 cellpadding=10>'.
+             '<thead><tr class="text-yellow"><th>Name</th><th>Gear</th><th>Effects</th><th>Required Runes</th></tr></thead><tbody>';
 
    $runeList = $main->var('runeList');
    $gearInfo = $main->var('gearInfo');
 
    foreach ($postInfo as $entryId => $entryInfo) {
+      $runewordName  = $entryInfo['label'];
       $entryCost     = json_decode($entryInfo['cost'],true);
       $entryAttrib   = json_decode($entryInfo['attributes'],true);
       $itemLabel     = $gearInfo[$entryInfo['item_id']]['label'] ?: 'None';
       $itemImage     = $gearInfo[$entryInfo['item_id']]['image'];
-      $itemInsert    = ($itemImage) ? sprintf("<img src='%s' height=50 data-toggle='tooltip' title='%s'>",$itemImage,$itemLabel) : $itemLabel;
+      $itemInsert    = ($itemImage) ? sprintf("<img src='%s' height=50 data-toggle='tooltip' title='%s'> <span class='text-green'>$itemLabel</span>",$itemImage,$itemLabel) : $itemLabel;
       $requiredRunes = array();
       $runeEffects   = '';
 
@@ -102,10 +103,10 @@ function runepostDisplay($main, $postName, $postInfo)
          $runeEffects = '<code style="color:#aaaaaa;">'.$main->obj('format')->effects($entryAttrib,true).'</code>'; 
       }
 
-      $return .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$entryInfo['label'],$itemInsert,$runeEffects,implode('',$requiredRunes));
+      $return .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$runewordName,$itemInsert,$runeEffects,implode('',$requiredRunes));
    }
 
-   $return .= '</table>'.
+   $return .= '</tbody></table>'.
               '</div>'.
               '</div>'.
               '</div>';
