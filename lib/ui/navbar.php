@@ -1,4 +1,4 @@
-<nav class="main-header navbar navbar-expand navbar-light navbar-light">
+<nav class="main-header navbar navbar-expand navbar-dark">
    <!-- Left navbar links -->
    <ul class="navbar-nav">
       <li class="nav-item">
@@ -9,9 +9,9 @@
       </li>
    </ul>
    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-         <!--<a class="nav-link" href="/profile" role="button">
-            <i class="fas fa-user"></i>-->
-         </a>
+      <!--<li class="nav-item">
+         <a class="nav-link" href="/profile" role="button">
+            <i class="fas fa-user"></i>
+         </a>-->
    </ul>
 </nav>

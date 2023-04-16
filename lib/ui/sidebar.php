@@ -23,6 +23,15 @@
             </li>
 -->
 
+            <li class="nav-header"><b>RUNES</b></li>
+
+            <li class="nav-item">
+               <a href="/runepost" class="nav-link<?php if (preg_match('~^/runepost~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
+                  <i class="nav-icon fal fa-sign"></i>
+                  <p> Runeposts </p>
+               </a>
+            </li>
+
             <li class="nav-header"><b>ITEMS</b></li>
 
             <li class="nav-item">
