@@ -59,9 +59,24 @@ include 'ui/header.php';
 
    <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
       <div class="info-box">
-         <span class="info-box-icon bg-green elevation-1"><a href="/item/analytics"><i class="fas fa-analytics" aria-hidden="true"></i></a></span>
+         <span class="info-box-icon bg-primary elevation-1"><a href="/item/gear/list"><i class="fas fa-sword" aria-hidden="true"></i></a></span>
          <div class="ribbon-wrapper">
             <div class="ribbon bg-danger">NEW</div>
+         </div>
+         <div class="info-box-content">
+            <span class="info-box-text"> <a href="/item/gear/list"><b>Gear List</b></a></span>
+            <span class="info-box-number" style="font-weight:normal;">
+               Examine gear attribute ranges
+            </span>
+         </div>
+      </div>
+   </div>
+
+   <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
+      <div class="info-box">
+         <span class="info-box-icon bg-green elevation-1"><a href="/item/analytics"><i class="fas fa-analytics" aria-hidden="true"></i></a></span>
+         <div class="ribbon-wrapper">
+            <div class="ribbon bg-warning">POPULAR</div>
          </div>
          <div class="info-box-content">
             <span class="info-box-text"> <a href="/item/analytics"><b>Item Analytics</b></a></span>
