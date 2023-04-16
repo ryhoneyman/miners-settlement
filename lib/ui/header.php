@@ -11,7 +11,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 
-  <title><?php echo 'Miners Tools: '.$title.' '.$subtitle; ?></title>
+  <title><?php print 'Miners Tools: '.$main->title(); ?></title>
 <!-- REQUIRED SCRIPTS -->
 <!-- jQuery -->
 <script src="/assets/alte/current/plugins/jquery/jquery.min.js"></script>
@@ -25,6 +25,8 @@
 <script src="/assets/alte/current/plugins/toastr/toastr.min.js" type="text/javascript"></script>
 <!-- Font Awesome Icons -->
 <script src="https://kit.fontawesome.com/a73a4c549e.js" crossorigin="anonymous"></script>
+<!-- local js -->
+<script src="/assets/js/ms.js" type="text/javascript"></script>
 <!-- local css -->
 <link rel="stylesheet" href="/assets/css/ms.css">
 <!-- overlayScrollbars -->
@@ -45,21 +47,29 @@
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
 
-<body class="hold-transition sidebar-mini sidebar-collapse">
+<body class="dark-mode hold-transition sidebar-mini sidebar-collapse">
 <div class="wrapper">
   <!-- Navbar -->
 <?php include("ui/navbar.php"); ?>
 
-  <!-- /.navbar -->
+<!-- Main Sidebar Container -->
+<?php include("ui/sidebar.php"); ?>
 
-  <!-- Main Sidebar Container -->
-  <?php include("ui/sidebar.php"); ?>
-
-  <!-- Content Wrapper. Contains page content -->
-<?php include("ui/titlebar.php"); ?>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-    <section class="content">
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+   <!-- Content Header (Page header) -->
+   <div class="content-header">
       <div class="container-fluid">
+         <div class="row mb-2">
+            <div class="col-12">
+               <h1 class="m-0 text-dark"><?php print $main->title(); ?></h1>
+               <hr>
+            </div><!-- /.col -->
+         </div> <!-- /.row -->
+      </div><!-- /.container-fluid -->
+   </div><!-- /.container-header -->
+
+ <!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
 
