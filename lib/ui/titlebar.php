@@ -4,7 +4,7 @@
       <div class="container-fluid">
          <div class="row mb-2">
             <div class="col-12">
-               <h1 class="m-0 text-dark"><?php echo $title.' '.$subtitle; ?></h1>
+               <h1 class="m-0 text-dark"><?php print $main->title(); ?></h1>
                <hr>
             </div><!-- /.col -->
       </div><!-- /.row -->
