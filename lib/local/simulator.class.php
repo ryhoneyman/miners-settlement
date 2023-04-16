@@ -181,18 +181,28 @@ class Simulator extends Base
          $output .= sprintf("%s%s\n------------------------------------------------\n",
                             $results[$role]['name'],(($results[$role]['description']) ? ' ('.$results[$role]['description'].')' : ''));
 
+         // Find maximum type length
+         $maxTypeLength = 0;
+         foreach ($this->gearTypes as $gearType) {
+            $typeLength  = strlen($gearType);
+            if ($typeLength > $maxTypeLength) { $maxTypeLength = $typeLength; }
+         }
+         $maxTypeLength += 2;
+
+
          if ($results[$role]['type'] == 'player') {
             foreach ($this->gearTypes as $gearType) {
                $typeLength  = strlen($gearType);
-               $dotCount    = 8 - $typeLength;
-               $typeDisplay = sprintf("%s%s:",ucfirst($gearType),str_repeat('.',$dotCount));
+               $dotCount    = $maxTypeLength - $typeLength;
+               $typeDisplay = sprintf("%s%s:",ucwords(str_replace('.',' ',$gearType)),str_repeat('.',$dotCount));
 
                $output .= sprintf("%s %s\n",$typeDisplay,$this->formatItem($results[$role]['gear'][$gearType]));
             }
          }
 
          if (is_array($results[$role]['gear']['runes'])) {
-            $output .= sprintf("Runes...: %s\n\n",implode(', ',array_map('strtoupper',$results[$role]['gear']['runes'])));
+            $dotCount    = $maxTypeLength - strlen('Runes');
+            $output .= sprintf("%s%s: %s\n\n",'Runes',str_repeat('.',$dotCount),implode(', ',array_map('strtoupper',$results[$role]['gear']['runes'])));
          }
 
          $effectList = $results[$role]['effects'];
@@ -290,17 +300,27 @@ class Simulator extends Base
       foreach (array('attacker','defender') as $role) {
          $output .= sprintf("%s%s\n------------------------------------------------\n",
                             $results[$role]['name'],(($results[$role]['description']) ? ' ('.$results[$role]['description'].')' : ''));
+
+         // Find maximum type length
+         $maxTypeLength = 0;
+         foreach ($this->gearTypes as $gearType) {
+            $typeLength  = strlen($gearType);
+            if ($typeLength > $maxTypeLength) { $maxTypeLength = $typeLength; }
+         }
+
+         print "max: $maxTypeLength\n";
      
          foreach ($this->gearTypes as $gearType) {
             $typeLength  = strlen($gearType);
-            $dotCount    = 8 - $typeLength;
-            $typeDisplay = sprintf("%s%s:",ucfirst($gearType),str_repeat('.',$dotCount));
+            $dotCount    = $maxTypeLength - $typeLength;
+            $typeDisplay = sprintf("%s%s:",ucwords(str_replace('.',' ',$gearType)),str_repeat('.',$dotCount));
 
             $output .= sprintf("%s%s\n",$typeDisplay,$this->formatItem($results[$role]['gear'][$gearType]));
          }
 
          if (is_array($results[$role]['gear']['runes'])) {
-            $output .= sprintf("Runes...: %s\n\n",implode(', ',array_map('strtoupper',$results[$role]['gear']['runes'])));
+            $dotCount    = $maxTypeLength - strlen('Runes');
+            $output .= sprintf("%s%s: %s\n\n",'Runes',$dotCount,implode(', ',array_map('strtoupper',$results[$role]['gear']['runes'])));
          }
 
          $output .= sprintf("Effective Power: %s\n\n\n",$this->formatAttribs($results['effective'][$role]));
@@ -330,7 +350,7 @@ class Simulator extends Base
    {
       if (is_null($itemInfo)) { return 'NONE'; }
 
-      $output = sprintf("%s %s%s | ",$typeDisplay,(($itemInfo['level'] > 0) ? '+'.$itemInfo['level'].' ' : ''),$itemInfo['name'],$itemInfo['type']);
+      $output = sprintf("%s%s | ",(($itemInfo['level'] > 0) ? '+'.$itemInfo['level'].' ' : ''),$itemInfo['name'],$itemInfo['type']);
 
       $output .= $this->formatAttribs($itemInfo);
 

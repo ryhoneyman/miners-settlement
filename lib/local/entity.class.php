@@ -198,12 +198,13 @@ class Entity extends Base
       return $itemList;
    }
 
-   public function weapon()  { return $this->var('weapon'); }
-   public function shield()  { return $this->var('shield'); }
-   public function amulet()  { return $this->var('amulet'); }
-   public function ring()    { return $this->var('ring'); }
-   public function runes()   { return $this->var('runes'); }
-   public function effects() { return $this->var('effects'); }
+   public function weapon()    { return $this->var('weapon'); }
+   public function shield()    { return $this->var('shield'); }
+   public function amulet()    { return $this->var('amulet'); }
+   public function ring()      { return $this->var('ring'); }
+   public function runes()     { return $this->var('runes'); }
+   public function skin($type) { return $this->var("$type.skin"); }
+   public function effects()   { return $this->var('effects'); }
 
    public function export()
    {
@@ -246,6 +247,8 @@ class Entity extends Base
 
       if (!is_array($entityInfo)) { $this->debug(7,"invalid entity info provided"); return false; }
 
+      $gearTypes = $this->constants->gearTypes();
+
       // clear out any existing data
       $this->data = array();
 
@@ -263,7 +266,7 @@ class Entity extends Base
                $this->equipItem($itemId,$itemData,$itemOptions);
             }
          }
-         else if (preg_match('/^(weapon|amulet|ring|shield)$/i',$name,$match)) {
+         else if (preg_match('/^('.implode('|',$gearTypes).')$/i',$name,$match)) {
             $itemType     = $name;
             $itemId       = $value['id'];
             $itemData     = $value['data'] ?: null;
