@@ -11,7 +11,6 @@ include 'ui/header.php';
 ?>
 
 <div class="row">
-
 <!--
    <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
       <div class="info-box">
@@ -43,6 +42,20 @@ include 'ui/header.php';
       </div>
    </div>
 -->
+   <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
+      <div class="info-box">
+         <span class="info-box-icon bg-green elevation-1"><a href="/runepost"><i class="fas fa-sign" aria-hidden="true"></i></a></span>
+         <div class="ribbon-wrapper">
+            <div class="ribbon bg-danger">NEW</div>
+         </div>
+         <div class="info-box-content">
+            <span class="info-box-text"> <a href="/runepost"><b>Runeposts</b></a></span>
+            <span class="info-box-number" style="font-weight:normal;">
+               Find rune words at runeposts for items
+            </span>
+         </div>
+      </div>
+   </div>
 
    <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
       <div class="info-box">
