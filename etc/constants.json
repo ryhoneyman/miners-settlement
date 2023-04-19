@@ -86,6 +86,46 @@
             "critical.hit": {
                 "format": "%d%% CHANCE FOR %d%% CRITICAL HIT",
                 "vars": ["percent.chance","percent.adjust"]
+            },
+            "fire.damage": {
+                "format": "FIRE DAMAGE: %d",
+                "vars": ["flat.adjust"]
+            },
+            "earth.damage": {
+                "format": "EARTH DAMAGE: %d",
+                "vars": ["flat.adjust"]
+            },
+            "wind.damage": {
+                "format": "WIND DAMAGE: %d",
+                "vars": ["flat.adjust"]
+            },
+            "water.damage": {
+                "format": "WATER DAMAGE: %d",
+                "vars": ["flat.adjust"]
+            },
+            "lightning.damage": {
+                "format": "LIGHTNING DAMAGE: %d",
+                "vars": ["flat.adjust"]
+            },
+            "fire.resist": {
+                "format": "FIRE RESIST: %d",
+                "vars": ["flat.adjust"]
+            },
+            "earth.resist": {
+                "format": "EARTH RESIST: %d",
+                "vars": ["flat.adjust"]
+            },
+            "wind.resist": {
+                "format": "WIND RESIST: %d",
+                "vars": ["flat.adjust"]
+            },
+            "water.resist": {
+                "format": "WATER RESIST: %d",
+                "vars": ["flat.adjust"]
+            },
+            "lightning.resist": {
+                "format": "LIGHTNING RESIST: %d",
+                "vars": ["flat.adjust"]
             }
         },
         "enemy": {
