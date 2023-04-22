@@ -38,6 +38,13 @@ function dataDisplay($main)
    $main->var('runeList',getRunes($main));
    $main->var('gearInfo',getSupportingGearInfo($main));
 
+   $areaNav = array();
+   foreach (array_keys($main->var('runewordList')) as $areaName) {
+      $areaNav[] = sprintf("<a href='#area-%s' class='text-green'>%s</a>",strtolower(preg_replace('/\W/','-',$areaName)),$areaName);
+   }
+
+   print '<div class="mb-4">'.implode(" | ",$areaNav).'</div>';
+
    foreach ($main->var('runewordList') as $areaName => $areaPosts) {
       $return .= areaDisplay($main,$areaName,$areaPosts);
    }
@@ -50,7 +57,9 @@ function areaDisplay($main, $areaName, $areaPosts)
    $return = '<div class="row">'.
              '<div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">'.
              '<div class="card card-outline card-success">'.
-             '<div class="card-header"><b class="text-xl">'.$areaName.'</b></div>'.
+             '<div class="card-header"><b class="text-xl" id="area-'.strtolower(preg_replace('/\W/','-',$areaName)).'">'.$areaName.'</b>'.
+             '<div class="card-tools"><a href="#"><button type="button" class="btn btn-tool"><i class="fas fa-arrow-alt-up"></i></button></a></div>'.
+             '</div>'.
              '<div class="card-body">'.
              '<div class="row">';
 
