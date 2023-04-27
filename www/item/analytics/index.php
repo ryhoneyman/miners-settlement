@@ -3,8 +3,8 @@ include_once 'miners-settlement-init.php';
 include_once 'local/minersmain.class.php';
 
 $main = new MinersMain(array(
-   'debugLevel'     => 9,
-   'errorReporting' => true,
+   'debugLevel'     => 0,
+   'errorReporting' => false,
    'sessionStart'   => true,
    'memoryLimit'    => null,
    'sendHeaders'    => true,
@@ -89,6 +89,8 @@ else if ($randomRoll) { $itemInput = randomItemValues($selectedItem); }
 if (preg_match('/,/',$itemInput['speed'])) { $itemInput['speed'] = str_replace(',','.',$itemInput['speed']); }
 
 $itemInfo = buildItemInfo($itemBase,$itemInput);  // Info is the raw + user data + validity
+
+@file_put_contents('/tmp/ia.debug.json',json_encode(array('post' => $_POST, 'get' => $_GET, 'server' => $_SERVER, 'selectedItem' => $selectedItem, 'itemBase' => $itemBase, 'itemInfo' => $itemInfo),JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
 
 if ($selectedItem && $calculate) {
    $inputErrors = validateItemInput($itemInfo,$itemInput);
