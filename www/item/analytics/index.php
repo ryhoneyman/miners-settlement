@@ -566,10 +566,10 @@ function buildItemInfo($itemInfo, $itemInput)
 
       if (!is_null($return[$attribName]['value'])) {
          if ($attribList[$attribName]['reversed']) {
-            if ($attribValue > $attribMin || $attribValue < $attribEMax) { $isValid = false; }
+            if ($attribValue > $levelMin || $attribValue < $levelMax) { $isValid = false; }
          }
          else {
-            if ($attribValue < $attribMin || $attribValue > $attribEMax) { $isValid = false; }
+            if ($attribValue < $levelMin || $attribValue > $levelMax) { $isValid = false; }
          }
       }
 
