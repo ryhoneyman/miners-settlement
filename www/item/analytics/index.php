@@ -13,14 +13,13 @@ $main = new MinersMain(array(
    'html'           => true,
 ));
 
-include_once 'local/constants.class.php';
-include_once 'local/item.class.php';
-
 $main->title('Item Analytics');
 
-$input     = $main->obj('input');
-$html      = $main->obj('html');
-$constants = new Constants($main->debug);
+$input = $main->obj('input');
+$html  = $main->obj('html');
+
+$main->buildClass('constants','Constants',null,'local/constants.class.php');
+$main->buildClass('item','Item',null,'local/item.class.php');
 
 $selectedItem = $input->get('item','alphanumeric,dash');
 $player       = $input->get('player','alphanumeric,dot,dash,underscore,space');
@@ -47,37 +46,17 @@ if ($itemUID) {
    }
 }
 
-$itemList = getItems();
-
-foreach ($itemList as $itemName => $itemInfo) {
-   $itemId = $dbItems[$itemInfo['requires']]['id'];
-   $data[] = array($itemName,$itemInfo['name'],$itemInfo['description'],$itemId,json_encode($itemInfo['cost']),json_encode($itemInfo['attribs']),$itemInfo['location']);
-}
-
-/*
-$itemList = getRunes();
-
-
-$dbItems = $db->query("select label,id from item");
-
-$statement = "insert into runeword values (NULL,?,?,?,?,?,?,?,now(),now(),1)";
-$types     = "sssissi";
-$data      = array();
-
-var_dump("<pre>",$data); exit;
-
-//$result = $db->bindExecute($statement,$types,$data);
-//var_dump(json_encode($result),$db->error()); exit;
-*/
-
+$itemList = getGear($main);
 $itemBase = $itemList[$selectedItem] ?: null;     // Base is the raw data for the item
+
+$main->var('itemList',$itemList);
 
 // Build the pulldown list of items
 $selectItem = array();
 foreach ($itemList as $itemId => $itemData) { 
    $selectItem[ucwords(str_replace('.',' ',$itemData['type']))][$itemId] = $itemData['name']; 
 }
-asort($selectItem);
+ksort($selectItem);
 
 // If there was no input and Calculate was pressed, just do a random roll.
 if (!$itemInput && $calculate) { $randomRoll = true; }
@@ -193,16 +172,18 @@ include 'ui/header.php';
           ?>
           </div>
       </div>
+<!--
       <div class="card card-outline card-secondary">
           <div class="card-header"><b>Item Overall</b></div>
           <div class="card-body">
           <?php
              if ($itemValid) {
-                print itemInputOverall($selectedItem,$itemBase,$itemInfo);
+                //print itemInputOverall($selectedItem,$itemBase,$itemInfo);
              }
           ?>
           </div>
       </div>
+-->
    </div>
 </div>
 <div class="row">
@@ -228,17 +209,18 @@ print "<script>window.history.replaceState(null, null, window.location.pathname)
 
 function itemResultsDisplay($selectedItem, $itemInput)
 {
-   global $main, $constants;
+   global $main;
 
-   $item = new Item($main->debug);
+   $itemList = $main->var('itemList');
+   $item     = $main->obj('item');
 
-   $item->load($selectedItem);
+   $item->import($itemList[$selectedItem]);
 
    $item->generate($itemInput,array('level' => $itemInput['level']));
 
    $return = "<div class='row'>";
 
-   for ($level = 0; $level <= $constants->maxEnhanceLevel(); $level++) {
+   for ($level = 0; $level <= $main->obj('constants')->maxEnhanceLevel(); $level++) {
       $item->enhance(0);
       $item->enhance($level);
       $return .= "<div class='card col-9 col-xl-3 col-lg-4 col-md-6 col-sm-9'>".itemDisplay($item)."</div>";
@@ -251,8 +233,6 @@ function itemResultsDisplay($selectedItem, $itemInput)
 
 function itemDisplay($item)
 {
-   global $constants;
-
    $itemStats = $item->export();
 
    if (!$itemStats) { return ''; }
@@ -280,17 +260,17 @@ function itemDisplay($item)
 
 function itemInputOverall($itemId, $itemBase, $itemInfo)
 {
-   global $constants;
+   global $main;
 
    if (!$itemInfo) { return ''; }
 
    $return = "";
 
-   $percentColors = $constants->percentColors();
+   $percentColors = $main->obj('constants')->percentColors();
 
    $weights = json_decode(file_get_contents(APP_CONFIGDIR.'/weights.json'),true);
 
-   $attribList = $constants->attribs();
+   $attribList = $main->obj('constants')->attribs();
    $itemType   = $itemBase['type'];
 
    $finalStat   = 0;
@@ -349,16 +329,16 @@ function itemInputOverall($itemId, $itemBase, $itemInfo)
 
 function itemInputQuality($itemInfo)
 {
-   global $constants;
+   global $main;
 
    if (!$itemInfo) { return ''; }
 
    $return = "";
 
-   $percentColors = $constants->percentColors();
+   $percentColors = $main->obj('constants')->percentColors();
 
    foreach ($itemInfo as $attribName => $attribInfo) {
-      if ($attribName == 'level' || !$attribInfo['value']) { continue; }
+      if ($attribName == 'level' || !isset($attribInfo['value'])) { continue; }
 
       $attribLabel  = $attribInfo['label'];
       $levelPercent = sprintf("%d",$attribInfo['level.percent']);
@@ -377,11 +357,13 @@ function itemInputQuality($itemInfo)
 
 function itemInputDisplay($itemInfo, $itemInput, $inputErrors)
 {
-   global $constants, $html;
+   global $main;
+
+   $html = $main->obj('html');
 
    if (!$itemInfo) { return ''; }
 
-   $attribList = $constants->attribs();
+   $attribList = $main->obj('constants')->attribs();
 
    $inputOptions  = array('params' => array('class' => 'form-control'));
    $attribOptions = $inputOptions;
@@ -392,7 +374,7 @@ function itemInputDisplay($itemInfo, $itemInput, $inputErrors)
              "<tr>".
              "<td class='ia-input-line'><b>Level</b></td>".
              "<td><div class='input-group input-group-sm'>".$html->inputText("item_level",$itemInput["level"],10,8,$attribOptions)."</div></td>".
-             "<td class='ia-input-line'>(0-".$constants->maxEnhanceLevel().")</td>".
+             "<td class='ia-input-line'>(0-".$main->obj('constants')->maxEnhanceLevel().")</td>".
              "</tr>";
 
    foreach ($itemInfo as $attribName => $attribInfo) {
@@ -445,16 +427,16 @@ function itemRangeDisplay($itemInfo)
 
 function itemDisplayElements($itemInfo, $limit = null, $options = null)
 {
-   global $constants;
+   global $main;
 
    $limit = (is_null($limit)) ? '' : ".$limit";
 
    $background = $options['background'] ?: '#6f4e37';
 
-   $elementDisplay = $constants->elementDisplay();
+   $elementDisplay = $main->obj('constants')->elementDisplay();
 
    $itemElements = array();
-   foreach ($constants->elements() as $element) {
+   foreach ($main->obj('constants')->elements() as $element) {
       foreach (array('damage','resist') as $feature) {
          if (isset($itemInfo["$element.$feature$limit"])) {
             $itemElements[$feature][$element] = $itemInfo["$element.$feature$limit"];
@@ -483,15 +465,15 @@ function itemDisplayElements($itemInfo, $limit = null, $options = null)
 
 function itemDisplayPrimary($itemInfo, $limit = null)
 {
-   global $constants;
+   global $main;
 
    $limit = (is_null($limit)) ? '' : ".$limit";
 
-   $attribDisplay = $constants->attribDisplay();
+   $attribDisplay = $main->obj('constants')->attribDisplay();
 
    $return = "<tr>";
 
-   foreach ($constants->primaryAttribs() as $attribName) {
+   foreach ($main->obj('constants')->primaryAttribs() as $attribName) {
       $attribProp  = $attribDisplay[$attribName];
       $attribValue = $itemInfo["$attribName$limit"] ?: 0;
 
@@ -507,9 +489,10 @@ function randomItemValues($itemId)
 {
    global $main;
 
-   $item = new Item($main->debug);
+   $itemList = $main->var('itemList');
+   $item     = $main->obj('item');
 
-   $item->load($itemId);
+   $item->import($itemList[$itemId]);
 
    $item->generate();
 
@@ -534,13 +517,13 @@ function setItemValues($itemInfo, $strategy)
 
 function buildItemInfo($itemInfo, $itemInput)
 {
-   global $constants;
+   global $main;
 
    $return = array();
 
    if (!$itemInfo) { return $return; }
 
-   $attribList = $constants->attribs();
+   $attribList = $main->obj('constants')->attribs();
 
    $itemLevel = $itemInput['level'];
 
@@ -553,7 +536,7 @@ function buildItemInfo($itemInfo, $itemInput)
       $attribMin    = $itemInfo["$attribName.min"];
       $attribMax    = $itemInfo["$attribName.max"];
       $enhanceCalc  = $attribList[$attribName]['enhance'] ?: array();
-      $attribEMax   = $attribMax + (($attribMax * $enhanceCalc['percent']/100) * $constants->maxEnhanceLevel());
+      $attribEMax   = $attribMax + (($attribMax * $enhanceCalc['percent']/100) * $main->obj('constants')->maxEnhanceLevel());
       $levelMin     = $attribMin + (($attribMin * $enhanceCalc['percent']/100) * $itemLevel);
       $levelMax     = $attribMax + (($attribMax * $enhanceCalc['percent']/100) * $itemLevel);
 
@@ -605,8 +588,6 @@ function buildItemInfo($itemInfo, $itemInput)
 
 function validateItemInput($itemInfo, &$itemInput)
 {
-   global $constants;
-
    $errors = array();
 
    foreach ($itemInfo as $attribName => $attribInfo) {
@@ -670,4 +651,28 @@ function getItems()
 
    return $itemList;
 }
+
+function getGear($main)
+{
+   $gearTypes = $main->obj('constants')->gearTypes();
+   $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\.]/','',$value)."'"; },
+                                      array_unique(array_filter($gearTypes))));
+
+   $result   = $main->db()->query("select * from item where type in ($typeList) and active = 1 order by label asc",array('keyid' => 'id'));
+   $gearList = array();
+
+   foreach ($result as $resultId => $resultInfo) {
+      $gearData = json_decode($resultInfo['attributes'],true);
+
+      $gearData['id']    = $resultInfo['name'];
+      $gearData['name']  = $resultInfo['label'];
+      $gearData['type']  = $resultInfo['type'];
+      $gearData['image'] = $resultInfo['image'];
+
+      $gearList[$gearData['id']] = $gearData;
+   }
+
+   return $gearList;
+}
+
 ?>
