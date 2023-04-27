@@ -368,7 +368,7 @@ function itemInputDisplay($itemInfo, $itemInput, $inputErrors)
    $inputOptions  = array('params' => array('class' => 'form-control'));
    $attribOptions = $inputOptions;
 
-   if ($inputErrors['level']) { $attribOptions['params']['class'] .= ' is-invalid'; }
+   if ($inputErrors['level']) { $attribOptions['class'] .= 'form-control is-invalid'; }
 
    $return = "<table border=0 cellpadding=5>".
              "<tr>".
@@ -379,9 +379,10 @@ function itemInputDisplay($itemInfo, $itemInput, $inputErrors)
 
    foreach ($itemInfo as $attribName => $attribInfo) {
       if ($attribName == 'level') { continue; }
+
       $attribOptions = $inputOptions;
 
-      if ($inputErrors[$attribName]) { $attribOptions['params']['class'] .= ' is-invalid'; }
+      if ($inputErrors[$attribName]) { $attribOptions['class'] .= 'form-control is-invalid'; }
 
       $inputName   = 'item_'.preg_replace('/\./','-',$attribName);
       $attribMin   = $attribInfo['min'];
@@ -577,7 +578,7 @@ function buildItemInfo($itemInfo, $itemInput)
 
    $return['level'] = array(
       'min' => 0,
-      'max' => 10,
+      'max' => 15,
    );
 
    $return['level']['value'] = $itemLevel;
