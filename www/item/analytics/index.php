@@ -8,7 +8,7 @@ $main = new MinersMain(array(
    'sessionStart'   => true,
    'memoryLimit'    => null,
    'sendHeaders'    => true,
-   'database'       => false,
+   'database'       => true,
    'input'          => true,
    'html'           => true,
 ));
@@ -16,18 +16,18 @@ $main = new MinersMain(array(
 include_once 'local/constants.class.php';
 include_once 'local/item.class.php';
 
-//$db        = $main->db();
+$main->title('Item Analytics');
+
 $input     = $main->obj('input');
 $html      = $main->obj('html');
 $constants = new Constants($main->debug);
 
-$title    = 'Item';
-$subtitle = 'Analytics';
-
 $selectedItem = $input->get('item','alphanumeric,dash');
+$player       = $input->get('player','alphanumeric,dot,dash,underscore,space');
 $select       = ($input->get('select')) ? true : false;
 $calculate    = ($input->get('calculate')) ? true : false;
 $copy         = ($input->get('copy')) ? true : false;
+$equip        = ($input->get('equip')) ? true : false;
 $save         = ($input->get('save')) ? true : false;
 $godRoll      = ($input->get('godroll')) ? true : false;
 $randomRoll   = ($input->get('randomRoll')) ? true : false;
@@ -48,33 +48,34 @@ if ($itemUID) {
 }
 
 $itemList = getItems();
-//$itemList = getRunes();
-
-/*
-$dbItems = $db->query("select label,id from item");
-
-$statement = "insert into runeword values (NULL,?,?,?,?,?,?,?,now(),now(),1)";
-$types     = "sssissi";
-$data      = array();
-*/
 
 foreach ($itemList as $itemName => $itemInfo) {
    $itemId = $dbItems[$itemInfo['requires']]['id'];
    $data[] = array($itemName,$itemInfo['name'],$itemInfo['description'],$itemId,json_encode($itemInfo['cost']),json_encode($itemInfo['attribs']),$itemInfo['location']);
 }
 
-//var_dump("<pre>",$data); exit;
+/*
+$itemList = getRunes();
+
+
+$dbItems = $db->query("select label,id from item");
+
+$statement = "insert into runeword values (NULL,?,?,?,?,?,?,?,now(),now(),1)";
+$types     = "sssissi";
+$data      = array();
+
+var_dump("<pre>",$data); exit;
 
 //$result = $db->bindExecute($statement,$types,$data);
-
 //var_dump(json_encode($result),$db->error()); exit;
+*/
 
 $itemBase = $itemList[$selectedItem] ?: null;     // Base is the raw data for the item
 
 // Build the pulldown list of items
 $selectItem = array();
 foreach ($itemList as $itemId => $itemData) { 
-   $selectItem[ucfirst($itemData['type'])][$itemId] = $itemData['name']; 
+   $selectItem[ucwords(str_replace('.',' ',$itemData['type']))][$itemId] = $itemData['name']; 
 }
 asort($selectItem);
 
@@ -83,6 +84,9 @@ if (!$itemInput && $calculate) { $randomRoll = true; }
 
 if ($godRoll)         { $itemInput = setItemValues($itemBase,'max'); }
 else if ($randomRoll) { $itemInput = randomItemValues($selectedItem); }
+
+// Handle non-dotted decimals used in parts of the world with commas.
+if (preg_match('/,/',$itemInput['speed'])) { $itemInput['speed'] = str_replace(',','.',$itemInput['speed']); }
 
 $itemInfo = buildItemInfo($itemBase,$itemInput);  // Info is the raw + user data + validity
 
@@ -109,22 +113,43 @@ include 'ui/header.php';
 
 
 <div class='row'>
-   <div class='col-6 mb-3'>
+   <div class='col-12 col-sm-9 col-md-6 col-lg-6 col-xl-3 mb-3'>
    <?php
       print $html->startForm(array('method' => 'post'));
       print "<div class='input-group'>";
-      print $html->select('item',$selectItem,$selectedItem,array('class' => 'foo', 'style' => 'width:auto;'));
+      print $html->select('item',$selectItem,$selectedItem,array('style' => 'width:auto;'));
       print "<span class='input-group-append'>";
       print $html->submit('select','Select',array('class' => 'btn btn-primary btn-sm'));
       print "</span></div>";
       print $html->inputHidden('uid','');
    ?>
    </div>
-   <div class='col-6 col-lg-4 col-sm-1 col-md-6 col-xl-4'>
-      <?php if ($itemValid) { ?>
-        <?php print $html->submit('save',"Save",array('class' => 'float-right btn btn-primary btn-sm')); ?>
-        <input type="submit" name="copy" value="Copy" class="mr-2 float-right btn btn-success btn-sm copy-btn" data-clipboard="<?php print $itemHash; ?>">
-      <?php } ?>
+   <div class='col-12 col-sm-9 col-md-6 col-lg-6 col-xl-3 mb-3'>
+      <?php 
+         if ($itemValid) { 
+/*
+            $main->fetchPlayerList();
+            
+            if ($main->var('playerList')) {
+               print "<div class='input-group'>";
+               print $html->select('player',array_keys($main->var('playerList')),null,array('style' => 'width:auto;'));
+               print "<span class='input-group-append'>";
+               print $html->submit('equip',"Equip",array('class' => 'btn btn-primary btn-sm')); 
+               print "</span></div>";
+            }
+*/
+         }
+      ?>
+   </div>
+   <div class='col-12 col-sm-9 col-md-6 col-lg-6 col-xl-3 mb-3'>
+      <?php
+         if ($itemValid) {
+/*
+            print $html->submit('save',"Save",array('class' => 'btn btn-primary btn-sm mr-2'));
+            print $html->submit('copy','Copy',array('class' => 'mr-2 btn btn-success btn-sm copy-btn', 'data-clipboard' => $itemHash));
+*/
+         }
+      ?>
    </div>
 </div>
 <script src="/assets/js/copytoclipboard.js"></script>
