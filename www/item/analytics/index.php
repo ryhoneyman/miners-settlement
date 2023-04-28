@@ -90,8 +90,9 @@ if ($itemValid) {
 
 include 'ui/header.php';
 
-?>
+print $html->startForm(array('method' => 'post'));
 
+?>
 
 <div class='row'>
    <div class='col-12 col-sm-9 col-md-6 col-lg-6 col-xl-3 mb-3'>
