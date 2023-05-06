@@ -11,12 +11,14 @@ $main = new MinersMain(array(
    'database'       => true,
    'input'          => true,
    'html'           => true,
+   'toastr'         => true,
 ));
 
 $main->title('Item Analytics');
 
-$input = $main->obj('input');
-$html  = $main->obj('html');
+$input  = $main->obj('input');
+$html   = $main->obj('html');
+$toastr = $main->obj('toastr');
 
 $main->buildClass('constants','Constants',null,'local/constants.class.php');
 $main->buildClass('item','Item',null,'local/item.class.php');
@@ -25,23 +27,24 @@ $selectedItem = $input->get('item','alphanumeric,dash');
 $player       = $input->get('player','alphanumeric,dot,dash,underscore,space');
 $select       = ($input->get('select')) ? true : false;
 $calculate    = ($input->get('calculate')) ? true : false;
-$copy         = ($input->get('copy')) ? true : false;
+$share        = ($input->get('share')) ? true : false;
 $equip        = ($input->get('equip')) ? true : false;
 $save         = ($input->get('save')) ? true : false;
 $godRoll      = ($input->get('godroll')) ? true : false;
 $randomRoll   = ($input->get('randomRoll')) ? true : false;
-$itemSubmit   = ($calculate || $godRoll || $randomRoll || $copy || $save);
+$itemSubmit   = ($calculate || $godRoll || $randomRoll || $share || $save);
 $itemInput    = ($select) ? array() : getItemInput();
 $inputErrors  = array();
 
-$itemUID = $input->get('uid','alphanumeric');
+// Allow inbound item link and player gear decoding for quick hash
+if (preg_match('/^(il|pg)(\w{8})$/i',$_SERVER['QUERY_STRING'],$match)) {
+   $loadType   = strtolower($match[1]);
+   $itemHash   = $match[2];
+   $itemResult = ($loadType == 'il') ? $main->getItemLink($itemHash) : $main->getGear($itemHash);
 
-if ($itemUID) {
-   $decodedItem = json_decode(file_get_contents(APP_CONFIGDIR."/copy/$itemUID"),true);
-
-   if (!is_null($decodedItem)) { 
-      $selectedItem = $decodedItem['id'];
-      $itemInput    = $decodedItem;
+   if ($itemResult) { 
+      $selectedItem = $itemResult['item_name'];
+      $itemInput    = $itemResult['stats'];
       $itemSubmit   = true;
    }
 }
@@ -53,8 +56,8 @@ $main->var('itemList',$itemList);
 
 // Build the pulldown list of items
 $selectItem = array();
-foreach ($itemList as $itemId => $itemData) { 
-   $selectItem[ucwords(str_replace('.',' ',$itemData['type']))][$itemId] = $itemData['name']; 
+foreach ($itemList as $itemName => $itemData) { 
+   $selectItem[ucwords(str_replace('.',' ',$itemData['type']))][$itemName] = $itemData['label']; 
 }
 ksort($selectItem);
 
@@ -69,7 +72,7 @@ if (preg_match('/,/',$itemInput['speed'])) { $itemInput['speed'] = str_replace('
 
 $itemInfo = buildItemInfo($itemBase,$itemInput);  // Info is the raw + user data + validity
 
-@file_put_contents('/tmp/ia.debug.json',json_encode(array('post' => $_POST, 'get' => $_GET, 'server' => $_SERVER, 'selectedItem' => $selectedItem, 'itemBase' => $itemBase, 'itemInfo' => $itemInfo),JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
+//@file_put_contents('/tmp/ia.debug.json',json_encode(array('post' => $_POST, 'get' => $_GET, 'server' => $_SERVER, 'selectedItem' => $selectedItem, 'itemBase' => $itemBase, 'itemInfo' => $itemInfo),JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
 
 if ($selectedItem && $calculate) {
    $inputErrors = validateItemInput($itemInfo,$itemInput);
@@ -78,17 +81,25 @@ if ($selectedItem && $calculate) {
 $itemValid = ($selectedItem && !$inputErrors && $itemSubmit) ? true : false;
 
 if ($itemValid) {
-   ksort($itemInput);
-   $jsonData   = json_encode(array_diff_key(array_merge(array('id' => $selectedItem),$itemInput),array_flip(array('name','type','description','image'))));
-   $itemHash   = hash("crc32",$jsonData);
-   $hashFile   = APP_CONFIGDIR."/copy/$itemHash";
+   $itemHash    = $main->generateItemHash($selectedItem,$itemInput);
+   $itemLinkUrl = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].preg_replace('/\?.*$/','',$_SERVER['REQUEST_URI'])."?il$itemHash";
 
-   if ($copy && !file_exists($hashFile)) { file_put_contents($hashFile,$jsonData); }
-
-   if ($save) { }
+   if ($share)     { $shareResult = $main->saveItemLink($itemHash,$selectedItem,$itemInput); }
+   else if ($save) { $saveResult = $main->saveGear($itemBase['id'],$selectedItem,$itemInput); }
 }
 
 include 'ui/header.php';
+
+// Need Toastr loaded from header first to process these alerts.
+if ($share) {
+   if ($shareResult) { $toastr->success('Item link copied to clipboard!'); }
+   else              { $toastr->failure('Could not generate item link!'); }
+}
+else if ($save) {
+   if ($saveResult) { $toastr->success('Item saved to profile!'); }
+   else             { $toastr->failure('Could not save item to profile!'); }
+}
+
 
 print $html->startForm(array('method' => 'post'));
 
@@ -107,29 +118,12 @@ print $html->startForm(array('method' => 'post'));
    ?>
    </div>
    <div class='col-12 col-sm-9 col-md-6 col-lg-6 col-xl-3 mb-3'>
-      <?php 
-         if ($itemValid) { 
-/*
-            $main->fetchPlayerList();
-            
-            if ($main->var('playerList')) {
-               print "<div class='input-group'>";
-               print $html->select('player',array_keys($main->var('playerList')),null,array('style' => 'width:auto;'));
-               print "<span class='input-group-append'>";
-               print $html->submit('equip',"Equip",array('class' => 'btn btn-primary btn-sm')); 
-               print "</span></div>";
-            }
-*/
-         }
-      ?>
    </div>
    <div class='col-12 col-sm-9 col-md-6 col-lg-6 col-xl-3 mb-3'>
       <?php
          if ($itemValid) {
-/*
             print $html->submit('save',"Save",array('class' => 'btn btn-primary btn-sm mr-2'));
-            print $html->submit('copy','Copy',array('class' => 'mr-2 btn btn-success btn-sm copy-btn', 'data-clipboard' => $itemHash));
-*/
+            print $html->submit('share','Share',array('class' => 'mr-2 btn btn-success btn-sm copy-btn', 'data-clipboard' => $itemLinkUrl));
          }
       ?>
    </div>
@@ -246,7 +240,7 @@ function itemDisplay($item)
                                  "text-align:center; line-height:10px;'>$itemLevel</span>" : '';
 
    $return = "<table border=0 style='background:#214268; border-radius:10px;'>".
-             "<tr><td colspan=4 style='color:#fff; background:#454545; text-align:left; border-radius:10px; padding:5px;'>".$item->name()."</td></tr>";
+             "<tr><td colspan=4 style='color:#fff; background:#454545; text-align:left; border-radius:10px; padding:5px;'>".$item->label()."</td></tr>";
 
    $return .= "<tr><td style='padding:5px; margin-left:auto; margin-right:auto;'><span><img src='$itemImage' style='width:auto; height:auto; max-width:50px;'>$levelCircle</span></td>".
               "<td colspan=3 style='padding:10px;'><table border=0><tr><td style='color:#fff; background:#454545; font-size:0.6em;'>$itemDesc</td></tr></table></td></tr>";
@@ -259,7 +253,7 @@ function itemDisplay($item)
    return $return;
 }
 
-function itemInputOverall($itemId, $itemBase, $itemInfo)
+function itemInputOverall($itemName, $itemBase, $itemInfo)
 {
    global $main;
 
@@ -293,7 +287,7 @@ function itemInputOverall($itemId, $itemBase, $itemInfo)
 
       foreach ($itemTypeList as $typePurpose => $typePurposeInfo) {
          $typeLabel    = $typePurposeInfo['label'];
-         $weightValues = $typePurposeInfo['list'][$itemId] ?: $typePurposeInfo['list']['default'];
+         $weightValues = $typePurposeInfo['list'][$itemName] ?: $typePurposeInfo['list']['default'];
 
          $percentList[$typeLabel]['percent'] = 0;
          
@@ -409,7 +403,7 @@ function itemRangeDisplay($itemInfo)
 
    if (!$itemInfo) { return ''; }
 
-   $return = "<table border=0 style='background:#ffccbb'>".
+   $return = "<table border=0 style='background:#ddaa99'>".
              "<tr><td colspan=4 style='text-align:center;'>FROM</td></tr>";
 
    $return .= itemDisplayPrimary($itemInfo,'min');
@@ -423,6 +417,23 @@ function itemRangeDisplay($itemInfo)
    $return .= itemDisplayElements($itemInfo,'max'); 
 
    $return .= "</table>";
+
+   $combinations = null;
+
+   foreach ($itemInfo as $attribName => $attribInfo) {
+      if (preg_match('/^(\S+)\.min$/i',$attribName,$match)) {
+         $baseAttrib = $match[1];
+         if (!isset($itemInfo["$baseAttrib.max"])) { $combinations = null; break; }
+
+         $delta = abs($itemInfo["$baseAttrib.max"] - $attribInfo) * (($baseAttrib == 'speed') ? 100 : 1);
+
+         if ($delta === 0) { $delta = 1; }
+
+         $combinations = (is_null($combinations)) ? $delta : $combinations * $delta;
+      }
+   } 
+
+   if (!is_null($combinations)) { $return .= "<div class='mt-3 text-sm text-warning'>The item has ".number_format($combinations)." possible combinations.</div>"; }
 
    return $return;
 }
@@ -487,14 +498,14 @@ function itemDisplayPrimary($itemInfo, $limit = null)
    return $return;
 }
 
-function randomItemValues($itemId)
+function randomItemValues($itemName)
 {
    global $main;
 
    $itemList = $main->var('itemList');
    $item     = $main->obj('item');
 
-   $item->import($itemList[$itemId]);
+   $item->import($itemList[$itemName]);
 
    $item->generate();
 
@@ -615,45 +626,6 @@ function getItemInput()
    return $itemInput;
 }
 
-function getRunes()
-{
-   $itemList = array();
-   $fileList = glob(APP_CONFIGDIR."/rune/*.json");
-
-   foreach ($fileList as $fileName) {
-       $itemId   = basename($fileName,".json");
-       $itemData = json_decode(file_get_contents($fileName),true);
-
-       if (is_null($itemData)) { continue; }
-
-       if ($itemData['hidden']) { continue; }
-
-       $itemList[$itemId] = $itemData;
-   }
-
-   return $itemList;
-}
-
-
-function getItems()
-{
-   $itemList = array();
-   $fileList = glob(APP_CONFIGDIR."/item/*.json");
- 
-   foreach ($fileList as $fileName) {
-       $itemId   = basename($fileName,".json");
-       $itemData = json_decode(file_get_contents($fileName),true);
-
-       if (is_null($itemData)) { continue; }
-
-       if ($itemData['hidden']) { continue; }
- 
-       $itemList[$itemId] = $itemData;
-   }
-
-   return $itemList;
-}
-
 function getGear($main)
 {
    $gearTypes = $main->obj('constants')->gearTypes();
@@ -666,12 +638,13 @@ function getGear($main)
    foreach ($result as $resultId => $resultInfo) {
       $gearData = json_decode($resultInfo['attributes'],true);
 
-      $gearData['id']    = $resultInfo['name'];
-      $gearData['name']  = $resultInfo['label'];
+      $gearData['id']    = $resultInfo['id'];
+      $gearData['name']  = $resultInfo['name'];
+      $gearData['label'] = $resultInfo['label'];
       $gearData['type']  = $resultInfo['type'];
       $gearData['image'] = $resultInfo['image'];
 
-      $gearList[$gearData['id']] = $gearData;
+      $gearList[$gearData['name']] = $gearData;
    }
 
    return $gearList;
