@@ -14,6 +14,13 @@ class MinersMain extends Main
       parent::__construct($debug,$options);
    }
 
+   public function title($name = null)
+   {
+      if (is_null($name)) { return $this->var('title'); }
+
+      $this->var('title',$name);
+   }
+
    public function webhookInit()
    {
       $currentId = $_COOKIE['userid'] ?: null;
@@ -104,11 +111,99 @@ class MinersMain extends Main
       return true;
    }
 
-   public function title($name = null)
+   public function fetchGearList()
    {
-      if (is_null($name)) { return $this->var('title'); }
+      $userId   = $this->userId;
+      $gearList = $this->db()->query(sprintf("select g.*,i.* from gear g, item i where g.item_id = i.id and profile_id = '%s'",$this->db()->escapeString($userId)),array('keyid' => 'id'));
 
-      $this->var('title',$name);
+      if ($gearList === false) { $this->error('Could not query gear list'); return false; }
+
+      $this->var('gearList',$gearList);
+
+      return true;
+   }
+
+   public function normalizeItemData($itemData)
+   {
+      $itemData = array_filter(array_diff_key($itemData,array_flip(array('name','type','description','image'))));
+
+      if (is_null($itemData['level'])) { $itemData['level'] = 0; }
+
+      ksort($itemData);
+
+      return $itemData;
+   }
+
+   public function generateItemHash($itemName, $itemData)
+   {
+      $itemData = $this->normalizeItemData($itemData);
+
+      $itemHash = hash("crc32",json_encode(array('item_name' => $itemName, 'stats' => $itemData)));
+
+      return $itemHash;
+   }
+
+   public function getItemLink($itemHash)
+   {
+      $itemInfo = $this->db()->query(sprintf("select * from item_link where id = '%s'",$this->db()->escapeString($itemHash)),array('keyid' => 'id', 'multi' => false));
+
+      if ($itemInfo === false) { $this->error('Could not query gear list'); return false; }
+
+      if (!$itemInfo) { return null; }
+
+      return array('item_name' => $itemInfo['item_name'], 'stats' => json_decode($itemInfo['stats'],true), 'raw' => $itemInfo);
+   }
+
+   public function saveItemLink($itemHash, $itemName, $itemData)
+   {
+      $itemData = $this->normalizeItemData($itemData);
+
+      $itemStats  = json_encode($itemData,JSON_UNESCAPED_SLASHES);
+      $dbResult   = $this->db()->bindExecute("insert into item_link (id,item_name,stats,created) values (?,?,?,now()) ".
+                                             "on duplicate key update created = values(created)",
+                                             "sss",array($itemHash,$itemName,$itemStats));
+
+      $success = ($dbResult) ? true : false;
+
+      return $success;
+   }
+
+   public function getGear($itemHash)
+   {
+      $userId   = $this->userId;
+      $itemInfo = $this->db()->query(sprintf("select g.*, i.* from gear g, item i where g.item_id = i.id and g.profile_id = '%s' and g.item_hash = '%s'",
+                                     $this->db()->escapeString($userId),$this->db()->escapeString($itemHash)),array('keyid' => 'id', 'multi' => false));
+
+      if ($itemInfo === false) { $this->error('Could not query gear list'); return false; }
+
+      if (!$itemInfo) { return null; }
+
+      return array('item_name' => $itemInfo['name'], 'stats' => json_decode($itemInfo['stats'],true), 'raw' => $itemInfo);
+   }
+
+   public function saveGear($itemId, $itemName, $itemData)
+   {
+      $userId    = $this->userId;
+      $itemHash  = $this->generateItemHash($itemName,$itemData);
+      $itemData  = $this->normalizeItemData($itemData);
+      $itemStats = json_encode($itemData,JSON_UNESCAPED_SLASHES);
+      $dbResult  = $this->db()->bindExecute("insert into gear (profile_id,item_hash,item_id,stats,created,updated) values (?,?,?,?,now(),now()) ".
+                                             "on duplicate key update updated = values(updated)",
+                                             "ssis",array($userId,$itemHash,$itemId,$itemStats));
+
+      $success = ($dbResult) ? true : false;
+
+      return $success;
+   }
+
+   public function deleteGear($itemHash)
+   {
+      $userId    = $this->userId;
+      $dbResult  = $this->db()->bindExecute("delete from gear where item_hash = ? and profile_id = ?","ss",array($itemHash,$userId));
+
+      $success = ($dbResult) ? true : false;
+
+      return $success;
    }
 }
 ?>
