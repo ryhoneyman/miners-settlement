@@ -1,1 +1,5 @@
 etc/db.conf
+etc/entity
+etc/rune
+etc/item
+etc/copy
