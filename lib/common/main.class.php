@@ -190,6 +190,10 @@ class Main extends Base
          if (!$this->buildClass('html','HTML',null,'html.class.php')) { exit; }
       }
 
+      if ($options['toastr']) {
+         if (!$this->buildClass('toastr','Toastr',null,'toastr.class.php')) { exit; }
+      }
+
       if ($options['require']) {
          foreach ($options['require'] as $buildParams) {
             if (count($buildParams) < 4) { $this->debug(0,"Invalid paramters to buildClass: ".json_encode($buildParams)); continue; }
