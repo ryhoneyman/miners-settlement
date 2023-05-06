@@ -35,6 +35,13 @@
             <li class="nav-header"><b>ITEMS</b></li>
 
             <li class="nav-item">
+               <a href="/item/crafting" class="nav-link<?php if (preg_match('~^/item/crafting/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
+                  <i class="nav-icon fal fa-puzzle-piece"></i>
+                  <p> Scheme Crafting </p>
+               </a>
+            </li>
+
+            <li class="nav-item">
                <a href="/item/gear/list" class="nav-link<?php if (preg_match('~^/item/gear/list/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
                   <i class="nav-icon fal fa-sword"></i>
                   <p> Gear List </p>
