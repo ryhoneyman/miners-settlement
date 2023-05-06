@@ -19,6 +19,7 @@ class Item extends Base
 
    public function id()          { return $this->var('id'); }
    public function name()        { return $this->var('name'); }
+   public function label()       { return $this->var('label'); }
    public function type()        { return $this->var('type'); }
    public function level()       { return $this->var('level'); }
    public function description() { return $this->var('description'); }
