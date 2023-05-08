@@ -45,12 +45,12 @@ function dataDisplay($main)
 
 function gearDisplay($main, $gearType, $gearTypeList)
 {
-   $gearType = ucwords(preg_replace('/\./',' ',$gearType));
+   $gearTypeLabel = ($main->obj('constants')->gearTypes())[$gearType];
 
    $return = '<div class="row">'.
              '<div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">'.
              '<div class="card card-outline card-success">'.
-             '<div class="card-header"><b class="text-xl">'.$gearType.'</b></div>'.
+             '<div class="card-header"><b class="text-xl">'.$gearTypeLabel.'</b></div>'.
              '<div class="card-body">'.
              '<table class="table table-striped table-hover" style="width:auto;" border=0 cellpadding=10>'.
              '<thead><tr class="text-yellow"><th></th><th>Name</th><th>Primary Stats</th><th>Elemental Stats</th></tr></thead><tbody>';
@@ -94,7 +94,7 @@ function getGear($main)
 {
    $gearTypes = $main->obj('constants')->gearTypes();
    $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\.]/','',$value)."'"; },
-                                      array_unique(array_filter($gearTypes))));
+                                      array_unique(array_filter(array_keys($gearTypes)))));
 
    $result   = $main->db()->query("select * from item where type in ($typeList) and active = 1",array('keyid' => 'id'));
    $gearList = array();

@@ -630,7 +630,7 @@ function getGear($main)
 {
    $gearTypes = $main->obj('constants')->gearTypes();
    $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\.]/','',$value)."'"; },
-                                      array_unique(array_filter($gearTypes))));
+                                      array_unique(array_filter(array_keys($gearTypes)))));
 
    $result   = $main->db()->query("select * from item where type in ($typeList) and active = 1 order by label asc",array('keyid' => 'id'));
    $gearList = array();

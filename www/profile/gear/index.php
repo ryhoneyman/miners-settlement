@@ -53,7 +53,7 @@ function gearDisplay($main)
    $userId    = $main->userId;
    $gearList  = $main->var('gearList');
 
-   $listContent = "<table border=0 class='table' style='width:auto;'>".
+   $gearContent = "<table border=0 class='table' style='width:auto;'>".
                   "<thead><tr><th></th><th></th><th>Name</h><th>Level</th><th>Stats</th><th></th><th></th></tr></thead>".
                   "<tbody>";
 
@@ -87,17 +87,17 @@ function gearDisplay($main)
          $deleteButton = sprintf("<button class='btn btn-tool fa fa-trash text-danger open-modal' data-name='%s' data-value='%s' ".
                                  "data-toggle='modal' data-target='#modal-window' title='Delete Gear' style='border:none;'></button>",
                                  $gearInfo['label'],$gearInfo['item_hash']); 
-         $listContent .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
+         $gearContent .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
                                  $deleteButton,$gearImage,$gearLabel,$levelBadge,$gearPrimary,$gearElement,
                                  "<a href='/item/analytics/?pg".$gearInfo['item_hash']."'><i class='fas fa-analytics text-white'</i></a>");
       }
    }
-   else { $listContent .= "<tr><td colspan=6>No gear found on this profile.</td></tr>"; }
+   else { $gearContent .= "<tr><td colspan=6>No gear found on this profile.</td></tr>"; }
 
-   $listContent .= "</tbody>".
+   $gearContent .= "</tbody>".
                    "</table>";
 
-   print displayRow(displayCard(array('header' => 'Gear List', 'container' => 'col-12', 'card' => 'card-success'),$listContent));
+   print displayRow(displayCard(array('header' => 'Gear List', 'container' => 'col-12', 'card' => 'card-success'),$gearContent));
 }
 
 function displayRow($content)

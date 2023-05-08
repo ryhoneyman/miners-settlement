@@ -97,7 +97,7 @@ class Simulator extends Base
 
                $stats[$role]["effects"] = $entity->effects();
 
-               foreach ($this->constants->gearTypes() as $gearType) {
+               foreach ($this->constants->gearTypes() as $gearType => $gearTypeLabel) {
                   $gearItem = $entity->getItemByType($gearType);
                   $stats[$role]["gear"][$gearType] = (is_null($gearItem)) ? null : $gearItem->export();
                }
@@ -183,7 +183,7 @@ class Simulator extends Base
 
          // Find maximum type length
          $maxTypeLength = 0;
-         foreach ($this->gearTypes as $gearType) {
+         foreach ($this->gearTypes as $gearType => $gearTypeLabel) {
             $typeLength  = strlen($gearType);
             if ($typeLength > $maxTypeLength) { $maxTypeLength = $typeLength; }
          }
@@ -194,7 +194,7 @@ class Simulator extends Base
             foreach ($this->gearTypes as $gearType) {
                $typeLength  = strlen($gearType);
                $dotCount    = $maxTypeLength - $typeLength;
-               $typeDisplay = sprintf("%s%s:",ucwords(str_replace('.',' ',$gearType)),str_repeat('.',$dotCount));
+               $typeDisplay = sprintf("%s%s:",$gearTypeLabel,str_repeat('.',$dotCount));
 
                $output .= sprintf("%s %s\n",$typeDisplay,$this->formatItem($results[$role]['gear'][$gearType]));
             }
@@ -303,7 +303,7 @@ class Simulator extends Base
 
          // Find maximum type length
          $maxTypeLength = 0;
-         foreach ($this->gearTypes as $gearType) {
+         foreach ($this->gearTypes as $gearType => $gearTypeLabel) {
             $typeLength  = strlen($gearType);
             if ($typeLength > $maxTypeLength) { $maxTypeLength = $typeLength; }
          }
@@ -313,7 +313,7 @@ class Simulator extends Base
          foreach ($this->gearTypes as $gearType) {
             $typeLength  = strlen($gearType);
             $dotCount    = $maxTypeLength - $typeLength;
-            $typeDisplay = sprintf("%s%s:",ucwords(str_replace('.',' ',$gearType)),str_repeat('.',$dotCount));
+            $typeDisplay = sprintf("%s%s:",$gearTypeLabel,str_repeat('.',$dotCount));
 
             $output .= sprintf("%s%s\n",$typeDisplay,$this->formatItem($results[$role]['gear'][$gearType]));
          }

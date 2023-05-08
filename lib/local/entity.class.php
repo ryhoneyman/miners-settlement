@@ -28,7 +28,7 @@ class Entity extends Base
 
       if (!$value && is_null($this->baseAttribs[$attribName]['innateGear'])) { $value = $this->baseAttribs[$attribName]['innateValue']; }
 
-      foreach ($this->constants->gearTypes() as $gearType) {
+      foreach ($this->constants->gearTypes() as $gearType => $gearTypeLabel) {
          $gearItem = $this->var($gearType);
 
          if (is_a($gearItem,'Item')) { 
@@ -154,7 +154,7 @@ class Entity extends Base
    {
       $itemType = strtolower($itemType);
 
-      if (!in_array($itemType,$this->constants->gearTypes())) { $this->debug(9,"unknown gear type"); return false; }
+      if (!in_array($itemType,array_keys($this->constants->gearTypes()))) { $this->debug(9,"unknown gear type"); return false; }
 
       $this->var($itemType,null);
     
@@ -180,7 +180,7 @@ class Entity extends Base
    {
       $itemType = strtolower($itemType);
 
-      if (!in_array($itemType,$this->constants->gearTypes())) { $this->debug(9,"unknown gear type"); return false; }
+      if (!in_array($itemType,array($this->constants->gearTypes()))) { $this->debug(9,"unknown gear type"); return false; }
 
       return ((is_a($this->var($itemType),'Item')) ? $this->var($itemType) : null);
    }
@@ -189,7 +189,7 @@ class Entity extends Base
    { 
       $itemList = array();
 
-      foreach ($this->constants->gearTypes() as $gearType) {
+      foreach ($this->constants->gearTypes() as $gearType => $gearTypeLabel) {
          $gearItem = $this->var($gearType);
 
          if (is_a($gearItem,'Item')) { $itemList[$gearItem->var($key)] = $gearItem; }
@@ -266,7 +266,7 @@ class Entity extends Base
                $this->equipItem($itemId,$itemData,$itemOptions);
             }
          }
-         else if (preg_match('/^('.implode('|',$gearTypes).')$/i',$name,$match)) {
+         else if (preg_match('/^('.implode('|',array_keys($gearTypes)).')$/i',$name,$match)) {
             $itemType     = $name;
             $itemId       = $value['id'];
             $itemData     = $value['data'] ?: null;

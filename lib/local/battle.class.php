@@ -52,7 +52,7 @@ class Battle extends Base
             $this->calculateBattleInfo(); 
 
             if ($this->battleInfo['timer']['battle'] == 0) { 
-               foreach ($this->constants->gearTypes() as $gearType) {
+               foreach ($this->constants->gearTypes() as $gearType => $gearTypeLabel) {
                   if (is_a($this->entityList['attacker']->var($gearType),'Item')) {
                      $this->debug(9,$this->entityList['attacker']->var($gearType)->display());
                   }
