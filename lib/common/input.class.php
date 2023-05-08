@@ -30,11 +30,13 @@ include_once 'base.class.php';
 
 class Input extends Base
 {
-   protected $version = 1.0;
+   protected $version  = 1.0;
+   private   $patterns = null;
+   public    $postBody = null;
 
    //===================================================================================================
    // Description: Creates the class object
-   // Input: object(debug), Debug object created from debug.class
+   // Input: object(debug), Debug object created from debug.class.php
    // Input: array(options), List of options to set in the class
    // Output: null()
    //===================================================================================================
@@ -42,7 +44,9 @@ class Input extends Base
    {
       parent::__construct($debug,$options);
 
-      $this->self['get.types'] = array(
+      $this->postBody = file_get_contents('php://input');
+
+      $this->patterns = array(
          'alpha'   => 'a-zA-Z',
          'numeric' => '\d',
          'alphanumeric' => '\w',
@@ -51,17 +55,28 @@ class Input extends Base
          'period' => '\.',
          'comma' => '\,',
          'dash' => '\-',
+         'plus' => '\+',
          'pipe' => '\|',
          'underscore' => '\_',
          'colon' => '\:',
          'semicolon' => '\;',
          'parenthesis' => '\(\)',
+         'brackets'    => '\[\]',
          'forwardslash' => '\/',
          'backslash' => addslashes('\\'),
          'ampersand' => '\&',
          'percent' => '\%',
          'star' => '\*',
          'equals' => '\=',
+         'apostrophe' => "\`",
+         'at' => '\@',
+         'newline' => addslashes('\\n\\r'),
+         'greater' => '\>',
+         'less'    => '\<',
+         'quote' => '\"',
+         'singlequote' => "\'",
+         'curlybrackets' => '\{\}',
+         'hashtag' => '\#',
       );
    }
 
@@ -79,9 +94,22 @@ class Input extends Base
       return $return;
    }
 
-   public function get($name, $allowed = 'alphanumeric')
+   public function isDefined($name)
    {
-      $value = $this->variable($name);
+      return (isset($_GET[$name]) || isset($_POST[$name]));
+   }
+
+   public function get($name, $allowed = 'alphanumeric', $default = null, $emptyDefault = false)
+   {
+      $value = ($emptyDefault) ? $this->variableEmptyDefault($name,$default) : $this->variable($name,$default);
+
+      return $this->validate($value,$allowed);
+   }
+
+   public function validate($value, $allowed = 'alphanumeric')
+   {
+      // If value is a built-in entity, just pass it back - it won't be tainted
+      if ($value === null || $value === true || $value === false) { return $value; }
 
       // This assumes the calling script will perform additional checks against the input
       // since we are returning the raw value here.  Allowing all can be dangerous if not
@@ -91,17 +119,20 @@ class Input extends Base
          return $value;
       }
       else if ($allowed == 'email') {
-         // This does not support an array of e-mail, which isn't ever used in my experience.
-         //==================================================================================
-         $valid = $this->match($value,'^[^@]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$');
-         return ($valid) ? $value : NULL;
-      }
+         $emailList   = (is_array($value)) ? $value : preg_split('/[,;]/',preg_replace('/\s/','',$value));
+         $validEmails = array_filter(filter_var_array($emailList,FILTER_VALIDATE_EMAIL));
 
-      $patterns = $this->self['get.types'];
+         if (!$validEmails) { return null; }
+
+         // Return an array of emails if we were given an array, otherwise a string of emails
+         $return = (is_array($value)) ? $validEmails : implode(',',$validEmails);
+
+         return $return;
+      }
 
       $pattern = '[^';
       foreach (explode(',',$allowed) as $type) {
-         $pattern .= ($patterns[$type]) ? $patterns[$type] : '';
+         $pattern .= ($this->patterns[$type]) ? $this->patterns[$type] : '';
       }
       $pattern .= ']+';
 
@@ -118,9 +149,23 @@ class Input extends Base
       return $return;
    }
 
-   public function variable($name)
+   public function getFile($name)
    {
-      return (isset($_GET[$name])) ? $_GET[$name] : ((isset($_POST[$name])) ? $_POST[$name] : '');
+      return $_FILES[$name];
+   }
+
+   public function variableEmptyDefault($name, $default = null)
+   {
+      $value = (isset($_GET[$name])) ? $_GET[$name] : ((isset($_POST[$name])) ? $_POST[$name] : $default);
+
+      if ((is_array($value) && empty($value)) || preg_match('/^\s*$/',$value)) { $value = $default; }
+
+      return $value;
+   }
+
+   public function variable($name, $default = '')
+   {
+      return (isset($_GET[$name])) ? $_GET[$name] : ((isset($_POST[$name])) ? $_POST[$name] : $default);
    }
 }
 
