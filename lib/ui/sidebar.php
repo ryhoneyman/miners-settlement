@@ -99,6 +99,14 @@
                </a>
             </li>
 -->
+            <li class="nav-header mt-3"><b></b></li>
+
+            <li class="nav-item">
+               <a href="/notes/history/" class="nav-link<?php if(preg_match("~^/notes/history/~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
+                  <i class="nav-icon fal fa-comment-edit"></i>
+                  <p> Patch Notes </p>
+               </a>
+            </li>
 
          </ul>
       </nav>
