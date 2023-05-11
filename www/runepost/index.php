@@ -112,7 +112,7 @@ function runepostDisplay($main, $postName, $postInfo)
          $runeEffects = '<code style="color:#aaaaaa;">'.$main->obj('format')->effects($entryAttrib,true).'</code>'; 
       }
 
-      $return .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$runewordName,$itemInsert,$runeEffects,implode('',$requiredRunes));
+      $return .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$runewordName,$itemInsert,$runeEffects,implode('',array_reverse($requiredRunes)));
    }
 
    $return .= '</tbody></table>'.
