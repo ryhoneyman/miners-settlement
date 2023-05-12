@@ -128,16 +128,21 @@ class Item extends Base
 
       if (!is_array($values)) { $values = array(); }
 
-      $godRoll = ($options['godroll']) ? true : false;
-      $level   = $options['level'] ?: null;
-      $enhance = $options['enhance'] ?: null;
+      $godRoll   = ($options['godroll']) ? true : false;
+      $adjust    = ($options['adjust']) ?: null;
+      $adjValues = array();
+      $level     = $options['level'] ?: null;
+      $enhance   = $options['enhance'] ?: null;
 
-      if (!$values || $godRoll) {
+      if (!$values || $godRoll || $adjust) {
          if ($level && !$enhance) { $enhance = $level; }
          $level = null;
       }
 
       if (is_null($level)) { $level = 0; }
+
+      if ($adjust && !is_array($adjust)) { $adjValues['base'] = $adjust; }
+      else { $adjValues = $adjust; }
 
       $this->debug(9,'Building item ['.$this->name().'] options:'.json_encode($options));
 
@@ -145,9 +150,13 @@ class Item extends Base
          if (array_key_exists("$attribName.min",$this->vars) && array_key_exists("$attribName.max",$this->vars)) {
             $minValue    = $this->var("$attribName.min");
             $maxValue    = $this->var("$attribName.max");
-            $maxEValue   = $maxValue * 2.2;  
+            $deltaValue  = ($attribName == 'speed') ? $minValue - $maxValue : $maxValue - $minValue;
+            $maxEValue   = $maxValue * (1 + ($this->constants->maxEnhanceLevel() / 10));  
 
-            if ($godRoll) { $values[$attribName] = $maxValue; }
+            $adjustAttrib = ($adjValues[$attribName]) ?: $adjValues['base'];
+
+            if ($godRoll)           { $values[$attribName] = $maxValue; }
+            else if ($adjustAttrib) { $values[$attribName] = $maxValue - (($deltaValue * ((100-$adjustAttrib)/100)) * (($attribName == 'speed') ? -1 : 1)); }
 
             $givenValue  = (array_key_exists($attribName,$values)) ? $values[$attribName] : null;
             $givenValid  = ($maxValue < $minValue) ? ($givenValue <= $minValue && $givenValue >= $maxValue) : ($givenValue >= $minValue && $givenValue <= $maxEValue);

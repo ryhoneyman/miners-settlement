@@ -49,8 +49,6 @@ class Entity extends Base
 
    public function healthMax() 
    { 
-      //$this->debug(8,"called");
-
       if (!$this->var('healthMax')) { $this->var('healthMax',$this->baseValue('health')); }
 
       return $this->var('healthMax'); 
@@ -180,7 +178,7 @@ class Entity extends Base
    {
       $itemType = strtolower($itemType);
 
-      if (!in_array($itemType,array($this->constants->gearTypes()))) { $this->debug(9,"unknown gear type"); return false; }
+      if (!in_array($itemType,array_keys($this->constants->gearTypes()))) { $this->debug(9,"unknown gear type"); return false; }
 
       return ((is_a($this->var($itemType),'Item')) ? $this->var($itemType) : null);
    }
@@ -233,6 +231,7 @@ class Entity extends Base
       if ($options['name']) { $entityInfo['name'] = $options['name']; }
       else {
          if ($options['godroll'])      { $entityInfo['name'] .= " [GODROLL]"; }
+         if ($options['adjust'])       { $entityInfo['name'] .= " [ADJUSTED]"; }
          if ($options['enhance'])      { $entityInfo['name'] .= " [ENHANCE=".$options['enhance']."]"; }
       }
 
@@ -252,27 +251,23 @@ class Entity extends Base
       // clear out any existing data
       $this->data = array();
 
-      foreach ($entityInfo as $name => $value) { 
-         if (preg_match('/^equip$/i',$name)) {
-            if (!is_array($value)) { $this->debug(7,"bad value for equip directive"); return false; }
-
-            foreach ($value as $itemId => $itemInfo) {
-               $itemData    = $itemInfo['data'] ?: null;
-               $itemOptions = $itemInfo['options'] ?: array();
-
-               if ($options['godroll']) { $itemOptions['godroll'] = true; } 
-               if ($options['enhance']) { $itemOptions['enhance'] = $options['enhance']; } 
-
-               $this->equipItem($itemId,$itemData,$itemOptions);
-            }
+      if ($options['equip']) {
+         foreach ($options['equip'] as $itemType => $itemInfo) {
+            $entityInfo[$itemType] = array('id' => $itemInfo['name'], 'data' => null, 'options' => array('enhance' => $itemInfo['level']));
          }
-         else if (preg_match('/^('.implode('|',array_keys($gearTypes)).')$/i',$name,$match)) {
+      }
+
+      if ($options['runes']) { $entityInfo['runes'] = $options['runes']; }
+
+      foreach ($entityInfo as $name => $value) { 
+         if (preg_match('/^('.implode('|',array_keys($gearTypes)).')$/i',$name,$match)) {
             $itemType     = $name;
             $itemId       = $value['id'];
             $itemData     = $value['data'] ?: null;
             $itemOptions  = $value['options'] ?: array();
 
             if ($options['godroll']) { $itemOptions['godroll'] = true; } 
+            if ($options['adjust'])  { $itemOptions['adjust']  = $options['adjust'][$itemType]; } 
             if ($options['enhance']) { $itemOptions['enhance'] = $options['enhance']; } 
 
             $this->equipItem($itemId,$itemData,$itemOptions);

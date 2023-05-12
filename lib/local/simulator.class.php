@@ -40,7 +40,10 @@ class Simulator extends Base
       $simType    = $config['type'] ?: 'general';
       $iterations = $config['iterations'] ?: 1;
       $godroll    = ($config['godroll']) ? true : false;
+      $adjust     = ($config['adjust']) ? json_decode($config['adjust'],true) : false;
       $enhance    = $config['enhance'] ?: null;
+      $equip      = ($config['equip']) ? json_decode($config['equip'],true) : null;
+      $runes      = ($config['runes']) ? json_decode($config['runes'],true) : null;
       $aName      = $config['aname'] ?: null;
 
       $stats = array(
@@ -56,15 +59,9 @@ class Simulator extends Base
 
       // load in entities and equip them
       foreach ($baseRoles as $role => $entity) {
-         if (!$entity->load($config[$role]['id'],array('godroll' => $godroll, 'enhance' => $enhance, 'name' => $aName))) { 
+         if (!$entity->load($config[$role]['id'],array('godroll' => $godroll, 'enhance' => $enhance, 'name' => $aName, 'adjust' => $adjust, 'equip' => $equip, 'runes' => $runes))) { 
             $this->debug(0,"Could not find $role profile for ".$config[$role][$id]); 
             exit; 
-         }
-
-         if ($config[$role]['gear']) {
-            foreach ($config[$role]['gear'] as $itemId => $itemInfo) {
-               $entity->equipItem($itemId,$itemInfo['values'],$itemInfo['options']);
-            }
          }
       }
 
@@ -184,15 +181,15 @@ class Simulator extends Base
          // Find maximum type length
          $maxTypeLength = 0;
          foreach ($this->gearTypes as $gearType => $gearTypeLabel) {
-            $typeLength  = strlen($gearType);
+            $typeLength  = strlen($gearTypeLabel);
             if ($typeLength > $maxTypeLength) { $maxTypeLength = $typeLength; }
          }
          $maxTypeLength += 2;
 
 
          if ($results[$role]['type'] == 'player') {
-            foreach ($this->gearTypes as $gearType) {
-               $typeLength  = strlen($gearType);
+            foreach ($this->gearTypes as $gearType => $gearTypeLabel) {
+               $typeLength  = strlen($gearTypeLabel);
                $dotCount    = $maxTypeLength - $typeLength;
                $typeDisplay = sprintf("%s%s:",$gearTypeLabel,str_repeat('.',$dotCount));
 

@@ -19,7 +19,7 @@ $battle    = new Battle($debug);
 $constants = new Constants($debug);
 $simulator = new Simulator($debug);
 
-$opts = getopt(null,array('verbose','short','debug:','type:','attacker:','aname:','defender:','iterations:','godroll','enhance:'));
+$opts = getopt(null,array('verbose','short','debug:','type:','attacker:','aname:','defender:','iterations:','godroll','enhance:','adjust:','equip:','runes:'));
 
 $debugLevel    = $opts['debug'] ?: 0;
 $verbose       = (isset($opts['verbose'])) ? true : false;
@@ -30,7 +30,10 @@ $attackerName  = $opts['aname'] ?: null;
 $defenderBuild = $opts['defender'] ?: null;
 $uIterations   = $opts['iterations'] ?: 100;
 $uGodroll      = (isset($opts['godroll'])) ? true : false;
+$uAdjust       = $opts['adjust'] ?: null;
 $uEnhance      = $opts['enhance'] ?: null;
+$uEquip        = $opts['equip'] ?: null;
+$uRunes        = $opts['runes'] ?: null;
 
 $simulateType = strtolower($simulateType);
 
@@ -43,65 +46,27 @@ if (preg_match('/^(pve|pvp)$/i',$simulateType) && $attackerBuild && $defenderBui
       'iterations' => $uIterations,
       'godroll'    => $uGodroll,
       'enhance'    => $uEnhance,
+      'adjust'     => $uAdjust,
+      'equip'      => $uEquip,
+      'runes'      => $uRunes,
       'aname'      => $attackerName,
-   );
-}
-else if ($simulateType == 'test-builds' && $attackerBuild && $defenderBuild) {
-   $buildList = array();
-   foreach (explode(',',$attackerBuild) as $build) { $buildList[$build]['id'] = $build; }
-
-   $setup = array(
-      'type'       => 'pve',
-      'attacker'   => array('tests' => $buildList),
-      'defender'   => array('id' => $defenderBuild),
-      'iterations' => $uIterations,
-   );
-}
-else { 
-   // Sample two weapon test setup
-   $setup = array(
-      'type' => 'pve',
-      'iterations' => $uIterations,
-      'attacker' => array(
-         'id' => 'lunaivy-sotg-dragon',
-         'tests' => array(
-            'weaponA' => array(
-               'gear'  => array(
-                  'spear-of-the-gods' => array(
-                     'values'  => array('health' => 748, 'attack' => 333, 'defense' => 50, 'speed' => 0.86, 'earth.damage' => 175, 'lightning.resist' => 124),
-                     'options' => array('level'  => 7),
-                  ),
-               ),
-            ),
-            'weaponB' => array(
-               'gear'  => array(
-                  'spear-of-the-gods' => array(
-                     'values' => array('health' => 473, 'attack' => 247, 'defense' => 99, 'speed' => 0.92, 'earth.damage' => 279, 'lightning.resist' => 160),
-                     'options' => array('level'  => 7),
-                  ),
-               ),
-            ),
-         ),
-      ),
-      'defender' => array(
-         'id'   => 'wind-dragon-83',
-         'gear' => array(),
-      ),
    );
 }
 
 $debug->level($debugLevel);
 
-
 $tests = array();
 
 $baseConfig = array(
-   'attacker'   => array('id' => $setup['attacker']['id'], 'gear' => $setup['attacker']['gear']),
-   'defender'   => array('id' => $setup['defender']['id'], 'gear' => $setup['defender']['gear']),
+   'attacker'   => array('id' => $setup['attacker']['id']),
+   'defender'   => array('id' => $setup['defender']['id']),
    'type'       => $setup['type'],
    'iterations' => $setup['iterations'],
    'godroll'    => $setup['godroll'],
    'enhance'    => $setup['enhance'],
+   'adjust'     => $setup['adjust'],
+   'equip'      => $setup['equip'],
+   'runes'      => $setup['runes'],
    'aname'      => $setup['aname'],
 );
 
@@ -109,10 +74,6 @@ $testList = ($setup['attacker']['tests']) ? array_keys($setup['attacker']['tests
 
 foreach ($testList as $testName) {
    $testConfig = $baseConfig;
-   $overrides  = $setup['attacker']['tests'][$testName];
- 
-   if ($overrides['id'])   { $testConfig['attacker']['id'] = $overrides['id']; }
-   if ($overrides['gear']) { $testConfig['attacker']['gear'] = $overrides['gear']; }
 
    $testConfig['label'] = $testName;
 
