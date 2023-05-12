@@ -54,6 +54,14 @@
                   <p> Item Analytics </p>
                </a>
             </li>
+
+            <li class="nav-item">
+               <a href="/item/enhancement" class="nav-link<?php if (preg_match('~^/item/enhancement/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
+                  <i class="nav-icon fal fa-sparkles"></i>
+                  <p> Item Enhancement </p>
+               </a>
+            </li>
+
 <!--
             <li class="nav-header"><b>MONSTERS</b></li>
 

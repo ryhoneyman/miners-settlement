@@ -16,6 +16,23 @@ include 'ui/header.php';
   <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
     <div class="card card-outline card-success">
       <div class="card-header">
+        <b class="text-xl">v1.2.4</b><div class="card-tools text-yellow">2023-05-12 21:00 UTC</div>
+      </div>
+      <div class="card-body">
+        <ul>
+          <li><span class='text-green'>Frontend:</span> Added Item Enhancement page</li>
+          <li><span class='text-red'>Backend:</span> Adjustments to simulator CLI</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
+    <div class="card card-outline card-success">
+      <div class="card-header">
         <b class="text-xl">v1.2.3</b><div class="card-tools text-yellow">2023-05-10 14:30 UTC</div>
       </div>
       <div class="card-body">
