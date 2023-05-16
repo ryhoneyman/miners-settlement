@@ -213,7 +213,7 @@ class MySQL extends Base
 
        $this->freeResult($result);
 
-       $this->debug(7,"loaded ".count($return)." elements");
+       if (is_array($return)) { $this->debug(7,"loaded ".count($return)." elements"); }
 
        return $return;
     }
