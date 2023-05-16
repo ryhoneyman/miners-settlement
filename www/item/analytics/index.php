@@ -553,11 +553,20 @@ function buildItemInfo($itemInfo, $itemInput)
       $levelMin     = $attribMin + (($attribMin * $enhanceCalc['percent']/100) * $itemLevel);
       $levelMax     = $attribMax + (($attribMax * $enhanceCalc['percent']/100) * $itemLevel);
 
+
       if ($enhanceCalc['round']) { 
          $attribEMax = round($attribEMax); 
          $levelMin   = round($levelMin);
          $levelMax   = round($levelMax);
+
+         // In game rounding is hit or miss, and proven to be inconsistent - so we will open the valid range down one and up one.
+         if ($levelMin != $levelMax) {
+            if ($levelMin > 0) { $levelMin--; }
+            $levelMax++;
+         }
       }
+
+      //var_dump($attribMin,$attribMax,$itemLevel,$attribName,$attribEMax,$levelMin,$levelMax,"<br>");
 
       $levelPercent = ($levelMin == $levelMax) ? 100 : 
                       (($attribList[$attribName]['reversed']) ? 100 - ((($attribValue - $levelMax) * 100) / ($levelMin - $levelMax)) 
