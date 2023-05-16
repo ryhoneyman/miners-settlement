@@ -21,10 +21,12 @@ include 'ui/header.php';
       <div class="card-body">
         <ul>
           <li><span class='text-green'>Frontend:</span> Correct mininum/maxinum bounds due to rounding issues on Item Analytics</li>
+          <li><span class='text-green'>Frontend:</span> Added new links on Home page</li>
         </ul>
       </div>
     </div>
   </div>
+</div>
 
 
 <div class="row">
