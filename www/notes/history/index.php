@@ -16,12 +16,15 @@ include 'ui/header.php';
   <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
     <div class="card card-outline card-success">
       <div class="card-header">
-        <b class="text-xl">v1.2.5</b><div class="card-tools text-yellow">2023-05-16 12:00 UTC</div>
+        <b class="text-xl">v1.2.5</b><div class="card-tools text-yellow">2023-05-16 20:30 UTC</div>
       </div>
       <div class="card-body">
         <ul>
           <li><span class='text-green'>Frontend:</span> Correct mininum/maxinum bounds due to rounding issues on Item Analytics</li>
           <li><span class='text-green'>Frontend:</span> Added new links on Home page</li>
+          <li><span class='text-green'>Frontend:</span> Added Activation Codes link and feature display to Profile page</li>
+          <li><span class='text-green'>Frontend:</span> New Activation Codes page available in Profile</li>
+          <li><span class='text-red'>Backend:</span> Creation of database elements to support activation codes</li>
         </ul>
       </div>
     </div>
