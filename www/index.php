@@ -44,9 +44,9 @@ include 'ui/header.php';
 -->
    <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
       <div class="info-box">
-         <span class="info-box-icon bg-green elevation-1"><a href="/runepost"><i class="fas fa-sign" aria-hidden="true"></i></a></span>
+         <span class="info-box-icon bg-lightblue elevation-1"><a href="/runepost"><i class="fas fa-sign" aria-hidden="true"></i></a></span>
          <div class="ribbon-wrapper">
-            <div class="ribbon bg-danger">NEW</div>
+            <!--<div class="ribbon bg-danger">NEW</div>-->
          </div>
          <div class="info-box-content">
             <span class="info-box-text"> <a href="/runepost"><b>Runeposts</b></a></span>
@@ -61,12 +61,27 @@ include 'ui/header.php';
       <div class="info-box">
          <span class="info-box-icon bg-primary elevation-1"><a href="/item/gear/list"><i class="fas fa-sword" aria-hidden="true"></i></a></span>
          <div class="ribbon-wrapper">
-            <div class="ribbon bg-danger">NEW</div>
+            <!--<div class="ribbon bg-danger">NEW</div>-->
          </div>
          <div class="info-box-content">
             <span class="info-box-text"> <a href="/item/gear/list"><b>Gear List</b></a></span>
             <span class="info-box-number" style="font-weight:normal;">
                Examine gear attribute ranges
+            </span>
+         </div>
+      </div>
+   </div>
+
+   <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
+      <div class="info-box">
+         <span class="info-box-icon bg-yellow elevation-1"><a href="/item/crafting"><i class="fas fa-puzzle-piece" aria-hidden="true"></i></a></span>
+         <div class="ribbon-wrapper">
+            <div class="ribbon bg-danger">NEW</div>
+         </div>
+         <div class="info-box-content">
+            <span class="info-box-text"> <a href="/item/crafting"><b>Scheme Crafting</b></a></span>
+            <span class="info-box-number" style="font-weight:normal;">
+               Find details about crafting schemes
             </span>
          </div>
       </div>
@@ -82,6 +97,21 @@ include 'ui/header.php';
             <span class="info-box-text"> <a href="/item/analytics"><b>Item Analytics</b></a></span>
             <span class="info-box-number" style="font-weight:normal;">
                Perform research on items and their stats
+            </span>
+         </div>
+      </div>
+   </div>
+
+   <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
+      <div class="info-box">
+         <span class="info-box-icon bg-purple elevation-1"><a href="/item/enhancement"><i class="fas fa-sparkles" aria-hidden="true"></i></a></span>
+         <div class="ribbon-wrapper">
+            <div class="ribbon bg-danger">NEW</div>
+         </div>
+         <div class="info-box-content">
+            <span class="info-box-text"> <a href="/item/enhancement"><b>Item Enhancement</b></a></span>
+            <span class="info-box-number" style="font-weight:normal;">
+               Find details about enhancing items
             </span>
          </div>
       </div>
