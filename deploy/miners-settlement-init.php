@@ -13,4 +13,3 @@ define('APP_LOCALDIR',APP_BASEDIR.'/local');   // scripts for cron, daemons, sch
 set_include_path(get_include_path().PATH_SEPARATOR.APP_LIBDIR);
 
 ?>
-
