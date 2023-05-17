@@ -16,7 +16,24 @@ include 'ui/header.php';
   <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
     <div class="card card-outline card-success">
       <div class="card-header">
-        <b class="text-xl">v1.2.5</b><div class="card-tools text-yellow">2023-05-16 20:30 UTC</div>
+        <b class="text-xl">v1.3.1</b><div class="card-tools text-yellow">2023-05-17 20:00 UTC</div>
+      </div>
+      <div class="card-body">
+        <ul>
+          <li><span class='text-green'>Frontend:</span> Added jump links and return to top on Gear List page</li>
+          <li><span class='text-green'>Frontend:</span> Sorted items by tier and name on Gear List page</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
+    <div class="card card-outline card-success">
+      <div class="card-header">
+        <b class="text-xl">v1.3.0</b><div class="card-tools text-yellow">2023-05-16 20:30 UTC</div>
       </div>
       <div class="card-body">
         <ul>
