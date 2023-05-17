@@ -36,6 +36,14 @@ function dataDisplay($main)
 
    $main->var('gearList',getGear($main));
 
+   $gearNav = array();
+   foreach (array_keys($main->var('gearList')) as $gearType) {
+      $gearLabel = ($main->obj('constants')->gearTypes())[$gearType];
+      $gearNav[] = sprintf("<a href='#gear-%s' class='text-green'>%s</a>",strtolower(preg_replace('/\W/','-',$gearType)),$gearLabel);
+   }
+
+   print '<div class="mb-4">'.implode(" | ",$gearNav).'</div>';
+
    foreach ($main->var('gearList') as $gearType => $gearTypeList) {
       $return .= gearDisplay($main,$gearType,$gearTypeList);
    }
@@ -50,7 +58,9 @@ function gearDisplay($main, $gearType, $gearTypeList)
    $return = '<div class="row">'.
              '<div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">'.
              '<div class="card card-outline card-success">'.
-             '<div class="card-header"><b class="text-xl">'.$gearTypeLabel.'</b></div>'.
+             '<div class="card-header"><b class="text-xl" id="gear-'.strtolower(preg_replace('/\W/','-',$gearType)).'">'.$gearTypeLabel.'</b>'.
+             '<div class="card-tools"><a href="#"><button type="button" class="btn btn-tool"><i class="fas fa-arrow-alt-up"></i></button></a></div>'.
+             '</div>'.
              '<div class="card-body">'.
              '<table class="table table-striped table-hover" style="width:auto;" border=0 cellpadding=10>'.
              '<thead><tr class="text-yellow"><th></th><th>Name</th><th>Primary Stats</th><th>Elemental Stats</th></tr></thead><tbody>';
@@ -96,7 +106,7 @@ function getGear($main)
    $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\.]/','',$value)."'"; },
                                       array_unique(array_filter(array_keys($gearTypes)))));
 
-   $result   = $main->db()->query("select * from item where type in ($typeList) and active = 1",array('keyid' => 'id'));
+   $result   = $main->db()->query("select * from item where type in ($typeList) and active = 1 order by tier asc, name asc",array('keyid' => 'id'));
    $gearList = array();
 
    foreach ($result as $resultId => $resultInfo) {
