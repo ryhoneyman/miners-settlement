@@ -22,6 +22,7 @@ include 'ui/header.php';
         <ul>
           <li><span class='text-green'>Frontend:</span> Added jump links and return to top on Gear List page</li>
           <li><span class='text-green'>Frontend:</span> Sorted items by tier and name on Gear List page</li>
+          <li><span class='text-red'>Backend:</span> Added Aquatic Edge and Tempest Guard</li>
         </ul>
       </div>
     </div>
