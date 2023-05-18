@@ -552,15 +552,18 @@ function buildItemInfo($itemInfo, $itemInput)
       $attribEMax   = $attribMax + (($attribMax * $enhanceCalc['percent']/100) * $main->obj('constants')->maxEnhanceLevel());
       $levelMin     = $attribMin + (($attribMin * $enhanceCalc['percent']/100) * $itemLevel);
       $levelMax     = $attribMax + (($attribMax * $enhanceCalc['percent']/100) * $itemLevel);
-
+      $trueLevelMin = $levelMin;
+      $trueLevelMax = $levelMax;
 
       if ($enhanceCalc['round']) { 
-         $attribEMax = round($attribEMax); 
-         $levelMin   = round($levelMin);
-         $levelMax   = round($levelMax);
+         $attribEMax   = round($attribEMax); 
+         $levelMin     = round($levelMin);
+         $levelMax     = round($levelMax);
+         $trueLevelMin = $levelMin;
+         $trueLevelMax = $levelMax;
 
          // In game rounding is hit or miss, and proven to be inconsistent - so we will open the valid range down one and up one
-         // only if this item is non-base.
+         // only if this item is non-base.  We need the true min and max for percent calculations, so set those here.
          if ($itemLevel > 0 && $levelMin != $levelMax) {
             if ($levelMin > 0) { $levelMin--; }
             $levelMax++;
@@ -569,9 +572,13 @@ function buildItemInfo($itemInfo, $itemInput)
 
       //var_dump($attribMin,$attribMax,$itemLevel,$attribName,$attribEMax,$levelMin,$levelMax,"<br>");
 
-      $levelPercent = ($levelMin == $levelMax) ? 100 : 
-                      (($attribList[$attribName]['reversed']) ? 100 - ((($attribValue - $levelMax) * 100) / ($levelMin - $levelMax)) 
-                                                              : ((($attribValue - $levelMin) * 100) / ($levelMax - $levelMin)));
+      $levelPercent = ($trueLevelMin == $trueLevelMax) ? 100 : 
+                      (($attribList[$attribName]['reversed']) ? 100 - ((($attribValue - $trueLevelMax) * 100) / ($trueLevelMin - $trueLevelMax)) 
+                                                              : ((($attribValue - $trueLevelMin) * 100) / ($trueLevelMax - $trueLevelMin)));
+
+      // We allow for the user to provide one less and one more on values to counter rounding issues, so we need to cap percentages 
+      if ($levelPercent < 0)        { $levelPercent = 0; }
+      else if ($levelPercent > 100) { $levelPercent = 100; }
 
       $return[$attribName] = array(
          'min'           => $attribMin,
