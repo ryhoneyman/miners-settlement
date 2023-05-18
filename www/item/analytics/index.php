@@ -559,8 +559,9 @@ function buildItemInfo($itemInfo, $itemInput)
          $levelMin   = round($levelMin);
          $levelMax   = round($levelMax);
 
-         // In game rounding is hit or miss, and proven to be inconsistent - so we will open the valid range down one and up one.
-         if ($levelMin != $levelMax) {
+         // In game rounding is hit or miss, and proven to be inconsistent - so we will open the valid range down one and up one
+         // only if this item is non-base.
+         if ($itemLevel > 0 && $levelMin != $levelMax) {
             if ($levelMin > 0) { $levelMin--; }
             $levelMax++;
          }
