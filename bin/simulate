@@ -4,28 +4,18 @@ include_once 'miners-settlement-init.php';
 
 include_once 'common/debug.class.php';
 include_once 'local/simulator.class.php';
-include_once 'local/battle.class.php';
-include_once 'local/entity.class.php';
-include_once 'local/item.class.php';
-include_once 'local/rune.class.php';
 
 $debug     = new Debug(9,DEBUG_CLI);
-$item      = new Item($debug);
-$item1     = new Item($debug);
-$item2     = new Item($debug);
-$attacker  = new Entity($debug);
-$defender  = new Entity($debug);
-$battle    = new Battle($debug);
-$constants = new Constants($debug);
 $simulator = new Simulator($debug);
 
-$opts = getopt(null,array('verbose','short','debug:','type:','attacker:','aname:','defender:','iterations:','godroll','enhance:','adjust:','equip:','runes:'));
+$opts = getopt(null,array('verbose','short','debug:','type:','area:','attacker:','aname:','defender:','iterations:','godroll','enhance:','adjust:','equip:','runes:'));
 
 $debugLevel    = $opts['debug'] ?: 0;
 $verbose       = (isset($opts['verbose'])) ? true : false;
 $shortResults  = (isset($opts['short'])) ? true : false;
-$simulateType  = $opts['type'] ?: 'pve';
-$attackerBuild = $opts['attacker'] ?: null;
+$simulateType  = strtolower($opts['type']) ?: 'pve';
+$uArea         = strtolower($opts['area']) ?: null;
+$attackerBuild = $opts['attacker'] ?: 'player';
 $attackerName  = $opts['aname'] ?: null;
 $defenderBuild = $opts['defender'] ?: null;
 $uIterations   = $opts['iterations'] ?: 100;
@@ -35,59 +25,125 @@ $uEnhance      = $opts['enhance'] ?: null;
 $uEquip        = $opts['equip'] ?: null;
 $uRunes        = $opts['runes'] ?: null;
 
-$simulateType = strtolower($simulateType);
-
-
-if (preg_match('/^(pve|pvp)$/i',$simulateType) && $attackerBuild && $defenderBuild) { 
-   $setup = array(
-      'type'       => $simulateType,
-      'attacker'   => array('id' => $attackerBuild),
-      'defender'   => array('id' => $defenderBuild),
-      'iterations' => $uIterations,
-      'godroll'    => $uGodroll,
-      'enhance'    => $uEnhance,
-      'adjust'     => $uAdjust,
-      'equip'      => $uEquip,
-      'runes'      => $uRunes,
-      'aname'      => $attackerName,
-   );
-}
+if ($uArea) { $simulateType = 'area'; }
 
 $debug->level($debugLevel);
 
-$tests = array();
-
 $baseConfig = array(
-   'attacker'   => array('id' => $setup['attacker']['id']),
-   'defender'   => array('id' => $setup['defender']['id']),
-   'type'       => $setup['type'],
-   'iterations' => $setup['iterations'],
-   'godroll'    => $setup['godroll'],
-   'enhance'    => $setup['enhance'],
-   'adjust'     => $setup['adjust'],
-   'equip'      => $setup['equip'],
-   'runes'      => $setup['runes'],
-   'aname'      => $setup['aname'],
+   'attacker'   => array('id' => $attackerBuild),
+   'defender'   => array('id' => $defenderBuild),
+   'type'       => $simulateType,
+   'iterations' => $uIterations,
+   'godroll'    => $uGodroll,
+   'enhance'    => $uEnhance,
+   'adjust'     => $uAdjust,
+   'equip'      => $uEquip,
+   'runes'      => $uRunes,
+   'aname'      => $attackerName,
+   'label'      => $simulateType,
 );
 
-$testList = ($setup['attacker']['tests']) ? array_keys($setup['attacker']['tests']) : array($setup['type']);
-
-foreach ($testList as $testName) {
-   $testConfig = $baseConfig;
-
-   $testConfig['label'] = $testName;
-
-   $tests[$testName] = $testConfig;
-}
-
-foreach ($tests as $testName => $testInfo) {
-   //print "\nStarting test $testName ".json_encode($testInfo)."\n\n";
-
-   $results = $simulator->start($testInfo);
+if (preg_match('/^(pve|pvp)$/i',$simulateType) && $attackerBuild && $defenderBuild) { 
+   $simParams = $baseConfig;
+   $results   = $simulator->start($simParams);
 
    if ($verbose) { print json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n"; }
 
-   print $simulator->formatResults($results,array('short' => $shortResults, 'name' => $testName))."\n\n\n";
+   print "\n".$simulator->formatResults($results,array('short' => $shortResults, 'name' => $testName))."\n\n\n";
+}
+else if (preg_match('/^(tower)/i',$simulateType) && $attackerBuild) {
+   $testList   = array();
+   $towerMobs  = array();
+   $towerFiles = glob(APP_CONFIGDIR."/entity/tower-*.json");
+
+   foreach ($towerFiles as $filePath) {
+      $fileName = basename($filePath,".json");
+      $floor    = sprintf("%03d",preg_replace('/^tower\-/','',$fileName));
+      $towerMobs[$floor] = $fileName;
+   }
+
+   ksort($towerMobs);
+
+   foreach ($towerMobs as $floor => $mobFile) {
+      $testConfig = $baseConfig;
+
+      $testConfig['defender'] = array('id' => $mobFile);
+      $testConfig['label']    = $mobFile;
+
+      $testList[$mobFile] = $testConfig;
+   }
+
+   print "\n";
+   foreach ($testList as $testName => $testInfo) {
+      $results = $simulator->start($testInfo);
+
+      if ($verbose) { json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n"; }
+
+      printf("%25s: %6s\n",$results['defender']['name'],$results['attacker']['chance.win']);
+   }
+}
+else if (preg_match('/^(area)/i',$simulateType) && $attackerBuild) {
+   $testAreas = array(
+      'mitar' => array(
+         'goblin-knocker' => array(),
+         'hobgoblin' => array(),
+         'stone-spider' => array(),
+         'uhr-rahz' => array(),
+      ),
+   );
+   
+   if (!$testAreas[$uArea]) { print "\nUnknown area specified.\n\n"; exit; }
+   
+   $testList = $testAreas[$uArea];
+   
+   foreach ($testList as $defenderId => $testSetup) {
+      $testName   = $defenderId;
+      $testConfig = $baseConfig;
+   
+      $testConfig['defender']['id'] = $defenderId;
+      $testConfig['label']          = ucfirst($uArea).' '.$testName;
+   
+      $tests[$testName] = $testConfig;
+   }
+   
+   $progress = 0;
+   
+   foreach ($tests as $testName => $testInfo) {
+      $progress++;
+      //print "\nStarting test $testName ".json_encode($testInfo)."\n\n";
+   
+      $results = $simulator->start($testInfo);
+   
+      if ($progress == 1) {
+         $output = "\n";
+         $maxTypeLength = 0;
+         foreach ($simulator->gearTypes as $gearType => $gearTypeLabel) {
+            $typeLength  = strlen($gearTypeLabel);
+            if ($typeLength > $maxTypeLength) { $maxTypeLength = $typeLength; }
+         }
+         $maxTypeLength += 2;
+   
+         foreach ($simulator->gearTypes as $gearType => $gearTypeLabel) {
+            $typeLength  = strlen($gearTypeLabel);
+            $dotCount    = $maxTypeLength - $typeLength;
+            $typeDisplay = sprintf("%s%s:",$gearTypeLabel,str_repeat('.',$dotCount));
+   
+            $output .= sprintf("%s %s\n",$typeDisplay,$simulator->formatItem($results['attacker']['gear'][$gearType]));
+         }
+   
+         if (is_array($results['attacker']['gear']['runes'])) {
+            $dotCount    = $maxTypeLength - strlen('Runes');
+            $output .= sprintf("%s%s: %s\n\n",'Runes',str_repeat('.',$dotCount),implode(', ',array_map('strtoupper',$results['attacker']['gear']['runes'])));
+         }
+         print "$output\n";
+      }
+
+      if ($verbose) { print json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n"; }
+
+      printf("%20s: %s\n",$results['defender']['name'],$results['attacker']['chance.win']);
+
+      //print $simulator->formatResults($results,array('short' => $shortResults, 'name' => $testName))."\n\n\n";
+   }
 }
 
 ?>
