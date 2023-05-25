@@ -111,14 +111,46 @@ class MinersMain extends Main
       return true;
    }
 
-   public function fetchGearList()
+   public function fetchPlayerGearList()
    {
       $userId   = $this->userId;
-      $gearList = $this->db()->query(sprintf("select g.*,i.* from gear g, item i where g.item_id = i.id and profile_id = '%s'",$this->db()->escapeString($userId)),array('keyid' => 'id'));
+      $gearList = $this->db()->query(sprintf("select g.*,i.*, g.id as id from gear g, item i where g.item_id = i.id and profile_id = '%s'",$this->db()->escapeString($userId)),array('keyid' => 'id'));
 
       if ($gearList === false) { $this->error('Could not query gear list'); return false; }
 
+      $this->var('playerGearList',$gearList);
+
+      return true;
+   }
+
+   public function fetchGearList()
+   {
+      $gearTypes = $this->obj('constants')->gearTypes();
+      $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\.]/','',$value)."'"; },
+                                         array_unique(array_filter(array_keys($gearTypes)))));
+
+      $result   = $this->db()->query("select * from item where type in ($typeList) and active = 1 order by tier asc, name asc",array('keyid' => 'id'));
+      $gearList = array();
+
+      foreach ($result as $resultId => $resultInfo) {
+         $gearList[$resultInfo['type']][$resultId] = $resultInfo;
+      }
+
       $this->var('gearList',$gearList);
+
+      return true;
+   }
+
+   public function fetchMonsterList($area = null)
+   {
+      $query = (is_null($area)) ? "select l.*,m.* from monster m left join location l on m.location_id = l.id" 
+                                : sprintf("select l.*,m.* from monster m, location l where m.location_id = l.id and l.area = '%s'",$this->db()->escapeString($area));
+
+      $monsterList = $this->db()->query($query,array('keyid' => 'id'));
+
+      if ($monsterList === false) { $this->error('Could not query monster list'); return false; }
+
+      $this->var('monsterList',$monsterList);
 
       return true;
    }
