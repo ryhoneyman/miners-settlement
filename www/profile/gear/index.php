@@ -19,7 +19,7 @@ $input = $main->obj('input');
 
 $main->buildClass('constants','Constants',null,'local/constants.class.php');
 
-$main->fetchGearList();
+$main->fetchPlayerGearList();
 
 $deleteGear = $input->get('delete','alphanumeric,dot,dash,underscore,space');
 
@@ -51,7 +51,7 @@ function gearDisplay($main)
    $html      = $main->obj('html');
    $constants = $main->obj('constants');
    $userId    = $main->userId;
-   $gearList  = $main->var('gearList');
+   $gearList  = $main->var('playerGearList');
 
    $gearContent = "<table border=0 class='table' style='width:auto;'>".
                   "<thead><tr><th></th><th></th><th>Name</h><th>Level</th><th>Stats</th><th></th><th></th></tr></thead>".
@@ -83,6 +83,7 @@ function gearDisplay($main)
          }
 
          $levelBadge = sprintf("<span class='badge' style='width:25px; background:black; color:white;'>%s</span>",$gearLevel);
+         //$levelBadge = sprintf("<i class='fas fa-minus text-sm'></i> <span class='badge' style='width:25px; background:black; color:white;'>%s</span> <i class='fas fa-plus text-sm'></i>",$gearLevel);
 
          $deleteButton = sprintf("<button class='btn btn-tool fa fa-trash text-danger open-modal' data-name='%s' data-value='%s' ".
                                  "data-toggle='modal' data-target='#modal-window' title='Delete Gear' style='border:none;'></button>",
