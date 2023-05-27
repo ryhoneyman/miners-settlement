@@ -16,6 +16,23 @@ include 'ui/header.php';
   <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
     <div class="card card-outline card-success">
       <div class="card-header">
+        <b class="text-xl">v1.3.3</b><div class="card-tools text-yellow">2023-05-27 17:00 UTC</div>
+      </div>
+      <div class="card-body">
+        <ul>
+          <li><span class='text-green'>Frontend:</span> Added images to pulldown in Item Analytics</li>
+          <li><span class='text-red'>Backend:</span> Added new Einlor rings</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
+    <div class="card card-outline card-success">
+      <div class="card-header">
         <b class="text-xl">v1.3.2</b><div class="card-tools text-yellow">2023-05-19 16:00 UTC</div>
       </div>
       <div class="card-body">
