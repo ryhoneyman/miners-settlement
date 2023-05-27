@@ -55,9 +55,11 @@ $itemBase = $itemList[$selectedItem] ?: null;     // Base is the raw data for th
 $main->var('itemList',$itemList);
 
 // Build the pulldown list of items
-$selectItem = array();
+$selectItem = array('' => 'Select an Item');
+$selectOpts = array('class' => 'form-control gear', 'style' => 'width:auto;');
 foreach ($itemList as $itemName => $itemData) { 
    $selectItem[ucwords(str_replace('.',' ',$itemData['type']))][$itemName] = $itemData['label']; 
+   $selectOpts['images'][$itemName] = $itemData['image'];
 }
 ksort($selectItem);
 
@@ -110,7 +112,7 @@ print $html->startForm(array('method' => 'post'));
    <?php
       print $html->startForm(array('method' => 'post'));
       print "<div class='input-group'>";
-      print $html->select('item',$selectItem,$selectedItem,array('style' => 'width:auto;'));
+      print $html->select('item',$selectItem,$selectedItem,$selectOpts);
       print "<span class='input-group-append'>";
       print $html->submit('select','Select',array('class' => 'btn btn-primary btn-sm'));
       print "</span></div>";
@@ -194,6 +196,15 @@ print $html->startForm(array('method' => 'post'));
 
 <?php
 print $html->endForm();
+
+print "
+<script type='text/javascript'>
+   $('.gear').select2({
+      templateSelection: select2_template,
+      templateResult: select2_template,
+   });
+</script>
+";
 
 include 'ui/footer.php';
 
