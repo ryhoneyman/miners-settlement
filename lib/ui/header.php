@@ -23,10 +23,13 @@
 <script src="/assets/alte/current/dist/js/adminlte.js"></script>
 <!-- Toastr -->
 <script src="/assets/alte/current/plugins/toastr/toastr.min.js" type="text/javascript"></script>
+<!-- Select2 -->
+<script src="/assets/alte/current/plugins/select2/js/select2.min.js" type="text/javascript"></script>
 <!-- Font Awesome Icons -->
 <script src="https://kit.fontawesome.com/a73a4c549e.js" crossorigin="anonymous"></script>
 <!-- local js -->
 <script src="/assets/js/ms.js" type="text/javascript"></script>
+
 <!-- local css -->
 <link rel="stylesheet" href="/assets/css/ms.css">
 <!-- overlayScrollbars -->
