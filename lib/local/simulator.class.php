@@ -5,7 +5,7 @@
 include_once 'common/base.class.php';
 include_once 'local/constants.class.php';
 include_once 'local/entity.class.php';
-include_once 'local/battle.class.php';
+include_once 'local/neobattle.class.php';
 
 class Simulator extends Base
 {
@@ -33,9 +33,9 @@ class Simulator extends Base
 
       $this->debug(9,"config = ".json_encode($config));
 
-      $baseAttacker = new Entity($this->debug);
-      $baseDefender = new Entity($this->debug);
-      $battle       = new Battle($this->debug);
+      $attacker = new Entity($this->debug);
+      $defender = new Entity($this->debug);
+      $battle   = new Battle($this->debug);
 
       $simType    = $config['type'] ?: 'general';
       $iterations = $config['iterations'] ?: 1;
@@ -52,13 +52,13 @@ class Simulator extends Base
          'time'  => array('start' => microtime(true)),
       );
 
-      $baseRoles = array(
-         'attacker' => $baseAttacker,
-         'defender' => $baseDefender,
+      $roles = array(
+         'attacker' => $attacker,
+         'defender' => $defender,
       );
 
       // load in entities and equip them
-      foreach ($baseRoles as $role => $entity) {
+      foreach ($roles as $role => $entity) {
          if (!$entity->load($config[$role]['id'],array('godroll' => $godroll, 'enhance' => $enhance, 'name' => $aName, 'adjust' => $adjust, 'equip' => $equip, 'runes' => $runes))) { 
             $this->debug(0,"Could not find $role profile for ".$config[$role][$id]); 
             exit; 
@@ -69,19 +69,23 @@ class Simulator extends Base
 
       if ($simType == 'pvp') { $battleOpts['revive'] = false; }
 
+      $iterCount = 0;
+
       while ($iterations-- > 0) {
-         $attacker = clone $baseAttacker;
-         $defender = clone $baseDefender;
-
-         $roles = array(
-            'attacker' => $attacker,
-            'defender' => $defender,
-         );
-
+         $iterCount++;
+         //$cloneAttacker = clone $attacker;
+         //$cloneDefender = clone $defender;
+         //$results     = $battle->start($cloneAttacker,$cloneDefender,$battleOpts);
          $results     = $battle->start($attacker,$defender,$battleOpts);
          $resultStats = $results['info']['stats'];
          $duration    = $resultStats['duration'];
 
+         if ($iterCount == 1) { 
+            $battleOpts['fast.start'] = $results['info']['fast.start']; 
+            //print json_encode($battleOpts['fast.start'],JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n"; exit; 
+         }
+
+         // Finalize information for display on final run
          if ($iterations == 0) {
             foreach ($roles as $role => $entity) {
                $stats[$role]["name"]        = $entity->name();
@@ -100,7 +104,7 @@ class Simulator extends Base
                }
             }
 
-            $stats['effective'] = $results['info']['effective'];
+            $stats['effective'] = $results['info']['base'];
          }
 
          //print json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n";
@@ -209,7 +213,7 @@ class Simulator extends Base
 
             foreach ($effectList as $affects => $effectAttribList) {
                foreach ($effectAttribList as $attribName => $attribList) {
-                  foreach ($attribList as $effectInfo) { 
+                  foreach ($attribList as $effectName => $effectInfo) {
                      $desc   = $effectDesc[$affects][$attribName];
                      $format = $desc['format'];
                      $vars   = $desc['vars']; 
@@ -226,10 +230,10 @@ class Simulator extends Base
             $output .= "\n";
          }
 
-         $output .= sprintf("Effective Power: %s\n\n\n",$this->formatAttribs($results['effective'][$role]));
+         $output .= sprintf("\nEffective Power: %s\n\n",$this->formatAttribs($results['effective'][$role]));
       }
 
-      $output .= "=== Results =======================\n\n";
+      $output .= "=== Results ================================================\n\n";
 
       foreach (array('attacker','defender') as $role) {
          if ($shortOutput && $role == 'defender') { continue; }
@@ -315,15 +319,16 @@ class Simulator extends Base
             $output .= sprintf("%s%s\n",$typeDisplay,$this->formatItem($results[$role]['gear'][$gearType]));
          }
 
+
          if (is_array($results[$role]['gear']['runes'])) {
             $dotCount    = $maxTypeLength - strlen('Runes');
-            $output .= sprintf("%s%s: %s\n\n",'Runes',$dotCount,implode(', ',array_map('strtoupper',$results[$role]['gear']['runes'])));
+            $output .= sprintf("%s%s: %s\n",'Runes',$dotCount,implode(', ',array_map('strtoupper',$results[$role]['gear']['runes'])));
          }
 
-         $output .= sprintf("Effective Power: %s\n\n\n",$this->formatAttribs($results['effective'][$role]));
+         $output .= sprintf("\nEffective Power: %s\n\n\n",$this->formatAttribs($results['effective'][$role]));
       }
 
-      $output .= "=== Results =======================\n";
+      $output .= "=== Results ================================================\n";
 
       foreach (array('attacker','defender') as $role) {
          $nameLength  = strlen($results[$role]['name']);
@@ -333,6 +338,33 @@ class Simulator extends Base
          $output .= sprintf("%s Won %6s (averging %d hits for %d total damage over %1.2f seconds)\n",
                             $nameDisplay,$results[$role]['chance.win'],$results[$role]['hits']['average'],
                             $results[$role]['damage']['average'],$results['duration']['average']);
+      }
+
+      return $output;
+   }
+
+   public function showGear($results)
+   {
+      $output        = '';
+      $maxTypeLength = 0;
+
+      foreach ($this->gearTypes as $gearType => $gearTypeLabel) {
+         $typeLength  = strlen($gearTypeLabel);
+         if ($typeLength > $maxTypeLength) { $maxTypeLength = $typeLength; }
+      }
+      $maxTypeLength += 2;
+   
+      foreach ($this->gearTypes as $gearType => $gearTypeLabel) {
+         $typeLength  = strlen($gearTypeLabel);
+         $dotCount    = $maxTypeLength - $typeLength;
+         $typeDisplay = sprintf("%s%s:",$gearTypeLabel,str_repeat('.',$dotCount));
+   
+         $output .= sprintf("%s %s\n",$typeDisplay,$this->formatItem($results['attacker']['gear'][$gearType]));
+      }
+   
+      if (is_array($results['attacker']['gear']['runes'])) {
+         $dotCount    = $maxTypeLength - strlen('Runes');
+         $output .= sprintf("%s%s: %s\n\n",'Runes',str_repeat('.',$dotCount),implode(', ',array_map('strtoupper',$results['attacker']['gear']['runes'])));
       }
 
       return $output;
