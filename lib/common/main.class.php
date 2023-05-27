@@ -190,6 +190,10 @@ class Main extends Base
          if (!$this->buildClass('html','HTML',null,'html.class.php')) { exit; }
       }
 
+      if ($options['adminlte']) {
+         if (!$this->buildClass('adminlte','AdminLTE',null,'adminlte.class.php')) { exit; }
+      }
+
       if ($options['toastr']) {
          if (!$this->buildClass('toastr','Toastr',null,'toastr.class.php')) { exit; }
       }
