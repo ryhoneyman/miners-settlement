@@ -43,7 +43,11 @@ function dataDisplay($main)
       $areaNav[] = sprintf("<a href='#area-%s' class='text-green'>%s</a>",strtolower(preg_replace('/\W/','-',$areaName)),$areaName);
    }
 
-   print '<div class="mb-4">'.implode(" | ",$areaNav).'</div>';
+   foreach (array_chunk($areaNav,6) as $areaChunk) {
+      $return .= '<div>'.implode(" | ",$areaChunk).'</div>';
+   }
+   
+   $return .= '<div class="mb-4"></div>'; 
 
    foreach ($main->var('runewordList') as $areaName => $areaPosts) {
       $return .= areaDisplay($main,$areaName,$areaPosts);
