@@ -53,7 +53,7 @@ class AdminLTE extends Base
    
    function errorCard($content, $cardProperties = null)
    {
-      $containerClass = $cardProperties['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';;
+      $containerClass = $cardProperties['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';
       $cardClass      = $cardProperties['card'] ?: 'card-danger';
       $cardTitle      = $cardProperties['title'] ?: 'Error';
       $cardId         = $cardProperties['id'] ?: 'errorcard';
@@ -74,7 +74,7 @@ class AdminLTE extends Base
    
    function displayCard($content, $cardProperties = null)
    {
-      $containerClass = $cardProperties['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';;
+      $containerClass = $cardProperties['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';
       $cardClass      = $cardProperties['card'] ?: 'card-primary';
       $cardTitle      = $cardProperties['title'] ?: 'Card';
       $cardId         = $cardProperties['id'] ?: 'card';
@@ -92,7 +92,7 @@ class AdminLTE extends Base
    
    function displayTabbedCard($content, $cardProperties = null)
    {
-      $containerClass = $cardProperties['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';;
+      $containerClass = $cardProperties['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';
       $cardClass      = $cardProperties['card'] ?: 'card-primary';
       $cardTitle      = $cardProperties['title'] ?: 'Card';
       $cardId         = $cardProperties['id'] ?: 'tabcard';
