@@ -123,6 +123,15 @@ class MinersMain extends Main
       return true;
    }
 
+   public function getItemByName($itemName)
+   {
+      $result = $this->db()->query(sprintf("select * from item where name = '%s' and active = 1",$this->db()->escapeString($itemName)),array('multi' => false));
+
+      if ($result === false) { $this->error('Could not query monster list'); return false; }
+
+      return $result;
+   }
+
    public function fetchGearList()
    {
       $gearTypes = $this->obj('constants')->gearTypes();
