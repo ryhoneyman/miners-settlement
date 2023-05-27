@@ -21,6 +21,7 @@ include 'ui/header.php';
       <div class="card-body">
         <ul>
           <li><span class='text-green'>Frontend:</span> Added images to pulldown in Item Analytics</li>
+          <li><span class='text-green'>Frontend:</span> Adjusted table formatting/alignment in Runeposts</li>
           <li><span class='text-red'>Backend:</span> Added new Einlor rings</li>
         </ul>
       </div>
