@@ -92,6 +92,13 @@ if ($itemValid) {
 
 include 'ui/header.php';
 
+print "
+<style>
+.select2-results__option { line-height:1.0; }
+.select2-container--default .select2-results>.select2-results__options { max-height: 350px; }
+</style>
+";
+
 // Need Toastr loaded from header first to process these alerts.
 if ($share) {
    if ($shareResult) { $toastr->success('Item link copied to clipboard!'); }
