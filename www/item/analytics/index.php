@@ -654,7 +654,7 @@ function getGear($main)
    $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\.]/','',$value)."'"; },
                                       array_unique(array_filter(array_keys($gearTypes)))));
 
-   $result   = $main->db()->query("select * from item where type in ($typeList) and active = 1 order by label asc",array('keyid' => 'id'));
+   $result   = $main->db()->query("select * from item where type in ($typeList) and active = 1 order by tier asc, label asc",array('keyid' => 'id'));
    $gearList = array();
 
    foreach ($result as $resultId => $resultInfo) {
