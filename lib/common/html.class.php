@@ -393,6 +393,9 @@ class HTML extends Base
       $disabled = ($attrib['disabled']) ? 'disabled'            : '';
       $required = ($attrib['required']) ? 'required="required"' : '';
       $keyopts  = ($attrib['keyopts'])  ? $attrib['keyopts']    : array();
+      $images   = ($attrib['images'])   ? $attrib['images']     : array();
+
+      $placeholder = ($attrib['placeholder']) ? $attrib['placeholder'] : '';
 
       if (isset($select)) {
          if (is_array($select)) {
@@ -409,8 +412,8 @@ class HTML extends Base
       if (!is_array($options)) { $options = array(); }
 
       $html = sprintf("<select $disabled $required class='$class' id='%s' style='$style' name='%s%s' size='%s'%s%s>\n",
-                      $name,$name,($multi) ? "[]" : "",$size,($multi) ? " multiple" : "",
-                      ($script) ? " $script" : "");
+                      $name,$name,($multi) ? "[]" : '',$size,($multi) ? " multiple" : '',
+                      ($script) ? " $script" : '');
 
       foreach ($options as $key => $value) {
          if (is_array($value)) {
@@ -420,8 +423,9 @@ class HTML extends Base
                //$disabledText = ($disabled) ? $keyopts['disabled'][$gkey] : '';
 
                if (!$gvalue) { $gvalue = $gkey; }
-               $html .= sprintf("<option value='%s'%s>%s</option>\n",
-                                $gkey,(isset($selected[$gkey])) ? " selected" : "",$gvalue);
+               $html .= sprintf("<option value='%s'%s%s>%s</option>\n",
+                                $gkey,(isset($selected[$gkey])) ? " selected" : "",
+                                ($images[$gkey]) ? " data-image='".$images[$gkey]."'" : '',$gvalue);
             }
             $html .= "</optgroup>\n";
          }
@@ -429,10 +433,11 @@ class HTML extends Base
             $disabled     = (isset($keyopts['disabled'][$key])) ? true : false;
             $disabledText = ($disabled) ? $keyopts['disabled'][$key] : '';
 
-            $html .= sprintf("<option value='%s'%s%s>%s</option>\n",
+            $html .= sprintf("<option value='%s'%s%s%s>%s</option>\n",
                              $key,
                              (isset($selected[$key])) ? " selected" : "",
                              ($disabled) ? " disabled" : "",
+                             ($images[$key]) ? " data-image='".$images[$key]."'" : '',
                              $value.(($disabled) ? $disabledText : ''));
          }
       }
