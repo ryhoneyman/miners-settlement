@@ -83,7 +83,7 @@ function runepostDisplay($main, $postName, $postInfo)
              '<div class="card-header"><b class="text-lg">'.$postName.'</b></div>'.
              '<div class="card-body">'.
              '<table class="table table-striped table-hover" border=0 cellpadding=10>'.
-             '<thead><tr class="text-yellow"><th>Name</th><th>Gear</th><th>Effects</th><th>Required Runes</th></tr></thead><tbody>';
+             '<thead><tr class="text-yellow"><th style="width:25%">Name</th><th style="width:25%">Gear</th><th style="width:35%">Effects</th><th style="width:15%">Required Runes</th></tr></thead><tbody>';
 
    $runeList = $main->var('runeList');
    $gearInfo = $main->var('gearInfo');
