@@ -73,9 +73,14 @@ else if (preg_match('/^(tower)/i',$simulateType) && $attackerBuild) {
       $testList[$mobFile] = $testConfig;
    }
 
-   print "\n";
+   $progress = 0;
+
    foreach ($testList as $testName => $testInfo) {
+      $progress++;
+
       $results = $simulator->start($testInfo);
+
+      if ($progress == 1) { print "\n".$simulator->showGear($results)."\n"; }
 
       if ($verbose) { json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n"; }
 
@@ -114,29 +119,7 @@ else if (preg_match('/^(area)/i',$simulateType) && $attackerBuild) {
    
       $results = $simulator->start($testInfo);
    
-      if ($progress == 1) {
-         $output = "\n";
-         $maxTypeLength = 0;
-         foreach ($simulator->gearTypes as $gearType => $gearTypeLabel) {
-            $typeLength  = strlen($gearTypeLabel);
-            if ($typeLength > $maxTypeLength) { $maxTypeLength = $typeLength; }
-         }
-         $maxTypeLength += 2;
-   
-         foreach ($simulator->gearTypes as $gearType => $gearTypeLabel) {
-            $typeLength  = strlen($gearTypeLabel);
-            $dotCount    = $maxTypeLength - $typeLength;
-            $typeDisplay = sprintf("%s%s:",$gearTypeLabel,str_repeat('.',$dotCount));
-   
-            $output .= sprintf("%s %s\n",$typeDisplay,$simulator->formatItem($results['attacker']['gear'][$gearType]));
-         }
-   
-         if (is_array($results['attacker']['gear']['runes'])) {
-            $dotCount    = $maxTypeLength - strlen('Runes');
-            $output .= sprintf("%s%s: %s\n\n",'Runes',str_repeat('.',$dotCount),implode(', ',array_map('strtoupper',$results['attacker']['gear']['runes'])));
-         }
-         print "$output\n";
-      }
+      if ($progress == 1) { print "\n".$simulator->showGear($results)."\n"; }
 
       if ($verbose) { print json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n"; }
 
@@ -145,5 +128,76 @@ else if (preg_match('/^(area)/i',$simulateType) && $attackerBuild) {
       //print $simulator->formatResults($results,array('short' => $shortResults, 'name' => $testName))."\n\n\n";
    }
 }
+else if (preg_match('/^(minimum)/i',$simulateType) && $uEquip) {
+   // --maxenhance (level to stop at) --chancewin (threshold to win in %)
+   $maxEnhance   = 10;
+   $winThreshold = 100;
+   
+   $equipment = json_decode($uEquip,true);
+   
+   $simInfo  = array();
+   $gearData = array();
+   
+   foreach ($equipment as $gearType => $gearInfo) {
+      $gearData['equip'][$gearType]  = array('name' => $gearInfo['name'], 'level' => 0);
+      $gearData['adjust'][$gearType] = array('base' => 0);
+   }
+   
+   print "\nPhase 1: (Find out which enhance level across all items of a 100% quality item can win)\n";
+   
+   for ($gearLevel = 0; $gearLevel < $maxEnhance; $gearLevel++) {
+      foreach ($equipment as $gearType => $gearInfo) {
+         $gearData['equip'][$gearType]['level'] = $gearLevel;
+         $gearData['adjust'][$gearType]['base'] = 100;
+      }
+   
+      $baseConfig['iterations'] = 10;
+      $baseConfig['equip']  = json_encode($gearData['equip']);
+      $baseConfig['adjust'] = json_encode($gearData['adjust']);
+   
+      printf("  - %2d: ",$gearLevel);
+   
+      $results = $simulator->start($baseConfig);
+   
+      $chanceWin = $results['attacker']['chance.win'];
+   
+      print "$chanceWin\n";
+   
+      if ($chanceWin >= $winThreshold) {
+         $simInfo['phase1.level'] = ($gearLevel == 0) ? $gearLevel : $gearLevel - 1;
+         print "  * Back level to ".$simInfo['phase1.level']." in order to fine tune results.\n";
+         break;
+      }
+   
+      //print $simulator->formatResults($results,array('short' => true))."\n\n";
+   }
+   
+   
+   if (!array_key_exists('phase1.level',$simInfo)) {
+      print "\nSpecified gear and enhance levels cannot meet threshold to win\n";
+      exit;
+   }
+   
+   print "\nPhase 2: (Incrementally change enhance level by +1 in combination on each item)\n";
+   
+   $baseData = array();
+   foreach ($equipment as $gearType => $gearInfo) {
+      $baseData['equip'][$gearType]['level'] = $simInfo['phase1.level'];
+      $baseData['adjust'][$gearType]['base'] = 100;
+   }
+   
+   foreach ($equipment as $pGearType => $pGearInfo) {
+      //$gearMatrix['equip'][$pGearType]['level']++;
+      foreach ($equipment as $sGearType => $sGearInfo) {
+         //if ($pGearType == $sGearType) { continue; }
+         $gearMatrix = $baseData;
+         $gearMatrix['equip'][$sGearType]['level']++;
+         print "$pGearType/$sGearType: ".json_encode($gearMatrix['equip'])."\n";
+      }
+   }
+}
+
+?>
+<?php
 
 ?>
