@@ -1,9 +1,0 @@
-{
-    "name": "AMULET OF PROTECTION",
-    "type": "amulet",
-    "image": "https://funventure.eu/wiki/minerssettlement/images/b/b6/AmuletOfProtection.png",
-    "health.min": 90,
-    "health.max": 150,
-    "fire.resist.min": 15,
-    "fire.resist.max": 35
-}

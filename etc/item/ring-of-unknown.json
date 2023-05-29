@@ -1,9 +1,0 @@
-{
-    "hidden": true,
-    "name": "RING OF UNKOWN",
-    "type": "ring",
-    "health.min": 0,
-    "health.max": 5500,
-    "wind.resist.min": 0,
-    "wind.resist.max": 500
-}

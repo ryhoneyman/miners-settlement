@@ -1,9 +1,0 @@
-{
-    "name": "Dummy High Defense 300s",
-    "type": "monster",
-    "max.timer": 300,
-    "health": 10000000,
-    "defense": 50000,
-    "attack": 0,
-    "speed": 1
-}
