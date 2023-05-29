@@ -32,7 +32,7 @@
         },
         "earth": {
             "color": "#00ff00",
-            "icon": "leaf"
+            "icon": "seedling"
         },
         "lightning": {
             "color": "#ffff00",
@@ -67,7 +67,7 @@
     },
     "effectDesc": {
         "myself": {
-            "stun.resist": {
+            "stun-resist": {
                 "format": "STUN RESIST: %d%%", 
                 "vars": ["percent.chance"]
             },
@@ -79,51 +79,51 @@
                 "format": "LIFE STEAL %d%% OF BASE ATTACK",
                 "vars": ["percent.adjust"]
             },
-            "extra.defense": {
+            "extra-defense": {
                 "format": "%d%% CHANCE FOR %d%% EXTRA DEFENSE",
                 "vars": ["percent.chance","percent.adjust"]
             },
-            "critical.hit": {
+            "critical-hit": {
                 "format": "%d%% CHANCE FOR %d%% CRITICAL HIT",
                 "vars": ["percent.chance","percent.adjust"]
             },
-            "fire.damage": {
+            "fire-damage": {
                 "format": "FIRE DAMAGE: %d",
                 "vars": ["flat.adjust"]
             },
-            "earth.damage": {
+            "earth-damage": {
                 "format": "EARTH DAMAGE: %d",
                 "vars": ["flat.adjust"]
             },
-            "wind.damage": {
+            "wind-damage": {
                 "format": "WIND DAMAGE: %d",
                 "vars": ["flat.adjust"]
             },
-            "water.damage": {
+            "water-damage": {
                 "format": "WATER DAMAGE: %d",
                 "vars": ["flat.adjust"]
             },
-            "lightning.damage": {
+            "lightning-damage": {
                 "format": "LIGHTNING DAMAGE: %d",
                 "vars": ["flat.adjust"]
             },
-            "fire.resist": {
+            "fire-resist": {
                 "format": "FIRE RESIST: %d",
                 "vars": ["flat.adjust"]
             },
-            "earth.resist": {
+            "earth-resist": {
                 "format": "EARTH RESIST: %d",
                 "vars": ["flat.adjust"]
             },
-            "wind.resist": {
+            "wind-resist": {
                 "format": "WIND RESIST: %d",
                 "vars": ["flat.adjust"]
             },
-            "water.resist": {
+            "water-resist": {
                 "format": "WATER RESIST: %d",
                 "vars": ["flat.adjust"]
             },
-            "lightning.resist": {
+            "lightning-resist": {
                 "format": "LIGHTNING RESIST: %d",
                 "vars": ["flat.adjust"]
             }
@@ -155,8 +155,8 @@
         "shield": "Shield",
         "amulet": "Amulet",
         "ring": "Ring",
-        "weapon.skin": "Weapon Skin",
-        "shield.skin": "Shield Skin"
+        "weapon-skin": "Weapon Skin",
+        "shield-skin": "Shield Skin"
     },
     "elements": ["fire","earth","wind","water","lightning"],
     "attribs": {
@@ -168,7 +168,8 @@
             "enhance": {
                 "percent": 10,
                 "round": true
-            }
+            },
+            "icon": "text-red fa-heart"
         },
         "attack": {
             "type": "attack",
@@ -178,7 +179,8 @@
             "enhance": {
                 "percent": 5,
                 "round": true
-            }
+            },
+            "icon": "text-orange fa-sword"
         },
         "defense": {
             "type": "defense",
@@ -188,7 +190,8 @@
             "enhance": {
                 "percent": 5,
                 "round": true
-            }
+            },
+            "icon": "text-blue fa-shield"
         },
         "speed": {
             "type": "speed",
@@ -199,9 +202,10 @@
             "enhance": {
                 "percent": 0,
                 "round": false
-            }
+            },
+            "icon": "text-green fa-clock"
         },
-        "fire.damage": {
+        "fire-damage": {
             "type": "elemental.damage",
             "format": "int",
             "min": 0,
@@ -209,9 +213,10 @@
             "enhance": {
                 "percent": 10,
                 "round": true
-            }
+            },
+            "icon": "text-red fa-fire;text-orange fa-sword"
         },
-        "earth.damage": {
+        "earth-damage": {
             "type": "elemental.damage",
             "format": "int",
             "min": 0,
@@ -219,9 +224,10 @@
             "enhance": {
                 "percent": 10,
                 "round": true
-            }
+            },
+            "icon": "text-green fa-seedling;text-orange fa-sword"
         },
-        "lightning.damage": {
+        "lightning-damage": {
             "type": "elemental.damage",
             "format": "int",
             "min": 0,
@@ -229,9 +235,10 @@
             "enhance": {
                 "percent": 10,
                 "round": true
-            }
+            },
+            "icon": "text-yellow fa-bolt;text-orange fa-sword"
         },
-        "wind.damage": {
+        "wind-damage": {
             "type": "elemental.damage",
             "format": "int",
             "min": 0,
@@ -239,9 +246,10 @@
             "enhance": {
                 "percent": 10,
                 "round": true
-            }
+            },
+            "icon": "text-lightblue fa-wind;text-orange fa-sword"
         },
-        "water.damage": {
+        "water-damage": {
             "type": "elemental.damage",
             "format": "int",
             "min": 0,
@@ -249,63 +257,69 @@
             "enhance": {
                 "percent": 10,
                 "round": true
-            }
+            },
+            "icon": "text-blue fa-tint;text-orange fa-sword"
         },
-        "fire.resist": {
+        "fire-resist": {
             "type": "elemental.resist",
             "format": "int",
             "abbr": "FIR.RES",
             "enhance": {
                 "percent": 10,
                 "round": true
-            }
+            },
+            "icon": "text-red fa-fire;text-blue fa-shield"
         },
-        "earth.resist": {
+        "earth-resist": {
             "type": "elemental.resist",
             "format": "int",
             "abbr": "EAR.RES",
             "enhance": {
                 "percent": 10,
                 "round": true
-            }
+            },
+            "icon": "text-green fa-seedling;text-blue fa-shield"
         },
-        "lightning.resist": {
+        "lightning-resist": {
             "type": "elemental.resist",
             "format": "int",
             "abbr": "LIT.RES",
             "enhance": {
                 "percent": 10,
                 "round": true
-            }
+            },
+            "icon": "text-yellow fa-bolt;text-blue fa-shield"
         },
-        "wind.resist": {
+        "wind-resist": {
             "type": "elemental.resist",
             "format": "int",
             "abbr": "WND.RES",
             "enhance": {
                 "percent": 10,
                 "round": true
-            }
+            },
+            "icon": "text-lightblue fa-wind;text-blue fa-shield"
         },
-        "water.resist": {
+        "water-resist": {
             "type": "elemental.resist",
             "format": "int",
             "abbr": "WTR.RES",
             "enhance": {
                 "percent": 10,
                 "round": true
-            }
+            },
+            "icon": "text-blue fa-tint;text-blue fa-shield"
         },
         "lifesteal": {
             "format": "float",
             "initialize": 1
         },
-        "extra.defense": {
+        "extra-defense": {
             "format": "int",
             "initialize": 1,
             "until.hit": true
         },
-        "critical.hit": {
+        "critical-hit": {
             "format": "int",
             "initialize": 1,
             "only.once": true
@@ -313,7 +327,7 @@
         "stun": {
             "format": "int"
         },
-        "stun.resist": {
+        "stun-resist": {
             "format": "float",
             "initialize": 1
         }
