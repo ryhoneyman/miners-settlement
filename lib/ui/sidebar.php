@@ -27,7 +27,7 @@
 
             <li class="nav-item">
                <a href="/runepost" class="nav-link<?php if (preg_match('~^/runepost/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
-                  <i class="nav-icon fal fa-sign"></i>
+                  <i class="nav-icon fa fa-sign"></i>
                   <p> Runeposts </p>
                </a>
             </li>
@@ -36,28 +36,28 @@
 
             <li class="nav-item">
                <a href="/item/crafting" class="nav-link<?php if (preg_match('~^/item/crafting/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
-                  <i class="nav-icon fal fa-puzzle-piece"></i>
+                  <i class="nav-icon fa fa-puzzle-piece"></i>
                   <p> Scheme Crafting </p>
                </a>
             </li>
 
             <li class="nav-item">
                <a href="/item/gear/list" class="nav-link<?php if (preg_match('~^/item/gear/list/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
-                  <i class="nav-icon fal fa-sword"></i>
+                  <i class="nav-icon fa fa-sword"></i>
                   <p> Gear List </p>
                </a>
             </li>
 
             <li class="nav-item">
                <a href="/item/analytics" class="nav-link<?php if (preg_match('~^/item/analytics/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
-                  <i class="nav-icon fal fa-analytics"></i>
+                  <i class="nav-icon fa fa-analytics"></i>
                   <p> Item Analytics </p>
                </a>
             </li>
 
             <li class="nav-item">
                <a href="/item/enhancement" class="nav-link<?php if (preg_match('~^/item/enhancement/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
-                  <i class="nav-icon fal fa-sparkles"></i>
+                  <i class="nav-icon fa fa-sparkles"></i>
                   <p> Item Enhancement </p>
                </a>
             </li>
@@ -67,42 +67,42 @@
 
             <li class="nav-item">
                <a href="//" class="nav-link<?php if(preg_match("~^//~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fal fa-skull"></i>
+                  <i class="nav-icon fa fa-skull"></i>
                   <p> Dungeon </p>
                </a>
             </li>
 
             <li class="nav-item">
                <a href="//" class="nav-link<?php if(preg_match("~^//~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fal fa-skull"></i>
+                  <i class="nav-icon fa fa-skull"></i>
                   <p> Caves </p>
                </a>
             </li>
 
             <li class="nav-item">
                <a href="//" class="nav-link<?php if(preg_match("~^//~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fal fa-skull"></i>
+                  <i class="nav-icon fa fa-skull"></i>
                   <p> Mitar </p>
                </a>
             </li>
 
             <li class="nav-item">
                <a href="//" class="nav-link<?php if(preg_match("~^//~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fal fa-skull"></i>
+                  <i class="nav-icon fa fa-skull"></i>
                   <p> Einlor </p>
                </a>
             </li>
 
             <li class="nav-item">
                <a href="//" class="nav-link<?php if(preg_match("~^//~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fal fa-skull"></i>
+                  <i class="nav-icon fa fa-skull"></i>
                   <p> Scrolls </p>
                </a>
             </li>
 
             <li class="nav-item">
                <a href="//" class="nav-link<?php if(preg_match("~^//~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fal fa-skull"></i>
+                  <i class="nav-icon fa fa-skull"></i>
                   <p> Dragons </p>
                </a>
             </li>
@@ -111,7 +111,7 @@
 
             <li class="nav-item">
                <a href="/notes/history/" class="nav-link<?php if(preg_match("~^/notes/history/~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fal fa-comment-edit"></i>
+                  <i class="nav-icon fa fa-comment-lines"></i>
                   <p> Patch Notes </p>
                </a>
             </li>
