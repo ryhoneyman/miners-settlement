@@ -59,7 +59,7 @@ $selectItem = array('' => 'Select an Item');
 $selectOpts = array('class' => 'form-control gear', 'style' => 'width:auto;');
 foreach ($itemList as $itemName => $itemData) { 
    $selectItem[ucwords(str_replace('.',' ',$itemData['type']))][$itemName] = $itemData['label']; 
-   $selectOpts['images'][$itemName] = $itemData['image'];
+   $selectOpts['data'][$itemName]['image'] = $itemData['image'];
 }
 ksort($selectItem);
 
@@ -469,8 +469,8 @@ function itemDisplayElements($itemInfo, $limit = null, $options = null)
    $itemElements = array();
    foreach ($main->obj('constants')->elements() as $element) {
       foreach (array('damage','resist') as $feature) {
-         if (isset($itemInfo["$element.$feature$limit"])) {
-            $itemElements[$feature][$element] = $itemInfo["$element.$feature$limit"];
+         if (isset($itemInfo["$element-$feature$limit"])) {
+            $itemElements[$feature][$element] = $itemInfo["$element-$feature$limit"];
          }
       }
    }
@@ -592,7 +592,7 @@ function buildItemInfo($itemInfo, $itemInput)
          'level.min'     => $levelMin,
          'level.max'     => $levelMax,
          'level.percent' => $levelPercent,
-         'label'         => ucwords(preg_replace('/\./',' ',$attribName)),
+         'label'         => ucwords(preg_replace('/\-/',' ',$attribName)),
          'value'         => (preg_match('/^\s*$/',$attribValue)) ? null : $attribValue,
       );
 
