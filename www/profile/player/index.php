@@ -69,7 +69,7 @@ function playerDisplay($main)
 
    if ($playerList) {
       foreach ($playerList as $playerId => $playerInfo) {
-         $deleteButton = sprintf("<button class='btn btn-tool fa fa-trash text-danger open-modal' data-name='%s' ".
+         $deleteButton = sprintf("<button class='btn btn-tool fa fa-trash-alt text-danger open-modal' data-name='%s' ".
                                  "data-toggle='modal' data-target='#modal-window' title='Delete Player' style='border:none;'></button>",
                                  $playerInfo['name']); 
          $listContent .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",

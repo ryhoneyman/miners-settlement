@@ -85,7 +85,7 @@ function gearDisplay($main)
          $levelBadge = sprintf("<span class='badge' style='width:25px; background:black; color:white;'>%s</span>",$gearLevel);
          //$levelBadge = sprintf("<i class='fas fa-minus text-sm'></i> <span class='badge' style='width:25px; background:black; color:white;'>%s</span> <i class='fas fa-plus text-sm'></i>",$gearLevel);
 
-         $deleteButton = sprintf("<button class='btn btn-tool fa fa-trash text-danger open-modal' data-name='%s' data-value='%s' ".
+         $deleteButton = sprintf("<button class='btn btn-tool fa fa-trash-alt text-danger open-modal' data-name='%s' data-value='%s' ".
                                  "data-toggle='modal' data-target='#modal-window' title='Delete Gear' style='border:none;'></button>",
                                  $gearInfo['label'],$gearInfo['item_hash']); 
          $gearContent .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
