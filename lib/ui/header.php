@@ -25,11 +25,11 @@
 <script src="/assets/alte/current/plugins/toastr/toastr.min.js" type="text/javascript"></script>
 <!-- Select2 -->
 <script src="/assets/alte/current/plugins/select2/js/select2.min.js" type="text/javascript"></script>
-<!-- Font Awesome Icons -->
-<script src="https://kit.fontawesome.com/a73a4c549e.js" crossorigin="anonymous"></script>
 <!-- local js -->
-<script src="/assets/js/ms.js" type="text/javascript"></script>
+<script src="/assets/js/ms.js?v=20230527001" type="text/javascript"></script>
 
+<!-- fontawesome -->
+<link rel="stylesheet" href="/assets/fa/css/all.min.css">
 <!-- local css -->
 <link rel="stylesheet" href="/assets/css/ms.css">
 <!-- overlayScrollbars -->
