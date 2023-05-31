@@ -132,10 +132,25 @@ class MinersMain extends Main
       return $result;
    }
 
+   public function fetchRunewordList()
+   {
+      $result       = $this->db()->query("select rw.*, i.name as item_name from runeword rw left join item i on rw.item_id = i.id where rw.active = 1 order by rw.name asc",array('keyid' => 'id'));
+      $runewordList = array();
+
+      foreach ($result as $resultId => $resultInfo) {
+         $itemName = $resultInfo['item_name'] ?: '';
+         $runewordList[$itemName][$resultId] = $resultInfo;
+      }
+
+      $this->var('runewordList',$runewordList);
+
+      return true;
+   }
+
    public function fetchGearList()
    {
       $gearTypes = $this->obj('constants')->gearTypes();
-      $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\.]/','',$value)."'"; },
+      $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\-]/','',$value)."'"; },
                                          array_unique(array_filter(array_keys($gearTypes)))));
 
       $result   = $this->db()->query("select * from item where type in ($typeList) and active = 1 order by tier asc, name asc",array('keyid' => 'id'));
