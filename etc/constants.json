@@ -10,7 +10,7 @@
         },
         "defense": {
             "color": "#0000ff",
-            "icon": "shield"
+            "icon": "shield-alt"
         },
         "speed": {
             "color": "#00aa00",
