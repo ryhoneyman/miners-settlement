@@ -26,12 +26,12 @@
 <!-- Select2 -->
 <script src="/assets/alte/current/plugins/select2/js/select2.min.js" type="text/javascript"></script>
 <!-- local js -->
-<script src="/assets/js/ms.js?v=20230527001" type="text/javascript"></script>
+<script src="/assets/js/ms.js?v=20230531001" type="text/javascript"></script>
 
 <!-- fontawesome -->
 <link rel="stylesheet" href="/assets/fa/css/all.min.css">
 <!-- local css -->
-<link rel="stylesheet" href="/assets/css/ms.css">
+<link rel="stylesheet" href="/assets/css/ms.css?v=20230531001">
 <!-- overlayScrollbars -->
 <link rel="stylesheet" href="/assets/alte/current/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
 <!-- Toastr -->
