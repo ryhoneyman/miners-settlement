@@ -153,6 +153,15 @@ class Main extends Base
       return true;
    }
 
+   public function sessionValue($name, $value = null, $clear = false)
+   {
+      if ($clear) { unset($_SESSION[$name]); return null; }
+
+      if (!is_null($value)) { $_SESSION[$name] = $value; }
+
+      return $_SESSION[$name]; 
+   }
+
    public function sessionStart($options = null)
    {
       $this->debug(8,"called");
