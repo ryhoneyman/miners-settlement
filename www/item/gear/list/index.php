@@ -59,7 +59,7 @@ function gearDisplay($main, $gearType, $gearTypeList)
              '<div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">'.
              '<div class="card card-outline card-success">'.
              '<div class="card-header"><b class="text-xl" id="gear-'.strtolower(preg_replace('/\W/','-',$gearType)).'">'.$gearTypeLabel.'</b>'.
-             '<div class="card-tools"><a href="#"><button type="button" class="btn btn-tool"><i class="fas fa-arrow-alt-up"></i></button></a></div>'.
+             '<div class="card-tools"><a href="#"><button type="button" class="btn btn-tool"><i class="fas fa-level-up"></i></button></a></div>'.
              '</div>'.
              '<div class="card-body">'.
              '<table class="table table-striped table-hover" style="width:auto;" border=0 cellpadding=10>'.
@@ -80,11 +80,12 @@ function gearDisplay($main, $gearType, $gearTypeList)
 
       foreach ($main->obj('constants')->elementDisplay() as $elementName => $elementInfo) {
          foreach (array('damage','resist') as $feature) {
-            if (!$gearAttribs["$elementName.$feature.min"]) { continue; }
+            $featureName = sprintf("%s-%s",$elementName,$feature);
+            if (!$gearAttribs["$featureName.min"]) { continue; }
 
             $gearElement .= sprintf("<span style='color:%s;'>%s %s: %d - %d <i class='fa fa-%s'></i></span><br>",
-                                    $elementInfo['color'],strtoupper($elementName),strtoupper($feature),$gearAttribs["$elementName.$feature.min"],
-                                    $gearAttribs["$elementName.$feature.max"],$elementInfo['icon']);
+                                    $elementInfo['color'],strtoupper($elementName),strtoupper($feature),$gearAttribs["$featureName.min"],
+                                    $gearAttribs["$featureName.max"],$elementInfo['icon']);
          }
       }
 
