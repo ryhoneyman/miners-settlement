@@ -5,15 +5,17 @@
 include_once 'common/base.class.php';
 include_once 'local/constants.class.php';
 include_once 'local/entity.class.php';
-include_once 'local/neobattle.class.php';
+include_once 'local/battle.class.php';
 
 class Simulator extends Base
 {
-   public $constants      = null;
-   public $attribList     = array();
-   public $elements       = array();
-   public $gearTypes      = array();
-   public $primaryAttribs = array();
+   public  $constants      = null;
+   public  $attribList     = array();
+   public  $elements       = array();
+   public  $gearTypes      = array();
+   public  $primaryAttribs = array();
+   public  $errors         = array();
+   private $db             = null;
 
    public function __construct($debug = null, $options = null)
    {
@@ -25,6 +27,8 @@ class Simulator extends Base
       $this->elements       = $this->constants->elements();
       $this->gearTypes      = $this->constants->gearTypes();
       $this->primaryAttribs = $this->constants->primaryAttribs();
+
+      $this->db = $options['db'] ?: null;
    }
 
    public function start($config)
@@ -42,9 +46,11 @@ class Simulator extends Base
       $godroll    = ($config['godroll']) ? true : false;
       $adjust     = ($config['adjust']) ? json_decode($config['adjust'],true) : false;
       $enhance    = $config['enhance'] ?: null;
-      $equip      = ($config['equip']) ? json_decode($config['equip'],true) : null;
-      $runes      = ($config['runes']) ? json_decode($config['runes'],true) : null;
+      $equip      = ($config['equip']) ? json_decode($config['equip'],true) : array();
+      $runes      = ($config['runes']) ? json_decode($config['runes'],true) : array();
       $aName      = $config['aname'] ?: null;
+
+      $config['attacker']['name'] = $aName;
 
       $stats = array(
          'type'  => $simType,
@@ -57,11 +63,93 @@ class Simulator extends Base
          'defender' => $defender,
       );
 
+      if (!$this->db || !$this->db->isConnected()) { 
+         $this->error("Could not access database");
+         return false;
+      }
+
       // load in entities and equip them
       foreach ($roles as $role => $entity) {
-         if (!$entity->load($config[$role]['id'],array('godroll' => $godroll, 'enhance' => $enhance, 'name' => $aName, 'adjust' => $adjust, 'equip' => $equip, 'runes' => $runes))) { 
-            $this->debug(0,"Could not find $role profile for ".$config[$role][$id]); 
-            exit; 
+         if ($config[$role]['type'] == 'player') {
+            $equipList = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\-]/','',$value)."'"; },
+                                     array_unique(array_filter(array_column($equip,'name')))));
+
+            $runeList = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\-]/','',$value)."'"; },
+                                    array_unique(array_filter($runes))));
+
+            $equipData = array();
+            $runeData  = array();
+
+            if ($equipList) {
+               $equipData = $this->db->query(sprintf("select *, name as id, label as name from item where name in (%s)",$equipList),array('keyid' => 'id'));
+
+               if (!$equipData) {
+                  $this->error("Could not find information for equipment in database: ".$equipList);
+                  return false;
+               }
+            }
+
+            if ($runeList) {
+               $runeData = $this->db->query(sprintf("select *, name as id, label as name from runeword where name in (%s)",$runeList),array('keyid' => 'id'));
+ 
+               if (!$runeData) {
+                  $this->error("Could not find information for runewords in database: ".$runeList);
+                  return false;
+               }
+            }
+
+            foreach ($equipData as $itemName => $itemInfo) {
+               if ($itemInfo['attributes']) { $equipData[$itemName] = array_merge($itemInfo,json_decode($itemInfo['attributes'],true)); }
+            }
+            foreach ($runeData as $runeName => $runeInfo) {
+               if ($runeInfo['attributes']) { $runeData[$runeName]['attributes'] = json_decode($runeInfo['attributes'],true); }
+               if ($runeInfo['cost']) { $runeData[$runeName]['cost'] = json_decode($runeInfo['cost'],true); }
+            }
+
+            $loadData = array(
+               'godroll' => $godroll,
+               'enhance' => $enhance,
+               'adjust'  => $adjust,
+               'equip'   => $equip,
+               'runes'   => $runes,
+               'data' => array(
+                  'equip'  => $equipData ?: array(),
+                  'runes'  => $runeData ?: array(),
+                  'entity' => $config[$role],
+               ),
+            );
+         }
+         else if ($config[$role]['type'] == 'monster') {
+            if (!$config[$role]['name']) { 
+               $this->error("Entity name not specified for monster $role");
+               return false;
+            }
+            
+            $monsterData = $this->db->query(sprintf("select *, name as id, label as name from monster where name = '%s'",$this->db->escapeString($config[$role]['name'])),array('multi' => false));
+
+            if (!$monsterData) { 
+               $this->error("Could not find information for ".$config[$role]['name']);
+               return false;
+            }
+
+            $monsterData = array_merge($monsterData,json_decode($monsterData['attributes'],true));
+
+            $loadData = array(
+               'id'   => $monsterData['name'],
+               'name' => $monsterData['label'],
+               'data' => array(
+                  'entity' => $monsterData,
+               ),
+            );
+         }
+         else {
+            $this->error("Could not determine entity type for $role");
+            return false;
+         }
+
+         if (!$entity->load($loadData)) { 
+            $this->error("Could not load $role profile for ".$config[$role]['type']); 
+            return false; 
          }
       }
 
@@ -73,9 +161,6 @@ class Simulator extends Base
 
       while ($iterations-- > 0) {
          $iterCount++;
-         //$cloneAttacker = clone $attacker;
-         //$cloneDefender = clone $defender;
-         //$results     = $battle->start($cloneAttacker,$cloneDefender,$battleOpts);
          $results     = $battle->start($attacker,$defender,$battleOpts);
          $resultStats = $results['info']['stats'];
          $duration    = $resultStats['duration'];
@@ -102,9 +187,11 @@ class Simulator extends Base
                   $gearItem = $entity->getItemByType($gearType);
                   $stats[$role]["gear"][$gearType] = (is_null($gearItem)) ? null : $gearItem->export();
                }
+
+               $stats[$role]['power'] = $results['info'][$role]['power'];
             }
 
-            $stats['effective'] = $results['info']['base'];
+            //var_dump("<pre>",json_encode($results['info'],JSON_PRETTY_PRINT),"</pre>");
          }
 
          //print json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n";
@@ -179,7 +266,7 @@ class Simulator extends Base
       foreach (array('attacker','defender') as $role) {
          if ($shortOutput && $role == 'defender') { continue; }
  
-         $output .= sprintf("%s%s\n------------------------------------------------\n",
+         $output .= sprintf("%s%s\n--------------------------------------------------------------------------\n",
                             $results[$role]['name'],(($results[$role]['description']) ? ' ('.$results[$role]['description'].')' : ''));
 
          // Find maximum type length
@@ -227,13 +314,14 @@ class Simulator extends Base
                   }
                }
             }
-            $output .= "\n";
          }
 
-         $output .= sprintf("\nEffective Power: %s\n\n",$this->formatAttribs($results['effective'][$role]));
+         $output .= "\n";
+         $output .= sprintf("Base Power........: %s\n",$this->formatAttribs($results[$role]['power']['base']));
+         $output .= sprintf("Effective Power...: %s\n\n\n",$this->formatAttribs($results[$role]['power']['effective']));
       }
 
-      $output .= "=== Results ================================================\n\n";
+      $output .= "=== Results ==============================================================\n\n";
 
       foreach (array('attacker','defender') as $role) {
          if ($shortOutput && $role == 'defender') { continue; }
@@ -396,8 +484,8 @@ class Simulator extends Base
       $elementList = array('damage' => array(), 'resist' => array());
 
       foreach ($this->elements as $element) {
-         $eleDamage = "$element.damage";
-         $eleResist = "$element.resist";
+         $eleDamage = sprintf("%s-damage",$element);
+         $eleResist = sprintf("%s-resist",$element);
 
          if ($attribInfo[$eleDamage]) { $elementList['damage'][] = sprintf("%s:%d",$this->attribList[$eleDamage]['abbr'],$attribInfo[$eleDamage]); }
          if ($attribInfo[$eleResist]) { $elementList['resist'][] = sprintf("%s:%d",$this->attribList[$eleResist]['abbr'],$attribInfo[$eleResist]); }
@@ -407,6 +495,19 @@ class Simulator extends Base
       if ($elementList['resist']) { $output .= sprintf(" | %s",implode(' ',$elementList['resist'])); }
 
       return $output;
+   }
+
+   public function error($errorMessage = null)
+   {
+      if (!is_null($errorMessage)) { $this->errors[] = $errorMessage; }
+      else {
+         $this->debug(8,"returning ".count($this->errors)." error(s)");
+
+         $errors = implode('; ',$this->errors);
+         $this->errors = array();
+
+         return $errors;
+      }
    }
 }
 

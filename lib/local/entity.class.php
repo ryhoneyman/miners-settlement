@@ -126,7 +126,7 @@ class Entity extends Base
       $this->var('runes',$runeList);
    }
 
-   public function addRunes($runeIds)
+   public function addRunes($runeIds, $runeInfo)
    {
       $currentRunes = $this->var('runes');
   
@@ -140,7 +140,7 @@ class Entity extends Base
 
          $rune = new Rune($this->debug);
 
-         if (!$rune->load($runeId)) { $this->debug(9,"could not load $runeId"); continue; }
+         if (!$rune->load($runeInfo[$runeId])) { $this->debug(9,"could not load $runeId"); continue; }
 
          $runeList[$runeId] = $rune;
       }
@@ -159,11 +159,11 @@ class Entity extends Base
       return true;
    }
 
-   public function equipItem($itemId, $itemData = null, $itemOptions = null)
+   public function equipItem($itemInfo, $itemData = null, $itemOptions = null)
    {
       $item = new Item($this->debug);
 
-      if ($item->load($itemId) === false) { return false; }
+      if ($item->load($itemInfo) === false) { return false; }
 
       $item->generate($itemData,$itemOptions);
 
@@ -206,36 +206,16 @@ class Entity extends Base
 
    public function export()
    {
-      //var_dump($this->data);
-
       return json_encode($this->data,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
    }
 
-   public function load($entityId, $options = null)
+   public function load($params = null)
    {
       $this->debug(9,"called");
 
-      $entityId = strtolower($entityId);
+      $entityInfo = $params['data']['entity'];
 
-      $fileName = sprintf(APP_CONFIGDIR.'/entity/%s.json',$entityId);
-
-      if (!file_exists($fileName)) { $this->debug(7,"could not find file for $entityId"); return false; }
-
-      $entityInfo = json_decode(file_get_contents($fileName),true);
-
-      $entityInfo['id'] = $entityId;
-
-      // Monsters don't get option adjustments
-      if ($entityInfo['type'] == 'monster') { $options = array(); }
-
-      if ($options['name']) { $entityInfo['name'] = $options['name']; }
-      else {
-         if ($options['godroll'])      { $entityInfo['name'] .= " [GODROLL]"; }
-         if ($options['adjust'])       { $entityInfo['name'] .= " [ADJUSTED]"; }
-         if ($options['enhance'])      { $entityInfo['name'] .= " [ENHANCE=".$options['enhance']."]"; }
-      }
-
-      return $this->import($entityInfo,$options);
+      return $this->import($entityInfo,$params);
    }
 
    public function import($entityInfo, $options = null)
@@ -253,7 +233,11 @@ class Entity extends Base
 
       if ($options['equip']) {
          foreach ($options['equip'] as $itemType => $itemInfo) {
-            $entityInfo[$itemType] = array('id' => $itemInfo['name'], 'data' => null, 'options' => array('enhance' => $itemInfo['level']));
+            $itemName = $itemInfo['name'];
+          
+            if (!$itemName) { continue; }
+ 
+            $entityInfo[$itemType] = array('id' => $itemName, 'data' => null, 'options' => array('enhance' => $itemInfo['level']));
          }
       }
 
@@ -270,10 +254,10 @@ class Entity extends Base
             if ($options['adjust'])  { $itemOptions['adjust']  = $options['adjust'][$itemType]; } 
             if ($options['enhance']) { $itemOptions['enhance'] = $options['enhance']; } 
 
-            $this->equipItem($itemId,$itemData,$itemOptions);
+            $this->equipItem($options['data']['equip'][$itemId],$itemData,$itemOptions);
          }
          else if (preg_match('/^runes$/i',$name)) {
-            $this->addRunes($value);
+            $this->addRunes($value,$options['data']['runes']);
          }
          else { $this->var($name,$value); }
       }
