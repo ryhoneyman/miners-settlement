@@ -1,6 +1,7 @@
 #!/usr/bin/php
 <?php
-include_once 'miners-settlement-init.php';
+@include_once 'miners-settlement-init.php';
+@include_once '/home/u690380958/php/miners-settlement-init.php';
 include_once 'local/minersmain.class.php';
 
 $main = new MinersMain(array(
@@ -15,27 +16,75 @@ $main = new MinersMain(array(
    'toastr'         => true,
 ));
 
-$result   = $main->db()->query("select * from gear");
+$opts = getopt(null,array('update'));
 
-foreach ($result as $resultId => $resultInfo) {
-   $gearStats = $resultInfo['stats'];
-   $gearData  = json_decode($gearStats,true);
-   $newData   = array();
+$main->var('update',(isset($opts['update'])) ? true : false);
 
-   foreach ($gearData as $dataName => $dataValue) {
+updateGear($main);
+updateItemLink($main);
+
+?>
+<?php
+
+function updateItemLink($main)
+{
+   $table  = 'item_link';
+   $result = $main->db()->query("select * from $table");
+
+   foreach ($result as $resultId => $resultInfo) {
+      $gearStats = $resultInfo['stats'];
+      $gearData  = json_decode($gearStats,true);
+
+      if (is_null($gearData)) { continue; }
+
+      $newData  = updateData($gearData);
+      $newStats = json_encode($newData,JSON_UNESCAPED_SLASHES);
+
+      if ($gearStats == $newStats) { continue; }
+
+      if ($main->var('update')) { 
+         $updateRc = $main->db()->bindExecute("update $table set stats = ? where id = ?","ss",array($newStats,$resultId));
+      }
+      else { $updateRc = 'SKIPPED'; }
+
+      print "[$updateRc]: $gearStats -> $newStats\n";
+   }
+}
+
+function updateGear($main)
+{
+   $table  = 'gear';
+   $result = $main->db()->query("select * from $table");
+   
+   foreach ($result as $resultId => $resultInfo) {
+      $gearStats = $resultInfo['stats'];
+      $gearData  = json_decode($gearStats,true);
+      $newData   = updateData($gearData);
+      $newStats  = json_encode($newData,JSON_UNESCAPED_SLASHES);
+   
+      if ($gearStats == $newStats) { continue; }
+   
+      if ($main->var('update')) { 
+         $updateRc = $main->db()->bindExecute("update $table set stats = ? where id = ?","si",array($newStats,$resultId));
+      }
+      else { $updateRc = 'SKIPPED'; }
+   
+      print "[$updateRc]: $gearStats -> $newStats\n";
+   }
+}
+
+function updateData($currentData)
+{
+   $newData = array();
+
+   foreach ($currentData as $dataName => $dataValue) {
       if (preg_match('/^(\S+)\.(damage|resist)$/',$dataName,$match)) {
          $dataName = sprintf("%s-%s",$match[1],$match[2]);
       }
       $newData[$dataName] = $dataValue;
    }
- 
-   $newStats = json_encode($newData,JSON_UNESCAPED_SLASHES);
 
-   if ($gearStats == $newStats) { continue; }
-
-   $updateRc = $main->db()->bindExecute("update gear set stats = ? where id = ?","si",array($newStats,$resultId));
-
-   print "$updateRc: $gearStats -> $newStats\n";
+   return $newData;
 }
 
 ?>
