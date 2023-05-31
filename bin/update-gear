@@ -1,0 +1,41 @@
+#!/usr/bin/php
+<?php
+include_once 'miners-settlement-init.php';
+include_once 'local/minersmain.class.php';
+
+$main = new MinersMain(array(
+   'debugLevel'     => 0,
+   'errorReporting' => false,
+   'sessionStart'   => true,
+   'memoryLimit'    => null,
+   'sendHeaders'    => true,
+   'database'       => true,
+   'input'          => true,
+   'html'           => true,
+   'toastr'         => true,
+));
+
+$result   = $main->db()->query("select * from gear");
+
+foreach ($result as $resultId => $resultInfo) {
+   $gearStats = $resultInfo['stats'];
+   $gearData  = json_decode($gearStats,true);
+   $newData   = array();
+
+   foreach ($gearData as $dataName => $dataValue) {
+      if (preg_match('/^(\S+)\.(damage|resist)$/',$dataName,$match)) {
+         $dataName = sprintf("%s-%s",$match[1],$match[2]);
+      }
+      $newData[$dataName] = $dataValue;
+   }
+ 
+   $newStats = json_encode($newData,JSON_UNESCAPED_SLASHES);
+
+   if ($gearStats == $newStats) { continue; }
+
+   $updateRc = $main->db()->bindExecute("update gear set stats = ? where id = ?","si",array($newStats,$resultId));
+
+   print "$updateRc: $gearStats -> $newStats\n";
+}
+
+?>
