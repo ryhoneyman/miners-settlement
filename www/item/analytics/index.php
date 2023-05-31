@@ -639,8 +639,10 @@ function getItemInput()
 
    foreach ($_POST as $name => $value) {
       if (preg_match('/^item_(.*)$/i',$name,$match)) { 
-         $attribName = preg_replace('/\-/','.',$match[1]);
+         $attribName = $match[1];
+
          if (preg_match('/^\s*$/',$value)) { continue; }
+
          $itemInput[$attribName] = $value; 
       }
    }
