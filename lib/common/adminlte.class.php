@@ -81,7 +81,7 @@ class AdminLTE extends Base
    
       return "<div class='$containerClass'>".
              "    <div id='$cardId' class='card $cardClass'>".
-             "       <div class='card-header'><b>$cardTitle</b></div>".
+             "       <div class='card-header'><h3 class='card-title text-bold'>$cardTitle</h3></div>".
              "       <div class='card-body'>".
              "       ".$content.
              "       </div>".
@@ -116,7 +116,7 @@ class AdminLTE extends Base
              "    <div class='card $cardClass card-tabs'>\n".
              "       <div class='card-header p-0 pt-1'>\n".
              "          <ul class='nav nav-tabs' id='$cardId' role='tablist'>\n".
-             "             <li class='pt-2 px-3'><h3 class='card-title'>$cardTitle</h3></li>\n".
+             "             <li class='pt-2 px-3'><h3 class='card-title text-bold'>$cardTitle</h3></li>\n".
              implode('',$headerContent).
              "          </ul>\n".
              "       </div>\n".
