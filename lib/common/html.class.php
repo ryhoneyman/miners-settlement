@@ -302,6 +302,25 @@ class HTML extends Base
       return "</form>\n";
    }
 
+   public function submitButton($name, $value, $label = null, $params = null)
+   {
+      if (!is_array($params)) { $params = array(); }
+
+      if (is_null($label)) { $label = $value; }
+
+      $params['name']  = $name;
+      $params['value'] = $value;
+      
+      if (!$params['type'])  { $params['type']  = 'submit'; }
+      if (!$params['class']) { $params['class'] = 'btn-wide btn btn-primary'; }
+
+      $paramList = array();
+
+      foreach ($params as $paramKey => $paramValue) { $paramList[] = "$paramKey='$paramValue'"; }
+
+      return sprintf("<button %s>%s</button>",implode(' ',$paramList),$label);
+   }
+
    public function submit($name = 'submit', $value = 'Go', $values = null)
    {
       if (!is_array($values)) { $values = array(); }
@@ -393,7 +412,7 @@ class HTML extends Base
       $disabled = ($attrib['disabled']) ? 'disabled'            : '';
       $required = ($attrib['required']) ? 'required="required"' : '';
       $keyopts  = ($attrib['keyopts'])  ? $attrib['keyopts']    : array();
-      $images   = ($attrib['images'])   ? $attrib['images']     : array();
+      $data     = ($attrib['data'])     ? $attrib['data']       : array();
 
       $placeholder = ($attrib['placeholder']) ? $attrib['placeholder'] : '';
 
@@ -423,9 +442,21 @@ class HTML extends Base
                //$disabledText = ($disabled) ? $keyopts['disabled'][$gkey] : '';
 
                if (!$gvalue) { $gvalue = $gkey; }
+             
+               $dataValues = $data[$gkey];
+               $dataList   = array();
+ 
+               if ($dataValues) {
+                  foreach ($dataValues as $dataKey => $dataValue) {
+                     $dataList[] = "data-$dataKey='$dataValue'";
+                  }
+               }
+
                $html .= sprintf("<option value='%s'%s%s>%s</option>\n",
-                                $gkey,(isset($selected[$gkey])) ? " selected" : "",
-                                ($images[$gkey]) ? " data-image='".$images[$gkey]."'" : '',$gvalue);
+                                $gkey,
+                                ((isset($selected[$gkey])) ? " selected" : ""),
+                                (($dataList) ? ' '.implode(' ',$dataList) : ''),
+                                $gvalue);
             }
             $html .= "</optgroup>\n";
          }
@@ -433,11 +464,20 @@ class HTML extends Base
             $disabled     = (isset($keyopts['disabled'][$key])) ? true : false;
             $disabledText = ($disabled) ? $keyopts['disabled'][$key] : '';
 
+            $dataValues = $data[$key];
+            $dataList   = array();
+
+            if ($dataValues) {
+               foreach ($dataValues as $dataKey => $dataValue) {
+                  $dataList[] = "data-$dataKey='$dataValue'";
+               }
+            }
+
             $html .= sprintf("<option value='%s'%s%s%s>%s</option>\n",
                              $key,
-                             (isset($selected[$key])) ? " selected" : "",
+                             ((isset($selected[$key])) ? " selected" : ""),
                              ($disabled) ? " disabled" : "",
-                             ($images[$key]) ? " data-image='".$images[$key]."'" : '',
+                             (($dataList) ? ' '.implode(' ',$dataList) : ''),
                              $value.(($disabled) ? $disabledText : ''));
          }
       }
