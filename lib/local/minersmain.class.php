@@ -61,6 +61,64 @@ class MinersMain extends Main
       return $result;
    }
 
+   public function fetchProfileData($useCache = true)
+   {
+      $userId = $this->userId;
+
+      $sessionProfileData = $this->sessionValue('profileData');
+
+      if (is_null($sessionProfileData) || !$useCache) { 
+         $profileData = $this->db()->query(sprintf("select * from profile_data where profile_id = '%s'",$this->db()->escapeString($userId)),array('keyid' => 'name'));
+
+         if ($profileData === false) { $this->error('Could not query profile data'); return false; }
+ 
+         $this->sessionValue('profileData',$profileData);
+      }
+      else { $profileData = $sessionProfileData; }
+
+      $this->var('profileData',$profileData);
+
+      return true;
+   }
+
+   public function fetchProfileEntitlement($useCache = true)
+   {
+      $profileData = $this->var('profileData');
+
+      if (!$profileData || !$useCache) { 
+         $fetchResult = $this->fetchProfileData($useCache); 
+
+         if ($fetchResult === false) { return false; }
+
+         $profileData = $this->var('profileData');
+
+         if (!$profileData) { return true; }
+      }
+
+      $entitlement = (array_key_exists('entitlement',$profileData)) ? json_decode($profileData['entitlement']['data'],true) : array();
+
+      $this->var('entitlement',$entitlement);
+
+      return true; 
+   }
+
+   public function getProfileEntitlement($name, $useCache = true) 
+   {
+      $entitlement = $this->var('entitlement');
+
+      if (is_null($entitlement) || !$useCache) {
+         $fetchResult = $this->fetchProfileEntitlement($useCache); 
+ 
+         if ($fetchResult === false) { return false; }
+
+         $entitlement = $this->var('entitlement');
+      }
+
+      if (!$entitlement || !array_key_exists($name,$entitlement)) { return false; }
+
+      return $entitlement[$name];
+   }
+
    public function deletePlayer($playerName)
    {
       $userId     = $this->userId;
