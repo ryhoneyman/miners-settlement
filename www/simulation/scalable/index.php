@@ -59,7 +59,7 @@ function pageDisplay($main)
              tabsDisplay($main).
              $html->endForm().
              resultsDisplay($main).
-             "<div><pre>".json_encode($main->var('pageInput'),JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."</pre></div>".
+             //"<div><pre>".json_encode($main->var('pageInput'),JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."</pre></div>".
              "<script src='/assets/js/simulation.js?v=20230528001' type='text/javascript'></script>\n".
              "<link rel='stylesheet' href='/assets/css/simulation.css?v=20230528001'>\n";
 
