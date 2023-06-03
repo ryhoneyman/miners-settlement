@@ -20,19 +20,20 @@ var runesOptions = {
 $('.runes').select2(runesOptions);
 
 $('#monster').select2();
+$('#iterations').select2({minimumResultsForSearch: -1});
 
-function updateGear(gearType, clearStats = false, refreshRunes = false)
+function updateScalableGear(gearType, clearStats = false, refreshRunes = false)
 {
    $('#'+gearType+'-stats').html();
 
    var gearName = $('#'+gearType).val();
 
-   $.ajax({url:'/simulation/variable/gearstats.php?clear='+clearStats+'&type='+gearType+'&name='+gearName, async:true}).done(function(data) { $('#'+gearType+'-stats').html(data); $('.stats').select2(statsOptions); });
+   $.ajax({url:'/simulation/scalable/gearstats.php?clear='+clearStats+'&type='+gearType+'&name='+gearName, async:true}).done(function(data) { $('#'+gearType+'-stats').html(data); $('.stats').select2(statsOptions); });
 
-   if (refreshRunes) { updateRunes(); }
+   if (refreshRunes) { updateScalableRunes(); }
 }
 
-function updateRunes()
+function updateScalableRunes()
 {
    $('#rune-section').html();
 
@@ -43,13 +44,13 @@ function updateRunes()
       equipState[gearType] = $('#'+gearType).val();;
    });
 
-   $.ajax({url:'/simulation/variable/runes.php?state='+JSON.stringify(equipState), async:true}).done(function(data) { $('#rune-section').html(data); $('.runes').select2(runesOptions); });
+   $.ajax({url:'/simulation/scalable/runes.php?state='+JSON.stringify(equipState), async:true}).done(function(data) { $('#rune-section').html(data); $('.runes').select2(runesOptions); });
 }
 
-function loadResults() 
+function loadScalableResults() 
 {
    $('#results').html();
 
-   $.ajax({url:'/simulation/variable/start.php', async:true}).done(function(data) { $('#results').html(data); });
+   $.ajax({url:'/simulation/scalable/start.php', async:true}).done(function(data) { $('#results').html(data); });
 }
 

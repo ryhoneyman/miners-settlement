@@ -1,4 +1,5 @@
 .statsSelect { display:inline-block; font-size:0.8em; vertical-align:top; }
+.iterationSelect { display:inline-block; vertical-align:top; }
 .stats { width:100px; }
 .select2-container { display:inline-block; }
 .select2-results__option { line-height:1.0; }
