@@ -60,7 +60,7 @@ include 'ui/header.php';
          <div class="info-box-content">
             <span class="info-box-text"> <a href="/simulation"><b>Simulation</b></a></span>
             <span class="info-box-number" style="font-weight:normal;">
-               Find rune words at runeposts for items
+               Simulate battles and analyze outcomes
             </span>
          </div>
       </div>
