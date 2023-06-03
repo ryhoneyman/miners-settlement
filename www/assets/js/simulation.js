@@ -41,7 +41,7 @@ function updateScalableRunes()
    const gearTypes = ['weapon','shield','ring','amulet','weapon-skin','shield-skin'];
 
    gearTypes.forEach((gearType) => {
-      equipState[gearType] = $('#'+gearType).val();;
+      equipState[gearType] = $('#'+gearType).val();
    });
 
    $.ajax({url:'/simulation/scalable/runes.php?state='+JSON.stringify(equipState), async:true}).done(function(data) { $('#rune-section').html(data); $('.runes').select2(runesOptions); });

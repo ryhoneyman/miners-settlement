@@ -29,7 +29,7 @@ include 'ui/header.php';
 
 if ($simEntitlement) { 
    $sessionInput = $main->sessionValue('simulation/pageInput') ?: array();
-   $pageInput    = array_merge($sessionInput,processInput($_POST));
+   $pageInput    = processInput($sessionInput);
 
    $main->var('pageInput',$pageInput);
    $main->var('simEntitlement',$simEntitlement);
@@ -59,7 +59,7 @@ function pageDisplay($main)
              tabsDisplay($main).
              $html->endForm().
              resultsDisplay($main).
-             //"<div><pre>".json_encode($main->var('pageInput'),JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."</pre></div>".
+             "<div><pre>".json_encode($main->var('pageInput'),JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."</pre></div>".
              "<script src='/assets/js/simulation.js?v=20230528001' type='text/javascript'></script>\n".
              "<link rel='stylesheet' href='/assets/css/simulation.css?v=20230528001'>\n";
 
@@ -168,12 +168,16 @@ function gearDisplay($main)
    return $alte->displayRow($alte->displayCard($gear,array('container' => 'col-12 col-xl-9 col-lg-12 col-md-12 col-sm-12','title' => 'Gear Selection')));
 }
 
-function processInput($rawInput)
+function processInput($sessionInput)
 {
-   // Empty runes are not passed to us by the browser, so we initialize them to empty
-   if (!array_key_exists('runes',$rawInput)) { $rawInput['runes'] = array(); }
+   $postInput = $_POST;
 
-   return $rawInput;
+   // Empty runes are not passed to us by the browser, so we initialize them to empty
+   if (!array_key_exists('runes',$postInput) && $postInput['start']) { $postInput['runes'] = array(); }
+
+   $return = array_merge($sessionInput,$postInput);
+
+   return $return;
 }
 
 ?>
