@@ -44,19 +44,19 @@ class AdminLTE extends Base
       parent::__construct($debug,$options);
    }
 
-   function displayRow($content)
+   public function displayRow($content)
    {
       return "<div class='row'>\n".
              $content.
              "</div>\n";
    }
    
-   function errorCard($content, $cardProperties = null)
+   public function errorCard($content, $cardProps = null)
    {
-      $containerClass = $cardProperties['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';
-      $cardClass      = $cardProperties['card'] ?: 'card-danger';
-      $cardTitle      = $cardProperties['title'] ?: 'Error';
-      $cardId         = $cardProperties['id'] ?: 'errorcard';
+      $containerClass = $cardProps['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';
+      $cardClass      = $cardProps['card'] ?: 'card-danger';
+      $cardTitle      = $cardProps['title'] ?: 'Error';
+      $cardId         = $cardProps['id'] ?: 'errorcard';
    
       return "<div class='$containerClass'>".
              "    <div id='$cardId' class='card $cardClass'>".
@@ -72,16 +72,17 @@ class AdminLTE extends Base
              "</div>";
    }
    
-   function displayCard($content, $cardProperties = null)
+   public function displayCard($content, $cardProps = null)
    {
-      $containerClass = $cardProperties['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';
-      $cardClass      = $cardProperties['card'] ?: 'card-primary';
-      $cardTitle      = $cardProperties['title'] ?: 'Card';
-      $cardId         = $cardProperties['id'] ?: 'card';
+      $containerClass = $cardProps['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';
+      $cardClass      = $cardProps['card'] ?: 'card-primary';
+      $headerClass    = $cardProps['header'] ?: '';
+      $cardTitle      = $cardProps['title'] ?: 'Card';
+      $cardId         = $cardProps['id'] ?: 'card';
    
       return "<div class='$containerClass'>".
              "    <div id='$cardId' class='card $cardClass'>".
-             "       <div class='card-header'><h3 class='card-title text-bold'>$cardTitle</h3></div>".
+             "       <div class='card-header $headerClass'><h3 class='card-title text-bold'>$cardTitle</h3></div>".
              "       <div class='card-body'>".
              "       ".$content.
              "       </div>".
@@ -90,12 +91,12 @@ class AdminLTE extends Base
    
    }
    
-   function displayTabbedCard($content, $cardProperties = null)
+   public function displayTabbedCard($content, $cardProps = null)
    {
-      $containerClass = $cardProperties['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';
-      $cardClass      = $cardProperties['card'] ?: 'card-primary';
-      $cardTitle      = $cardProperties['title'] ?: 'Card';
-      $cardId         = $cardProperties['id'] ?: 'tabcard';
+      $containerClass = $cardProps['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';
+      $cardClass      = $cardProps['card'] ?: 'card-primary';
+      $cardTitle      = $cardProps['title'] ?: 'Card';
+      $cardId         = $cardProps['id'] ?: 'tabcard';
    
       $headerContent = array();
       $bodyContent   = array();
@@ -128,6 +129,31 @@ class AdminLTE extends Base
              "   </div>\n".
              "</div>\n";
    }
+
+   public function infoBox($label, $link, $description = null, $boxProps = null)
+   {
+      $containerClass    = $boxProps['container'] ?: 'col-10 col-sm-6 col-md-6 col-lg-6 col-xl-3';
+      $boxIcon           = $boxProps['icon'] ?: 'question';
+      $boxIconBackground = $boxProps['icon-background'] ?: 'bg-primary';
+      $ribbonLabel       = $boxProps['ribbon'] ?: null;
+      $ribbonBackground  = $boxProps['ribbon-background'] ?: 'bg-danger';
+      
+      return "<div class='$containerClass'>\n".
+             "   <div class='info-box'>\n".
+             "      <span class='info-box-icon $boxIconBackground elevation-1'><a href='$link'><i class='fas $boxIcon' aria-hidden='true'></i></a></span>\n".
+             "      <div class='ribbon-wrapper'>\n".
+             (($ribbonLabel) ? "         <div class='ribbon $ribbonBackground'>$ribbonLabel</div>\n" : '').
+             "      </div>\n".
+             "      <div class='info-box-content'>\n".
+             "         <span class='info-box-text'> <a href='$link'><b>$label</b></a></span>\n".
+             "         <span class='info-box-number' style='font-weight:normal;'>\n".
+             "            $description\n".
+             "         </span>\n".
+             "      </div>\n".
+             "   </div>\n".
+             "</div>\n";
+   }
+
 }
 
 ?>
