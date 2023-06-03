@@ -62,6 +62,16 @@
                </a>
             </li>
 
+            <li class="nav-header"><b>SIMULATION</b></li>
+
+            <li class="nav-item">
+               <a href="/simulation/" class="nav-link<?php if (preg_match('~^/simulation/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
+                  <i class="nav-icon fa fa-user-chart"></i>
+                  <p> Simulation </p>
+               </a>
+            </li>
+
+
 <!--
             <li class="nav-header"><b>MONSTERS</b></li>
 
