@@ -28,7 +28,7 @@ include 'ui/footer.php';
 function pageDisplay($main)
 {
    $alte           = $main->obj('adminlte');
-   $simEntitlement = $main->getProfileEntitlement('simulation-usage');
+   $simEntitlement = $main->getProfileEntitlement('simulation-usage',false);
 
    if (!$simEntitlement) { return $alte->displayRow($alte->displayCard("You do not currently have any simulation privileges.",array('title' => 'Warning', 'header' => 'bg-danger'))); }
 
