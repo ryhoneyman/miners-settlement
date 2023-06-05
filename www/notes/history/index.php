@@ -16,6 +16,23 @@ include 'ui/header.php';
   <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
     <div class="card card-outline card-success">
       <div class="card-header">
+        <b class="text-xl">v1.4.1</b><div class="card-tools text-yellow">2023-06-05 18:30 UTC</div>
+      </div>
+      <div class="card-body">
+        <ul>
+          <li><span class='text-green'>Frontend:</span> Updated color/icons for runewords with elemental in Runeposts</li>
+          <li><span class='text-green'>Backend:</span> Refactored stored game constants for access uniformity</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
+    <div class="card card-outline card-success">
+      <div class="card-header">
         <b class="text-xl">v1.4.0</b><div class="card-tools text-yellow">2023-06-03 20:00 UTC</div>
       </div>
       <div class="card-body">
