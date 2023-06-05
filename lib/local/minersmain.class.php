@@ -27,12 +27,12 @@ class MinersMain extends Main
 
    public function webhookInit()
    {
-      $currentId = $_COOKIE['userid'] ?: null;
-      $userId    = $currentId ?: $this->generateUserId();
-
+      $currentId     = $_COOKIE['userid'] ?: null;
+      $userId        = $currentId ?: $this->generateUserId();
       $cookieExpires = time()+(60*60*24*400); // 400 days is enforced in browsers;
 
       if (!$currentId) {
+         $this->logger('newUser',array('userId' => $userId, 'source' => $_SERVER['REMOTE_ADDR']));
          $this->sendCookies(array('userid' => array('value' => $userId, 'expires' => $cookieExpires, 'path' => null, 'domain' => $_SERVER['SERVER_NAME'])));
       }
 
