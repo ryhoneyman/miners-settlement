@@ -40,6 +40,7 @@ function pageDisplay($main)
    $uIterations   = $pageInput['iterations'] ?: 1000;
    $uGodroll      = (isset($pageInput['godroll'])) ? true : false;
 
+
    $uEquip  = buildEquipMap($main);
    $uAdjust = buildAdjustMap($main);
    $uRunes  = buildRunesMap($main);
@@ -71,8 +72,14 @@ function pageDisplay($main)
 
       if ($verbose) { print json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n"; }
 
-      return "<div class='text-white text-sm' style='font-family:monospace; white-space:pre;'>".$simulator->formatResults($results,array('short' => $shortResults, 'name' => $testName))."</div>";
+      $main->logger('scalableSimulation',array('type' => $results['type'], 'defender' => $results['defender']['name'], 
+                                               'iterations' => $results['iterations'], 'time' => sprintf("%1.3f",$results['time']['total'])));
+
+      return "<div class='text-white text-sm' style='font-family:monospace; white-space:pre;'>".
+             $simulator->formatResults($results,array('short' => $shortResults, 'name' => $testName)).
+             "</div>";
    }
+
 
    return 'Failed';
 }
