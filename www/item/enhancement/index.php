@@ -31,6 +31,7 @@ $enhanceCosts = array(
    '10' => array('coin' => 15, 'sacred-soul-stone' => 40, 'material' => array('magic-dust' => 2), 'shard' => 100, 'chance' => 0.3),
    '11' => array('coin' => 50, 'sacred-soul-stone' => 250, 'material' => array('rune-vii' => 3), 'shard' => 500, 'chance' => 0.2),
    '12' => array('coin' => 100, 'sacred-soul-stone' => 500, 'material' => array('rune-viii' => 3), 'shard' => 1000, 'chance' => 0.1),
+   '13' => array('coin' => 250, 'sacred-soul-stone' => 1250, 'material' => array('rune-ix' => 3), 'shard' => 2000, 'chance' => 0.08),
 );
 
 $runeBoosts = array(
