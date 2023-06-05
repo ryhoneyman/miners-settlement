@@ -92,8 +92,6 @@ if ($itemValid) {
 
 include 'ui/header.php';
 
-print "<span class='text-gray'>".$main->userId."</span>";
-
 print "
 <style>
 .select2-results__option { line-height:1.0; }
