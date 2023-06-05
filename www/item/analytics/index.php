@@ -464,28 +464,17 @@ function itemDisplayElements($itemInfo, $limit = null, $options = null)
 
    $background = $options['background'] ?: '#6f4e37';
 
-   $elementDisplay = $main->obj('constants')->elementDisplay();
-
-   $itemElements = array();
-   foreach ($main->obj('constants')->elements() as $element) {
-      foreach (array('damage','resist') as $feature) {
-         if (isset($itemInfo["$element-$feature$limit"])) {
-            $itemElements[$feature][$element] = $itemInfo["$element-$feature$limit"];
-         }
-      }
-   }
-
-   if (!$itemElements) { return ''; }
+   $elementAttribs = $main->obj('constants')->elementAttribs();
 
    $return = "<tr>".
              "<td colspan=4 style='background:$background; text-align:center;'>";
 
-   foreach (array('damage','resist') as $feature) {
-      if (!$itemElements[$feature]) { continue; }
-      foreach ($itemElements[$feature] as $element => $value) {
-         $elementProp = $elementDisplay[$element];
-         $return .= sprintf("<span style='color:%s;'>%s %s: %s <i class='fa fa-%s'></i></span><br>",$elementProp['color'],strtoupper($element),strtoupper($feature),$value,$elementProp['icon']);
-      }
+   foreach ($elementAttribs as $attribName => $attribInfo) {
+      if (!array_key_exists("$attribName$limit",$itemInfo)) { continue; }
+
+      $attribValue = $itemInfo["$attribName$limit"];
+
+      $return .= sprintf("<span class='%s'>%s: %s <i class='fa %s'></i></span><br>",$attribInfo['color'],$attribInfo['text'],$attribValue,$attribInfo['icon']);
    }
 
    $return .= "</td>".
@@ -500,15 +489,14 @@ function itemDisplayPrimary($itemInfo, $limit = null)
 
    $limit = (is_null($limit)) ? '' : ".$limit";
 
-   $attribDisplay = $main->obj('constants')->attribDisplay();
+   $primaryAttribs = $main->obj('constants')->primaryAttribs();
 
    $return = "<tr>";
 
-   foreach ($main->obj('constants')->primaryAttribs() as $attribName) {
-      $attribProp  = $attribDisplay[$attribName];
+   foreach ($primaryAttribs as $attribName => $attribInfo) {
       $attribValue = $itemInfo["$attribName$limit"] ?: 0;
 
-      $return .= sprintf("<td width=75px style='padding:5px; color:#fff; background:%s;'>%s <i class='float-right fa fa-%s'></i></td>",$attribProp['color'],$attribValue,$attribProp['icon']);
+      $return .= sprintf("<td width=75px class='%s' style='padding:5px;'>%s <i class='float-right fa %s'></i></td>",$attribInfo['background'],$attribValue,$attribInfo['icon']);
    }
    
    $return .= "</tr>";
@@ -555,8 +543,7 @@ function buildItemInfo($itemInfo, $itemInput)
    if (!$itemInfo) { return $return; }
 
    $attribList = $main->obj('constants')->attribs();
-
-   $itemLevel = $itemInput['level'];
+   $itemLevel  = $itemInput['level'];
 
    foreach ($itemInfo as $attrib => $attribValue) {
       if (!preg_match('/^(.*)\.min$/i',$attrib,$match)) { continue; }
@@ -612,7 +599,7 @@ function buildItemInfo($itemInfo, $itemInput)
 
    $return['level'] = array(
       'min' => 0,
-      'max' => 15,
+      'max' => $main->obj('constants')->maxEnhanceLevel(),
    );
 
    $return['level']['value'] = $itemLevel;

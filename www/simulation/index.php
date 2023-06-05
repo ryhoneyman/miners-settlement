@@ -4,7 +4,7 @@ include_once 'local/minersmain.class.php';
 
 $main = new MinersMain(array(
    'debugLevel'     => 0,
-   'errorReporting' => true,
+   'errorReporting' => false,
    'sessionStart'   => true,
    'memoryLimit'    => null,
    'sendHeaders'    => true,

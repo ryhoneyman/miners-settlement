@@ -444,13 +444,13 @@ class Battle extends Base
 
    public function valueCalculate($attribInfo, $value)
    {
-      $format = $attribInfo['format'];
-      $min    = (array_key_exists('min',$attribInfo)) ? $attribInfo['min'] : null;
+      $dataType = $attribInfo['datatype'];
+      $format   = $attribInfo['format'];
+      $min      = (array_key_exists('min',$attribInfo)) ? $attribInfo['min'] : null;
 
-      // for floats we need hundredths place precision without rounding, so we use substr to floor the decimals
-      if ($format == 'float') { 
-         //$calculated = substr(sprintf("%1.3f",$value),0,-1); 
-         $calculated = (float)sprintf("%1.2f",$value); 
+      // for floats we need hundredths place precision without rounding
+      if ($dataType == 'float') { 
+         $calculated = (float)sprintf($format,$value); 
 
          if (!is_null($min) && $calculated < $min) { $calculated = $min; }
 

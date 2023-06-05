@@ -21,16 +21,24 @@ class Format extends Base
 
    public function effects($effectList, $web = false)
    {
-      $return      = '';
-      $lineBreak   = ($web) ? "<br>\n" : "\n";
-      $effectDesc  = $this->constants->effectDesc();
-      $effectDepth = $this->arrays->arrayDepth($effectList);
+      $return         = '';
+      $lineBreak      = ($web) ? "<br>\n" : "\n";
+      $effectDesc     = $this->constants->effectDesc();
+      $effectDepth    = $this->arrays->arrayDepth($effectList);
+      $elementAttribs = $this->constants->elementAttribs();
 
       foreach ($effectList as $affects => $effectAttribList) {
          foreach ($effectAttribList as $attribName => $attribList) {
-            $desc   = $effectDesc[$affects][$attribName];
-            $format = $desc['format'];
-            $vars   = $desc['vars'];
+            $attribDesc = $effectDesc[$affects][$attribName];
+
+            if ($web && $attribDesc['web-format'] && $attribDesc['web-vars']) {
+               $format = preg_replace_callback('~{{(\S+?)}}~',function($matches) use ($attribDesc) { return $attribDesc[$matches[1]]; },$attribDesc['web-format']);
+               $vars   = $attribDesc['web-vars'];
+            }
+            else {
+               $format = $attribDesc['format'];
+               $vars   = $attribDesc['vars'];
+            }
 
             if (!$format) { continue; }
 
@@ -42,12 +50,28 @@ class Format extends Base
                // We don't need the negative numbers here, the descriptions will say slower or faster
                $effectInfo['percent.adjust'] = abs($effectInfo['percent.adjust']);
 
-               $return .= vsprintf($format.$lineBreak,array_intersect_key($effectInfo,array_fill_keys($vars,true)));
+               $effectInfo['color'] = $elementAttribs[$attribName]['color'];
+               $effectInfo['icon']  = $elementAttribs[$attribName]['icon'];
+
+               $formatFill = array();
+               foreach ($vars as $var) { $formatFill[$var] = $effectInfo[$var]; }
+
+               $return .= vsprintf($format.$lineBreak,$formatFill);
             }
          }
       }
 
       return $return;
+   }
+
+   public function numericReducer($value, $format = null)
+   {
+      if (is_null($format)) { $format = '%d'; }
+
+      if ($value >= 1000) { 
+         return preg_replace('/\.?0+$/','',sprintf("%1.2f",$value / 1000)).'K';
+      }
+      else { return sprintf($format,$value); }
    }
 }
 ?>

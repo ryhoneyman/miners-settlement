@@ -26,10 +26,11 @@ print pageDisplay($main);
 
 function pageDisplay($main)
 {
-   $html      = $main->obj('html');
-   $alte      = $main->obj('adminlte');
-   $attribs   = $main->obj('constants')->attribs();
-   $pageInput = $main->sessionValue('simulation/pageInput');
+   $html       = $main->obj('html');
+   $alte       = $main->obj('adminlte');
+   $constants  = $main->obj('constants');
+   $attribList = $constants->attribs();
+   $pageInput  = $main->sessionValue('simulation/pageInput');
 
    $clearStats = $main->obj('input')->get('clear','alphanumeric');
    $gearType   = $main->obj('input')->get('type','alphanumeric,dash');
@@ -72,13 +73,14 @@ function pageDisplay($main)
    $selectGroup = array($html->select($levelName,array_merge(array('' => 'Level'),range(0,$main->obj('constants')->maxEnhanceLevel())),$pageInput[$levelName],$baseOpts),
                         $html->select($baseName,array_merge(array('' => 'Base %'),$attribPercentList),$pageInput[$baseName],$baseOpts));
 
-   foreach ($main->obj('constants')->attribs() as $attribName => $attribInfo) {
+   foreach ($attribList as $attribName => $attribInfo) {
       if (!array_key_exists($attribName,$statList)) { continue; }
 
-      $attribIcon = $attribInfo['icon'];
-      $selectOpts = $baseOpts;
+      $attribIconList = ($attribInfo['icon-combo']) ? $attribInfo['icon-combo'] : $attribName;
+      $attribIconData = $constants->buildAttribIconClass($attribIconList);
+      $selectOpts     = $baseOpts;
 
-      $selectOpts['data']['']['icon'] = $attribIcon;
+      $selectOpts['data']['']['icon'] = $attribIconData;
 
       foreach (range(0,100,10) as $percentage) { 
          $selectOpts['data']['percent-'.$percentage] = array('icon' => $attribIcon, 'css' => 'text-sm'); 

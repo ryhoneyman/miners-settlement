@@ -11,6 +11,7 @@ $main = new MinersMain(array(
    'database'       => true,
    'input'          => true,
    'html'           => true,
+   'format'         => true,
 ));
 
 $main->title('Item Enhancement');
@@ -108,6 +109,8 @@ function boostDisplay($main)
 
 function enhanceDisplay($main)
 {
+   $format = $main->obj('format');
+
    $return = '<div class="col-12 col-xl-6 col-lg-8 col-md-8 col-sm-12">'.
              '<div class="card card-outline card-success">'.
              '<div class="card-header"><b class="text-xl">Enhancement Cost</b></div>'.
@@ -140,10 +143,10 @@ function enhanceDisplay($main)
       $countFormat = "<span class='text-%s'>x %s</span>";
 
       $levelDisplay     = "<span class='text-lg text-bold'>+".$enhanceLevel."<span>";
-      $coinDisplay      = "$coinImage ".sprintf($countFormat,'white',numericReducer($coinCount));
-      $soulstoneDisplay = "$soulstoneImage ".sprintf($countFormat,'white',numericReducer($soulstoneCount));
-      $shardDisplay     = "$shardImage ".sprintf($countFormat,'white',numericReducer($shardCount));
-      $materialDisplay  = "$materialImage ".sprintf($countFormat,'white',numericReducer($materialCount));
+      $coinDisplay      = "$coinImage ".sprintf($countFormat,'white',$format->numericReducer($coinCount));
+      $soulstoneDisplay = "$soulstoneImage ".sprintf($countFormat,'white',$format->numericReducer($soulstoneCount));
+      $shardDisplay     = "$shardImage ".sprintf($countFormat,'white',$format->numericReducer($shardCount));
+      $materialDisplay  = "$materialImage ".sprintf($countFormat,'white',$format->numericReducer($materialCount));
       $successDisplay   = sprintf("<span class='text-green text-lg text-bold'>%s%%</span>",$enhanceInfo['chance']);
 
       $return .= sprintf("<tr><td>%s</td><td>%s</td><td class='text-center'>%s</td><td>%s</td><td>%s</td><td class='text-right'>%s</td></tr>",
@@ -184,14 +187,6 @@ function overviewDisplay($main)
               '</div>';
 
    return $return;
-}
-
-function numericReducer($value, $format = null)
-{
-   if (is_null($format)) { $format = '%d'; }
-
-   if ($value >= 1000) { return sprintf($format.'K',$value/1000); }
-   else { return $value; }
 }
 
 function getCrafting($main)

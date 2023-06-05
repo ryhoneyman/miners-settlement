@@ -3,8 +3,8 @@ include_once 'miners-settlement-init.php';
 include_once 'local/minersmain.class.php';
 
 $main = new MinersMain(array(
-   'debugLevel'     => 9,
-   'errorReporting' => true,
+   'debugLevel'     => 0,
+   'errorReporting' => false,
    'sessionStart'   => true,
    'memoryLimit'    => null,
    'sendHeaders'    => true,
@@ -72,21 +72,19 @@ function gearDisplay($main, $gearType, $gearTypeList)
       $gearPrimary = '';
       $gearElement = '';
 
-      foreach ($main->obj('constants')->attribDisplay() as $attribName => $attribInfo) {
-         $rangeFormat = ($attribName == 'speed') ? '%1.2f | %1.2f' : '%d - %d';
-         $gearPrimary .= sprintf("<span class='badge' style='width:90px; background:%s; color:white;'>$rangeFormat <i class='fas fa-%s float-right'></i></span> ",
-                                 $attribInfo['color'],$gearAttribs["$attribName.min"],$gearAttribs["$attribName.max"],$attribInfo['icon']);
+      foreach ($main->obj('constants')->primaryAttribs() as $attribName => $attribInfo) {
+         $rangeFormat = $attribInfo['range-format'];
+         $gearPrimary .= sprintf("<span class='badge %s' style='width:90px;'>$rangeFormat <i class='fas %s float-right'></i></span> ",
+                                 $attribInfo['background'],$gearAttribs["$attribName.min"],$gearAttribs["$attribName.max"],$attribInfo['icon']);
       }
 
-      foreach ($main->obj('constants')->elementDisplay() as $elementName => $elementInfo) {
-         foreach (array('damage','resist') as $feature) {
-            $featureName = sprintf("%s-%s",$elementName,$feature);
-            if (!$gearAttribs["$featureName.min"]) { continue; }
+      foreach ($main->obj('constants')->elementAttribs() as $elementName => $elementInfo) {
+         if (!$gearAttribs["$elementName.min"]) { continue; }
 
-            $gearElement .= sprintf("<span style='color:%s;'>%s %s: %d - %d <i class='fa fa-%s'></i></span><br>",
-                                    $elementInfo['color'],strtoupper($elementName),strtoupper($feature),$gearAttribs["$featureName.min"],
-                                    $gearAttribs["$featureName.max"],$elementInfo['icon']);
-         }
+         $rangeFormat = $elementInfo['range-format'];
+         $gearElement .= sprintf("<span class='%s'>%s: $rangeFormat <i class='fa %s'></i></span><br>",
+                                 $elementInfo['color'],$elementInfo['text'],$gearAttribs["$elementName.min"],
+                                 $gearAttribs["$elementName.max"],$elementInfo['icon']);
       }
 
       $return .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$gearImage,$gearName,$gearPrimary,$gearElement);

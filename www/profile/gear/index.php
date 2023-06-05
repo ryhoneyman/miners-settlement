@@ -4,7 +4,7 @@ include_once 'local/minersmain.class.php';
 
 $main = new MinersMain(array(
    'debugLevel'     => 0,
-   'errorReporting' => true,
+   'errorReporting' => false,
    'sessionStart'   => true,
    'memoryLimit'    => null,
    'sendHeaders'    => true,
@@ -66,20 +66,17 @@ function gearDisplay($main)
          $gearPrimary = '';
          $gearElement = '';
 
-         foreach ($constants->attribDisplay() as $attribName => $attribInfo) {
+         foreach ($constants->primaryAttribs() as $attribName => $attribInfo) {
             $rangeFormat = ($attribName == 'speed') ? '%1.2f' : '%d';
-            $gearPrimary .= sprintf("<span class='badge' style='width:90px; background:%s; color:white;'>$rangeFormat <i class='fas fa-%s float-right'></i></span> ",
-                                    $attribInfo['color'],$gearAttribs[$attribName],$attribInfo['icon']);
+            $gearPrimary .= sprintf("<span class='badge %s' style='width:90px;'>$rangeFormat <i class='fas %s float-right'></i></span> ",
+                                    $attribInfo['background'],$gearAttribs[$attribName],$attribInfo['icon']);
          }
 
-         foreach ($constants->elementDisplay() as $elementName => $elementInfo) {
-            foreach (array('damage','resist') as $feature) {
-               if (!isset($gearAttribs["$elementName.$feature"])) { continue; }
+         foreach ($constants->elementAttribs() as $elementName => $elementInfo) {
+            if (!isset($gearAttribs[$elementName])) { continue; }
 
-               $gearElement .= sprintf("<span style='color:%s;'>%s %s: %d <i class='fa fa-%s'></i></span><br>",
-                                       $elementInfo['color'],strtoupper($elementName),strtoupper($feature),$gearAttribs["$elementName.$feature"],
-                                       $elementInfo['icon']);
-            }
+               $gearElement .= sprintf("<span class='%s'>%s: %d <i class='fa %s'></i></span><br>",
+                                       $elementInfo['color'],$elementInfo['text'],$gearAttribs[$elementName],$elementInfo['icon']);
          }
 
          $levelBadge = sprintf("<span class='badge' style='width:25px; background:black; color:white;'>%s</span>",$gearLevel);

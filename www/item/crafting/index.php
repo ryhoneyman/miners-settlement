@@ -11,6 +11,7 @@ $main = new MinersMain(array(
    'database'       => true,
    'input'          => true,
    'html'           => true,
+   'format'         => true,
 ));
 
 $main->title('Scheme Crafting');
@@ -19,7 +20,6 @@ $input = $main->obj('input');
 $html  = $main->obj('html');
 
 $main->buildClass('constants','Constants',null,'local/constants.class.php');
-$main->buildClass('format','Format',null,'local/format.class.php');
 
 include 'ui/header.php';
 
@@ -43,6 +43,8 @@ function dataDisplay($main)
 
 function craftingDisplay($main)
 {
+   $format = $main->obj('format');
+
    $return = '<div class="row">'.
              '<div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">'.
              '<div class="card card-outline card-success">'.
@@ -63,7 +65,7 @@ function craftingDisplay($main)
          $componentImage = $craftingList['component'][$itemName]['image'] ?: null;
          $componentLabel = $craftingList['component'][$itemName]['label'] ?: $itemName;
          $entryComponents[] = (($componentImage) ? sprintf("<img class='ml-4' src='%s' height=25 data-toggle='tooltip' title='%s'>",$componentImage,$componentLabel) :
-                                                  sprintf("<span class='ml-4'>%s</span>",$componentLabel)).sprintf(" x%s",numericReducer($itemCount));
+                                                  sprintf("<span class='ml-4'>%s</span>",$componentLabel)).sprintf(" x%s",$format->numericReducer($itemCount));
       }
 
       $return .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td></tr>",$entryImage,$entryName,implode(' ',$entryComponents));
@@ -76,14 +78,6 @@ function craftingDisplay($main)
               '</div>';
 
    return $return;
-}
-
-function numericReducer($value, $format = null)
-{
-   if (is_null($format)) { $format = '%d'; }
-
-   if ($value >= 1000) { return sprintf($format.'K',$value/1000); }
-   else { return $value; }
 }
 
 function getCrafting($main)

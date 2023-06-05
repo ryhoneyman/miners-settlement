@@ -160,7 +160,7 @@ class Item extends Base
 
             $givenValue  = (array_key_exists($attribName,$values)) ? $values[$attribName] : null;
             $givenValid  = ($maxValue < $minValue) ? ($givenValue <= $minValue && $givenValue >= $maxValue) : ($givenValue >= $minValue && $givenValue <= $maxEValue);
-            $attribValue = (!is_null($givenValue) && $givenValid) ? $givenValue : $this->random($minValue,$maxValue,$attribInfo['format']);
+            $attribValue = (!is_null($givenValue) && $givenValid) ? $givenValue : $this->random($minValue,$maxValue,$attribInfo);
 
             $this->debug(9,"Generate: $attribName = $attribValue ".((is_null($givenValue)) ? "(random $minValue ~ $maxValue)" : ''));
             
@@ -173,21 +173,24 @@ class Item extends Base
       if ($enhance) { $this->enhance($enhance); }
    }
 
-   public function random($minValue, $maxValue, $format = null)
+   public function random($minValue, $maxValue, $attribInfo = null)
    {
       //$this->debug(8,"called");
 
-      $this->debug(9,"min: $minValue, max: $maxValue, format: $format");
+      $dataType = $attribInfo['datatype'];
+      $format   = $attribInfo['format'];
 
-      if (is_null($format) || preg_match('/^int$/',$format)) { return sprintf("%d",mt_rand($minValue,$maxValue)); }
+      $this->debug(9,"min: $minValue, max: $maxValue, dataType: $dataType, format: $format");
 
-      if (preg_match('/^float$/',$format)) {
+      if (is_null($format) || preg_match('/^int$/',$dataType)) { return sprintf("%d",mt_rand($minValue,$maxValue)); }
+
+      if (preg_match('/^float$/',$dataType)) {
          $multiplier = pow(10,2);
          $reversed   = ($maxValue < $minValue) ? true : false;
 
          $result = ($reversed) ? mt_rand($maxValue*$multiplier,$minValue*$multiplier) : mt_rand($minValue*$multiplier,$maxValue*$multiplier);
 
-         return sprintf("%1.2f",$result / $multiplier);
+         return sprintf($format,$result / $multiplier);
       }
 
       return null;
@@ -203,7 +206,7 @@ class Item extends Base
          'image'       => $this->image(),
       );
 
-      foreach ($this->constants->primaryAttribs() as $attribName) {
+      foreach ($this->constants->primaryAttribs() as $attribName => $attribInfo) {
          $data[$attribName] = $this->var($attribName);
       }
 

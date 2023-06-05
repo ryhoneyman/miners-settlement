@@ -51,7 +51,7 @@ function monsterDisplay($monsterList, $lootList)
 {
    global $constants;
 
-   $attribDisplay = $constants->attribDisplay();
+   $primaryAttribs = $constants->primaryAttribs();
 
    $return = "<table border=0 cellpadding=10>".
              "<tr><th></th><th>Name</th><th>Health</th><th>Attack</th><th>Defense</th><th>Speed</th><th>Effects</th><th>Exp</th><th>Drops</th></tr>";
@@ -63,9 +63,9 @@ function monsterDisplay($monsterList, $lootList)
 
       $return .= sprintf("<tr><td>%s</td><td>%s</td>",$monsterImage,$monsterName);
 
-      foreach ($attribDisplay as $attribName => $attribInfo) {
-         $return .= sprintf("<td><span class='badge' style='width:75px; background:%s; color:white;'>%d <i class='fas fa-%s float-right'></i></span></td>",
-                            $attribInfo['color'],$monsterInfo[$attribName],$attribInfo['icon']);
+      foreach ($primaryAttribs as $attribName => $attribInfo) {
+         $return .= sprintf("<td><span class='badge %s' style='width:75px;'>%d <i class='fas %s float-right'></i></span></td>",
+                            $attribInfo['background'],$monsterInfo[$attribName],$attribInfo['icon']);
       }
 
       $return .= "<td></td>";

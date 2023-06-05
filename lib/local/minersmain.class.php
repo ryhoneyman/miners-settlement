@@ -9,9 +9,13 @@ class MinersMain extends Main
 {
    public $userId = null;
 
-   public function __construct($debug = null, $options = null)
+   public function __construct($options = null)
    {
-      parent::__construct($debug,$options);
+      parent::__construct($options);
+
+      if ($options['format']) {
+         $this->buildClass('format','Format',null,'local/format.class.php');
+      }
    }
 
    public function title($name = null)
