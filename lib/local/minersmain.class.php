@@ -33,7 +33,7 @@ class MinersMain extends Main
 
       if (!$currentId) {
          $this->logger('newUser',array('userId' => $userId, 'source' => $_SERVER['REMOTE_ADDR']));
-         $this->sendCookies(array('userid' => array('value' => $userId, 'expires' => $cookieExpires, 'path' => null, 'domain' => $_SERVER['SERVER_NAME'])));
+         $this->sendCookies(array('userid' => array('value' => $userId, 'expires' => $cookieExpires, 'path' => '/', 'domain' => $_SERVER['SERVER_NAME'])));
       }
 
       $this->userId = $userId;
