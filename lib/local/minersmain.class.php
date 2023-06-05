@@ -283,6 +283,8 @@ class MinersMain extends Main
 
       $success = ($dbResult) ? true : false;
 
+      $this->logger('saveItemLink',array('itemHash' => $itemHash, 'itemName' => $itemName, 'success' => $success));
+
       return $success;
    }
 
@@ -306,18 +308,31 @@ class MinersMain extends Main
       $itemData  = $this->normalizeItemData($itemData);
       $itemStats = json_encode($itemData,JSON_UNESCAPED_SLASHES);
       $dbResult  = $this->db()->bindExecute("insert into gear (profile_id,item_hash,item_id,stats,created,updated) values (?,?,?,?,now(),now()) ".
-                                             "on duplicate key update updated = values(updated)",
-                                             "ssis",array($userId,$itemHash,$itemId,$itemStats));
+                                            "on duplicate key update updated = values(updated)",
+                                            "ssis",array($userId,$itemHash,$itemId,$itemStats));
 
       $success = ($dbResult) ? true : false;
+
+      $this->logger('saveGear',array('itemId' => $itemId, 'itemName' => $itemName, 'success' => $success));
 
       return $success;
    }
 
    public function deleteGear($itemHash)
    {
-      $userId    = $this->userId;
-      $dbResult  = $this->db()->bindExecute("delete from gear where item_hash = ? and profile_id = ?","ss",array($itemHash,$userId));
+      $userId   = $this->userId;
+      $dbResult = $this->db()->bindExecute("delete from gear where item_hash = ? and profile_id = ?","ss",array($itemHash,$userId));
+
+      $success = ($dbResult) ? true : false;
+
+      return $success;
+   }
+
+   public function logger($name, $data, $options = null)
+   {
+      $userId   = $this->userId;
+      $dbResult = $this->db()->bindExecute("insert into log (profile_id,name,data,created) value (?,?,?,now())",
+                                           "sss",array($userId,$name,json_encode($data,JSON_UNESCAPED_SLASHES)));
 
       $success = ($dbResult) ? true : false;
 
