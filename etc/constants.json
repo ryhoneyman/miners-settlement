@@ -1,68 +1,280 @@
 {
-    "attribDisplay": {
+    "maxEnhanceLevel": 15,
+    "baseAttribs": {
+        "attack": {"innateGear": "weapon", "innateValue": 1},
+        "speed": {"innateGear": "weapon", "innateValue": 1},
+        "health": {"innateGear": null, "innateValue": 500}
+    },
+    "gearTypes": {
+        "weapon": "Weapon",
+        "shield": "Shield",
+        "amulet": "Amulet",
+        "ring": "Ring",
+        "weapon-skin": "Weapon Skin",
+        "shield-skin": "Shield Skin"
+    },
+    "attribs": {
         "health": {
-            "color": "#aa0000",
-            "icon": "heart"
+            "type": "primary",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "min": 0,
+            "abbr": "HP",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            },
+            "background": "miners-health-bg",
+            "color": "miners-health",
+            "icon": "fa-heart"
         },
         "attack": {
-            "color": "#ff6600",
-            "icon": "sword"
+            "type": "primary",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "min": 0,
+            "abbr": "ATK",
+            "enhance": {
+                "percent": 5,
+                "round": true
+            },
+            "background": "miners-attack-bg",
+            "color": "miners-attack",
+            "icon": "fa-sword"
         },
         "defense": {
-            "color": "#0000ff",
-            "icon": "shield-alt"
+            "type": "primary",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "min": 0,
+            "abbr": "DEF",
+            "enhance": {
+                "percent": 5,
+                "round": true
+            },
+            "background": "miners-defense-bg",
+            "color": "miners-defense",
+            "icon": "fa-shield-alt"
         },
         "speed": {
-            "color": "#00aa00",
-            "icon": "clock"
-        }
-    },
-    "elementDisplay": {
-        "fire": {
-            "color": "#ff0000",
-            "icon": "fire"
+            "type": "primary",
+            "format": "%1.2f",
+            "range-format": "%1.2f | %1.2f",
+            "datatype": "float",
+            "min": 0,
+            "abbr": "SPD",
+            "reversed": true,
+            "enhance": {
+                "percent": 0,
+                "round": false
+            },
+            "background": "miners-speed-bg",
+            "color": "miners-speed",
+            "icon": "fa-clock"
         },
-        "water": {
-            "color": "#aaaaff",
-            "icon": "tint"
+        "fire-damage": {
+            "type": "elemental-damage",
+            "element": "fire",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "min": 0,
+            "text": "FIRE DAMAGE",
+            "abbr": "FIR.DMG",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            },
+            "background": "miners-fire-bg",
+            "color": "miners-fire",
+            "icon": "fa-fire",
+            "icon-combo": ["fire-damage","attack"]
         },
-        "wind": {
-            "color": "#00ffff",
-            "icon": "wind"
+        "water-damage": {
+            "type": "elemental-damage",
+            "element": "water",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "min": 0,
+            "text": "WATER DAMAGE",
+            "abbr": "WTR.DMG",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            },
+            "background": "miners-water-bg",
+            "color": "miners-water",
+            "icon": "fa-tint",
+            "icon-combo": ["water-damage","attack"]
         },
-        "earth": {
-            "color": "#00ff00",
-            "icon": "seedling"
+        "wind-damage": {
+            "type": "elemental-damage",
+            "element": "wind",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "min": 0,
+            "text": "WIND DAMAGE",
+            "abbr": "WND.DMG",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            },
+            "background": "miners-wind-bg",
+            "color": "miners-wind",
+            "icon": "fa-wind",
+            "icon-combo": ["wind-damage","attack"]
         },
-        "lightning": {
-            "color": "#ffff00",
-            "icon": "bolt"
-        }
-    },
-    "percentColors": {
-        "5": {
-            "color": "#ff0000",
-            "label": "Horrible"
+        "earth-damage": {
+            "type": "elemental-damage",
+            "element": "earth",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "min": 0,
+            "text": "EARTH DAMAGE",
+            "abbr": "EAR.DMG",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            },
+            "background": "miners-earth-bg",
+            "color": "miners-earth",
+            "icon": "fa-seedling",
+            "icon-combo": ["earth-damage","attack"]
         },
-        "25": {
-            "color": "#ff9900",
-            "label": "Poor"
+        "lightning-damage": {
+            "type": "elemental-damage",
+            "element": "lightning",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "min": 0,
+            "text": "LIGHTNING DAMAGE",
+            "abbr": "LIT.DMG",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            },
+            "background": "miners-lightning-bg",
+            "color": "miners-lightning",
+            "icon": "fa-bolt",
+            "icon-combo": ["lightning-damage","attack"]
         },
-        "50": {
-            "color": "#ffaa00",
-            "label": "Below-Average"
+        "fire-resist": {
+            "type": "elemental-resist",
+            "element": "fire",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "text": "FIRE RESIST",
+            "abbr": "FIR.RES",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            },
+            "background": "miners-fire-bg",
+            "color": "miners-fire",
+            "icon": "fa-fire",
+            "icon-combo": ["fire-resist","defense"]
         },
-        "75": {
-            "color": "#ffff00",
-            "label": "Average"
+        "water-resist": {
+            "type": "elemental-resist",
+            "element": "water",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "text": "WATER RESIST",
+            "abbr": "WTR.RES",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            },
+            "background": "miners-water-bg",
+            "color": "miners-water",
+            "icon": "fa-tint",
+            "icon-combo": ["water-resist","defense"]
         },
-        "95": {
-            "color": "#aaff00",
-            "label": "Good"
+        "wind-resist": {
+            "type": "elemental-resist",
+            "element": "wind",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "text": "WIND RESIST",
+            "abbr": "WND.RES",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            },
+            "background": "miners-wind-bg",
+            "color": "miners-wind",
+            "icon": "fa-wind",
+            "icon-combo": ["wind-resist","defense"]
         },
-        "100": {
-            "color": "#66ff00",
-            "label": "Godly"
+        "earth-resist": {
+            "type": "elemental-resist",
+            "element": "earth",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "text": "EARTH RESIST",
+            "abbr": "EAR.RES",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            },
+            "background": "miners-earth-bg",
+            "color": "miners-earth",
+            "icon": "fa-seedling",
+            "icon-combo": ["earth-resist","defense"]
+        },
+        "lightning-resist": {
+            "type": "elemental-resist",
+            "element": "lightning",
+            "format": "%d",
+            "range-format": "%d - %d",
+            "datatype": "int",
+            "text": "LIGHTNING RESIST",
+            "abbr": "LIT.RES",
+            "enhance": {
+                "percent": 10,
+                "round": true
+            },
+            "background": "miners-lightning-bg",
+            "color": "miners-lightning",
+            "icon": "fa-bolt",
+            "icon-combo": ["lightning-resist","defense"]
+        },
+        "lifesteal": {
+            "format": "%1.2f",
+            "datatype": "float",
+            "initialize": 1
+        },
+        "extra-defense": {
+            "format": "%d",
+            "datatype": "int",
+            "initialize": 1,
+            "until.hit": true
+        },
+        "critical-hit": {
+            "format": "%d",
+            "datatype": "int",
+            "initialize": 1,
+            "only.once": true
+        },
+        "stun": {
+            "format": "%d",
+            "datatype": "int"
+        },
+        "stun-resist": {
+            "format": "%1.2f",
+            "datatype": "float",
+            "initialize": 1
         }
     },
     "effectDesc": {
@@ -89,43 +301,63 @@
             },
             "fire-damage": {
                 "format": "FIRE DAMAGE: %d",
-                "vars": ["flat.adjust"]
+                "vars": ["flat.adjust"],
+                "web-format": "<span class='%s'>{{format}} <i class='fas %s'></i></span>",
+                "web-vars": ["color","flat.adjust","icon"]
             },
             "earth-damage": {
                 "format": "EARTH DAMAGE: %d",
-                "vars": ["flat.adjust"]
+                "vars": ["flat.adjust"],
+                "web-format": "<span class='%s'>{{format}} <i class='fas %s'></i></span>",
+                "web-vars": ["color","flat.adjust","icon"]
             },
             "wind-damage": {
                 "format": "WIND DAMAGE: %d",
-                "vars": ["flat.adjust"]
+                "vars": ["flat.adjust"],
+                "web-format": "<span class='%s'>{{format}} <i class='fas %s'></i></span>",
+                "web-vars": ["color","flat.adjust","icon"]
             },
             "water-damage": {
                 "format": "WATER DAMAGE: %d",
-                "vars": ["flat.adjust"]
+                "vars": ["flat.adjust"],
+                "web-format": "<span class='%s'>{{format}} <i class='fas %s'></i></span>",
+                "web-vars": ["color","flat.adjust","icon"]
             },
             "lightning-damage": {
                 "format": "LIGHTNING DAMAGE: %d",
-                "vars": ["flat.adjust"]
+                "vars": ["flat.adjust"],
+                "web-format": "<span class='%s'>{{format}} <i class='fas %s'></i></span>",
+                "web-vars": ["color","flat.adjust","icon"]
             },
             "fire-resist": {
                 "format": "FIRE RESIST: %d",
-                "vars": ["flat.adjust"]
+                "vars": ["flat.adjust"],
+                "web-format": "<span class='%s'>{{format}} <i class='fas %s'></i></span>",
+                "web-vars": ["color","flat.adjust","icon"]
             },
             "earth-resist": {
                 "format": "EARTH RESIST: %d",
-                "vars": ["flat.adjust"]
+                "vars": ["flat.adjust"],
+                "web-format": "<span class='%s'>{{format}} <i class='fas %s'></i></span>",
+                "web-vars": ["color","flat.adjust","icon"]
             },
             "wind-resist": {
                 "format": "WIND RESIST: %d",
-                "vars": ["flat.adjust"]
+                "vars": ["flat.adjust"],
+                "web-format": "<span class='%s'>{{format}} <i class='fas %s'></i></span>",
+                "web-vars": ["color","flat.adjust","icon"]
             },
             "water-resist": {
                 "format": "WATER RESIST: %d",
-                "vars": ["flat.adjust"]
+                "vars": ["flat.adjust"],
+                "web-format": "<span class='%s'>{{format}} <i class='fas %s'></i></span>",
+                "web-vars": ["color","flat.adjust","icon"]
             },
             "lightning-resist": {
                 "format": "LIGHTNING RESIST: %d",
-                "vars": ["flat.adjust"]
+                "vars": ["flat.adjust"],
+                "web-format": "<span class='%s'>{{format}} <i class='fas %s'></i></span>",
+                "web-vars": ["color","flat.adjust","icon"]
             }
         },
         "enemy": {
@@ -143,193 +375,30 @@
             }
         }
     }, 
-    "maxEnhanceLevel": 15,
-    "baseAttribs": {
-        "attack": {"innateGear": "weapon", "innateValue": 1},
-        "speed": {"innateGear": "weapon", "innateValue": 1},
-        "health": {"innateGear": null, "innateValue": 500}
-    },
-    "primaryAttribs": ["health","attack","defense","speed"],
-    "gearTypes": {
-        "weapon": "Weapon",
-        "shield": "Shield",
-        "amulet": "Amulet",
-        "ring": "Ring",
-        "weapon-skin": "Weapon Skin",
-        "shield-skin": "Shield Skin"
-    },
-    "elements": ["fire","earth","wind","water","lightning"],
-    "attribs": {
-        "health": {
-            "type": "health",
-            "format": "int",
-            "min": 0,
-            "abbr": "HP",
-            "enhance": {
-                "percent": 10,
-                "round": true
-            },
-            "icon": "text-red fa-heart"
+    "percentColors": {
+        "5": {
+            "color": "#ff0000",
+            "label": "Horrible"
         },
-        "attack": {
-            "type": "attack",
-            "format": "int",
-            "min": 0,
-            "abbr": "ATK",
-            "enhance": {
-                "percent": 5,
-                "round": true
-            },
-            "icon": "text-orange fa-sword"
+        "25": {
+            "color": "#ff9900",
+            "label": "Poor"
         },
-        "defense": {
-            "type": "defense",
-            "format": "int",
-            "min": 0,
-            "abbr": "DEF",
-            "enhance": {
-                "percent": 5,
-                "round": true
-            },
-            "icon": "text-blue fa-shield"
+        "50": {
+            "color": "#ffaa00",
+            "label": "Below-Average"
         },
-        "speed": {
-            "type": "speed",
-            "format": "float",
-            "min": 0,
-            "abbr": "SPD",
-            "reversed": true,
-            "enhance": {
-                "percent": 0,
-                "round": false
-            },
-            "icon": "text-green fa-clock"
+        "75": {
+            "color": "#ffff00",
+            "label": "Average"
         },
-        "fire-damage": {
-            "type": "elemental.damage",
-            "format": "int",
-            "min": 0,
-            "abbr": "FIR.DMG",
-            "enhance": {
-                "percent": 10,
-                "round": true
-            },
-            "icon": "text-red fa-fire;text-orange fa-sword"
+        "95": {
+            "color": "#aaff00",
+            "label": "Good"
         },
-        "earth-damage": {
-            "type": "elemental.damage",
-            "format": "int",
-            "min": 0,
-            "abbr": "EAR.DMG",
-            "enhance": {
-                "percent": 10,
-                "round": true
-            },
-            "icon": "text-green fa-seedling;text-orange fa-sword"
-        },
-        "lightning-damage": {
-            "type": "elemental.damage",
-            "format": "int",
-            "min": 0,
-            "abbr": "LIT.DMG",
-            "enhance": {
-                "percent": 10,
-                "round": true
-            },
-            "icon": "text-yellow fa-bolt;text-orange fa-sword"
-        },
-        "wind-damage": {
-            "type": "elemental.damage",
-            "format": "int",
-            "min": 0,
-            "abbr": "WND.DMG",
-            "enhance": {
-                "percent": 10,
-                "round": true
-            },
-            "icon": "text-lightblue fa-wind;text-orange fa-sword"
-        },
-        "water-damage": {
-            "type": "elemental.damage",
-            "format": "int",
-            "min": 0,
-            "abbr": "WTR.DMG",
-            "enhance": {
-                "percent": 10,
-                "round": true
-            },
-            "icon": "text-blue fa-tint;text-orange fa-sword"
-        },
-        "fire-resist": {
-            "type": "elemental.resist",
-            "format": "int",
-            "abbr": "FIR.RES",
-            "enhance": {
-                "percent": 10,
-                "round": true
-            },
-            "icon": "text-red fa-fire;text-blue fa-shield"
-        },
-        "earth-resist": {
-            "type": "elemental.resist",
-            "format": "int",
-            "abbr": "EAR.RES",
-            "enhance": {
-                "percent": 10,
-                "round": true
-            },
-            "icon": "text-green fa-seedling;text-blue fa-shield"
-        },
-        "lightning-resist": {
-            "type": "elemental.resist",
-            "format": "int",
-            "abbr": "LIT.RES",
-            "enhance": {
-                "percent": 10,
-                "round": true
-            },
-            "icon": "text-yellow fa-bolt;text-blue fa-shield"
-        },
-        "wind-resist": {
-            "type": "elemental.resist",
-            "format": "int",
-            "abbr": "WND.RES",
-            "enhance": {
-                "percent": 10,
-                "round": true
-            },
-            "icon": "text-lightblue fa-wind;text-blue fa-shield"
-        },
-        "water-resist": {
-            "type": "elemental.resist",
-            "format": "int",
-            "abbr": "WTR.RES",
-            "enhance": {
-                "percent": 10,
-                "round": true
-            },
-            "icon": "text-blue fa-tint;text-blue fa-shield"
-        },
-        "lifesteal": {
-            "format": "float",
-            "initialize": 1
-        },
-        "extra-defense": {
-            "format": "int",
-            "initialize": 1,
-            "until.hit": true
-        },
-        "critical-hit": {
-            "format": "int",
-            "initialize": 1,
-            "only.once": true
-        },
-        "stun": {
-            "format": "int"
-        },
-        "stun-resist": {
-            "format": "float",
-            "initialize": 1
+        "100": {
+            "color": "#66ff00",
+            "label": "Godly"
         }
     }
 }
