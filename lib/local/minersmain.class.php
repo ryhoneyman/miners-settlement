@@ -32,7 +32,7 @@ class MinersMain extends Main
       $cookieExpires = time()+(60*60*24*400); // 400 days is enforced in browsers;
 
       if (!$currentId) {
-         $this->logger('newUser',array('userId' => $userId, 'source' => $_SERVER['REMOTE_ADDR']));
+         $this->logger('newUser',array('userId' => $userId, 'expires' => $cookieExpires));
          $this->sendCookies(array('userid' => array('value' => $userId, 'expires' => $cookieExpires, 'path' => '/', 'domain' => $_SERVER['SERVER_NAME'])));
       }
 
@@ -331,8 +331,8 @@ class MinersMain extends Main
    public function logger($name, $data, $options = null)
    {
       $userId   = $this->userId;
-      $dbResult = $this->db()->bindExecute("insert into log (profile_id,name,data,created) value (?,?,?,now())",
-                                           "sss",array($userId,$name,json_encode($data,JSON_UNESCAPED_SLASHES)));
+      $dbResult = $this->db()->bindExecute("insert into log (profile_id,remote_addr,name,data,created) value (?,?,?,?,now())",
+                                           "ssss",array($userId,$_SERVER['REMOTE_ADDR'],$name,json_encode($data,JSON_UNESCAPED_SLASHES)));
 
       $success = ($dbResult) ? true : false;
 
