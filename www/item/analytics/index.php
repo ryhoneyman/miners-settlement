@@ -57,8 +57,10 @@ $main->var('itemList',$itemList);
 // Build the pulldown list of items
 $selectItem = array('' => 'Select an Item');
 $selectOpts = array('class' => 'form-control gear', 'style' => 'width:auto;');
+$gearTypes  = $main->obj('constants')->gearTypes();
+
 foreach ($itemList as $itemName => $itemData) { 
-   $selectItem[ucwords(str_replace('.',' ',$itemData['type']))][$itemName] = $itemData['label']; 
+   $selectItem[$gearTypes[$itemData['type']]][$itemName] = $itemData['label']; 
    $selectOpts['data'][$itemName]['image'] = $itemData['image'];
 }
 ksort($selectItem);
@@ -639,23 +641,22 @@ function getItemInput()
 
 function getGear($main)
 {
-   $gearTypes = $main->obj('constants')->gearTypes();
-   $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\.]/','',$value)."'"; },
-                                      array_unique(array_filter(array_keys($gearTypes)))));
+   $main->fetchGearList();
 
-   $result   = $main->db()->query("select * from item where type in ($typeList) and active = 1 order by tier asc, label asc",array('keyid' => 'id'));
    $gearList = array();
 
-   foreach ($result as $resultId => $resultInfo) {
-      $gearData = json_decode($resultInfo['attributes'],true);
+   foreach ($main->var('gearList') as $gearType => $gearItems) {
+      foreach ($gearItems as $resultId => $resultInfo) {
+         $gearData = json_decode($resultInfo['attributes'],true);
 
-      $gearData['id']    = $resultInfo['id'];
-      $gearData['name']  = $resultInfo['name'];
-      $gearData['label'] = $resultInfo['label'];
-      $gearData['type']  = $resultInfo['type'];
-      $gearData['image'] = $resultInfo['image'];
+         $gearData['id']    = $resultInfo['id'];
+         $gearData['name']  = $resultInfo['name'];
+         $gearData['label'] = $resultInfo['label'];
+         $gearData['type']  = $resultInfo['type'];
+         $gearData['image'] = $resultInfo['image'];
 
-      $gearList[$gearData['name']] = $gearData;
+         $gearList[$gearData['name']] = $gearData;
+      }
    }
 
    return $gearList;

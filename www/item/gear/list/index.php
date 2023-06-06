@@ -34,7 +34,7 @@ function dataDisplay($main)
 {
    $return = '';
 
-   $main->var('gearList',getGear($main));
+   $main->fetchGearList();
 
    $gearNav = array();
    foreach (array_keys($main->var('gearList')) as $gearType) {
@@ -97,22 +97,6 @@ function gearDisplay($main, $gearType, $gearTypeList)
               '</div>';
 
    return $return;
-}
-
-function getGear($main)
-{
-   $gearTypes = $main->obj('constants')->gearTypes();
-   $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\.]/','',$value)."'"; },
-                                      array_unique(array_filter(array_keys($gearTypes)))));
-
-   $result   = $main->db()->query("select * from item where type in ($typeList) and active = 1 order by tier asc, name asc",array('keyid' => 'id'));
-   $gearList = array();
-
-   foreach ($result as $resultId => $resultInfo) {
-      $gearList[$resultInfo['type']][$resultId] = $resultInfo;
-   }
-
-   return $gearList; 
 }
 
 ?>
