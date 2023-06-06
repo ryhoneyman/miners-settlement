@@ -98,7 +98,7 @@ function runepostDisplay($main, $postName, $postInfo)
       $entryAttrib   = json_decode($entryInfo['attributes'],true);
       $itemLabel     = $gearInfo[$entryInfo['item_id']]['label'] ?: 'None';
       $itemImage     = $gearInfo[$entryInfo['item_id']]['image'];
-      $itemInsert    = ($itemImage) ? sprintf("<img src='%s' height=50 data-toggle='tooltip' title='%s'> <span class='text-green'>$itemLabel</span>",$itemImage,$itemLabel) : $itemLabel;
+      $itemInsert    = ($itemImage) ? sprintf("<img src='%s' height=50 data-toggle='tooltip' title=\"%s\"> <span class='text-green'>$itemLabel</span>",$itemImage,$itemLabel) : $itemLabel;
       $requiredRunes = array();
       $runeEffects   = '';
 
