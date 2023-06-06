@@ -32,8 +32,8 @@ class MinersMain extends Main
       $cookieExpires = time()+(60*60*24*400); // 400 days is enforced in browsers;
 
       if (!$currentId) {
-         $this->logger('newUser',array('userId' => $userId, 'expires' => $cookieExpires));
          $this->sendCookies(array('userid' => array('value' => $userId, 'expires' => $cookieExpires, 'path' => '/', 'domain' => $_SERVER['SERVER_NAME'])));
+         $this->logger('newUser',array('userId' => $userId, 'expires' => $cookieExpires));
       }
 
       $this->userId = $userId;
