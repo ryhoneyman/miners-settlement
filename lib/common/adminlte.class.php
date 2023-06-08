@@ -71,7 +71,7 @@ class AdminLTE extends Base
              "   </div>".
              "</div>";
    }
-   
+
    public function displayCard($content, $cardProps = null)
    {
       $containerClass = $cardProps['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';
@@ -79,16 +79,18 @@ class AdminLTE extends Base
       $headerClass    = $cardProps['header'] ?: '';
       $cardTitle      = $cardProps['title'] ?: 'Card';
       $cardId         = $cardProps['id'] ?: 'card';
-   
+      $footerClass    = $cardProps['footer'] ?: '';
+      $footerContent  = $cardProps['footerContent'] ?: '';
+
       return "<div class='$containerClass'>".
              "    <div id='$cardId' class='card $cardClass'>".
              "       <div class='card-header $headerClass'><h3 class='card-title text-bold'>$cardTitle</h3></div>".
              "       <div class='card-body'>".
              "       ".$content.
              "       </div>".
+             (($footerContent) ? "       <div class='card-footer $footerClass'>$footerContent</div>" : '').
              "   </div>".
              "</div>";
-   
    }
    
    public function displayTabbedCard($content, $cardProps = null)
