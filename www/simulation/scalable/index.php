@@ -61,7 +61,7 @@ function pageDisplay($main)
              resultsDisplay($main).
              //"<div><pre>".json_encode($main->var('pageInput'),JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."</pre></div>".
              "<script src='/assets/js/simulation.js?t=".$main->now."' type='text/javascript'></script>\n".
-             "<link rel='stylesheet' href='/assets/css/simulation.css?t=".$main-now."'>\n";
+             "<link rel='stylesheet' href='/assets/css/simulation.css?t=".$main->now."'>\n";
 
    $return .= "<script>\n";
 
