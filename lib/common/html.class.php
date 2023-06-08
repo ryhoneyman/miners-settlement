@@ -436,7 +436,7 @@ class HTML extends Base
 
       foreach ($options as $key => $value) {
          if (is_array($value)) {
-            $html .= "<optgroup label='$key'>\n";
+            $html .= sprintf('<optgroup label="%s">'."\n",$key);
             foreach ($value as $gkey => $gvalue) {
                //$disabled     = (isset($keyopts['disabled'][$gkey])) ? true : false;
                //$disabledText = ($disabled) ? $keyopts['disabled'][$gkey] : '';
@@ -452,7 +452,7 @@ class HTML extends Base
                   }
                }
 
-               $html .= sprintf("<option value='%s'%s%s>%s</option>\n",
+               $html .= sprintf('<option value="%s"%s%s>%s</option>'."\n",
                                 $gkey,
                                 ((isset($selected[$gkey])) ? " selected" : ""),
                                 (($dataList) ? ' '.implode(' ',$dataList) : ''),
