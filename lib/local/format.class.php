@@ -19,6 +19,44 @@ class Format extends Base
       $this->arrays    = new Arrays($debug);
    }
 
+   public function monsterStatsDisplay($monsterData)
+   {
+      $monsterName    = strtoupper($monsterData['label']);
+      $monsterAttribs = json_decode($monsterData['attributes'],true);
+      $monsterHealth  = $monsterAttribs['health'];
+      $monsterAttack  = $monsterAttribs['attack'];
+      $monsterDefense = $monsterAttribs['defense'];
+      $monsterSpeed   = $monsterAttribs['speed'];
+      $elementalList  = array();
+
+      foreach ($this->constants->elementAttribs() as $elementName => $elementInfo) {
+         if (!$monsterAttribs[$elementName]) { continue; }
+
+         $elementalList[] = sprintf("<span class='%s'>%s: %s <i class='fa %s'></i></span>",
+                                    $elementInfo['color'],$elementInfo['text'],$monsterAttribs[$elementName],$elementInfo['icon']);
+      }
+
+      $return = "<table border=0 class='mr-4 mb-4' style='border-collapse:separate;'>".
+                "<tr><td colspan=3 class='text-bold monster-name-td'>$monsterName</td></tr>".
+                "<tr><td colspan=3 class='text-bold test-white miners-health-bg monster-health-td'>$monsterHealth / $monsterHealth</td></tr>".
+                "<tr>".
+                "<td class='miners-attack-border text-center monster-primary-td'>$monsterAttack<i class='fas fa-sword float-right miners-attack align-middle monster-primary-icon'></i></td>".
+                "<td class='miners-defense-border text-center monster-primary-td'>$monsterDefense<i class='fas fa-shield-alt float-right miners-defense align-middle monster-primary-icon'></i></td>".
+                "<td class='miners-speed-border text-center monster-primary-td'>$monsterSpeed<i class='fas fa-clock float-right miners-speed align-middle monster-primary-icon'></i></td>".
+                "</tr>";
+
+      if ($elementalList) {
+         $return .= "<tr><td colspan=3 class='monster-element-td'>".implode('<br>',$elementalList)."</td></tr>";
+      }
+
+      $return .= "<tr><td colspan=3 class='monster-effects-td text-center' style='height:20px; width:300px; border:3px solid dimgray; border-radius:15px;'>".
+                 $this->effects($monsterAttribs['effects'],true)."</td></tr>".
+                 "<tr><td colspan=3><span class='float-right mr-2 monster-effects-label'>EFFECTS</span></td></tr>".
+                 "</table>";
+
+      return $return;
+   }
+
    public function effects($effectList, $web = false)
    {
       $return         = '';
