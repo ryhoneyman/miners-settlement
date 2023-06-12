@@ -338,6 +338,23 @@ class HTML extends Base
       return sprintf("<input %s>",implode(' ',$valueList));
    }
 
+   public function reset($name = 'reset', $value = 'Clear', $values = null)
+   {
+      if (!is_array($values)) { $values = array(); }
+
+      $values['name']  = $name;
+      $values['value'] = $value;
+
+      if (!$values['type'])  { $values['type']  = 'reset'; }
+      if (!$values['class']) { $values['class'] = 'btn-wide btn btn-primary'; }
+
+      $valueList = array();
+
+      foreach ($values as $k => $v) { $valueList[] = "$k='$v'"; }
+
+      return sprintf("<input %s>",implode(' ',$valueList));
+   }
+
    public function inputTextarea($name, $text='', $cols=30, $rows=5, $options = null)
    {
       $this->debug(5,"name=$name, text=$text, cols=$cols, rows=$rows");
