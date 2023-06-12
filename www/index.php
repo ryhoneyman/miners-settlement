@@ -19,6 +19,7 @@ include 'ui/header.php';
 ?>
 
 <div class="row">
+
    <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
       <div class="info-box">
          <span class="info-box-icon bg-primary elevation-1"><a href="/profile"><i class="fas fa-user" aria-hidden="true"></i></a></span>
@@ -34,22 +35,20 @@ include 'ui/header.php';
       </div>
    </div>
 
-<!--
    <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
       <div class="info-box">
-         <span class="info-box-icon bg-danger elevation-1"><a href="/beastiary/list?area=dungeon"><i class="fas fa-skull" aria-hidden="true"></i></a></span>
+         <span class="info-box-icon bg-orange elevation-1"><a href="/monster/viewer/"><i class="fas fa-skull" aria-hidden="true"></i></a></span>
          <div class="ribbon-wrapper">
             <div class="ribbon bg-danger">NEW</div>
          </div>
          <div class="info-box-content">
-            <span class="info-box-text"> <a href="/beastiary/list?area=dungeon"><b>Beastiary - Dungeon</b></a></span>
+            <span class="info-box-text"> <a href="/monster/viewer/"><b>Monster Viewer</b></a></span>
             <span class="info-box-number" style="font-weight:normal;">
-               Get details about monsters in the Dungeon
+               Get details about monsters in the game
             </span>
          </div>
       </div>
    </div>
--->
 
    <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
       <div class="info-box">

@@ -12,16 +12,14 @@
       <nav class="mt-2" style='font-size:0.9em;'>
          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-<!--
-            <li class="nav-header"><b>BEASTIARY</b></li>
+            <li class="nav-header"><b>MONSTER</b></li>
 
             <li class="nav-item">
-               <a href="/beastiary/list?area=dungeon" class="nav-link<?php if (preg_match('~^/beastiary/list/\?area=dungeon~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
-                  <i class="nav-icon fal fa-skull"></i>
-                  <p> Dungeon </p>
+               <a href="/monster/viewer/" class="nav-link<?php if (preg_match('~^/monster/viewer/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
+                  <i class="nav-icon fa fa-skull"></i>
+                  <p> Monster Viewer </p>
                </a>
             </li>
--->
 
             <li class="nav-header"><b>RUNES</b></li>
 
