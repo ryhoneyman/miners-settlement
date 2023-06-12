@@ -1,0 +1,7 @@
+.monster-name-td { width:300px; padding-left:5px; }
+.monster-health-td { width:300px; border-width:3px; border-style:solid; border-color:#770000; border-radius:15px; padding-left:15px; }
+.monster-primary-td { width:100px; border-width:3px; border-style:solid; border-radius:15px; }
+.monster-element-td { width:300px; border:3px solid dimgray; border-radius:15px; text-align:center; }
+.monster-effects-td { width:300px; height:20px; border:3px solid dimgray; border-radius:15px; }
+.monster-effects-label { font-size:0.7em; color:darkgray; }
+.monster-primary-icon { line-height:1.5rem; }
