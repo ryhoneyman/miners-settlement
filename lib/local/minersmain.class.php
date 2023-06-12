@@ -8,7 +8,7 @@ include_once 'common/random.class.php';
 class MinersMain extends Main
 {
    public $userId         = null;
-   public $currentVersion = '1.4.1';
+   public $currentVersion = '1.5.0';
 
    public function __construct($options = null)
    {
