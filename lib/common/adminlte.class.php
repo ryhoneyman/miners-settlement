@@ -47,7 +47,7 @@ class AdminLTE extends Base
    public function displayRow($content)
    {
       return "<div class='row'>\n".
-             $content.
+             $content."\n".
              "</div>\n";
    }
    
@@ -58,18 +58,18 @@ class AdminLTE extends Base
       $cardTitle      = $cardProps['title'] ?: 'Error';
       $cardId         = $cardProps['id'] ?: 'errorcard';
    
-      return "<div class='$containerClass'>".
-             "    <div id='$cardId' class='card $cardClass'>".
-             "       <div class='card-header'><b>$cardTitle</b>".
-             "          <div class='card-tools'>".
-             "             <button type='button' class='btn bg-danger btn-sm' data-card-widget='remove'><i class='fas fa-times'></i></button>".
-             "          </div>".
-             "       </div>".
-             "       <div class='card-body'>".
-             "       ".$content.
-             "       </div>".
-             "   </div>".
-             "</div>";
+      return "<div class='$containerClass'>\n".
+             "    <div id='$cardId' class='card $cardClass'>\n".
+             "       <div class='card-header'><b>$cardTitle</b>\n".
+             "          <div class='card-tools'>\n".
+             "             <button type='button' class='btn bg-danger btn-sm' data-card-widget='remove'><i class='fas fa-times'></i></button>\n".
+             "          </div>\n".
+             "       </div>\n".
+             "       <div class='card-body'>\n".
+             "       ".$content."\n".
+             "       </div>\n".
+             "   </div>\n".
+             "</div>\n";
    }
 
    public function displayCard($content, $cardProps = null)
@@ -82,15 +82,15 @@ class AdminLTE extends Base
       $footerClass    = $cardProps['footer'] ?: '';
       $footerContent  = $cardProps['footerContent'] ?: '';
 
-      return "<div class='$containerClass'>".
-             "    <div id='$cardId' class='card $cardClass'>".
-             "       <div class='card-header $headerClass'><h3 class='card-title text-bold'>$cardTitle</h3></div>".
-             "       <div class='card-body'>".
-             "       ".$content.
-             "       </div>".
-             (($footerContent) ? "       <div class='card-footer $footerClass'>$footerContent</div>" : '').
-             "   </div>".
-             "</div>";
+      return "<div class='$containerClass'>\n".
+             "    <div id='$cardId' class='card $cardClass'>\n".
+             "       <div class='card-header $headerClass'><h3 class='card-title text-bold'>$cardTitle</h3></div>\n".
+             "       <div class='card-body'>\n".
+             "       ".$content."\n".
+             "       </div>\n".
+             (($footerContent) ? "       <div class='card-footer $footerClass'>$footerContent</div>\n" : '').
+             "   </div>\n".
+             "</div>\n";
    }
    
    public function displayTabbedCard($content, $cardProps = null)
