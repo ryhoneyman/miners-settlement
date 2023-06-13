@@ -172,8 +172,8 @@ function overviewDisplay($main)
               "Gear can be enhanced up to 15 times.</div>".
               "<div class='mt-3'>Enhancing gear increases its stats by a fixed percent of the base value per level:".
               "<ul>".
-              "<li><span class='text-yellow'>+10%</span> Health, Elemental Damage, Elemental Resist <span class='text-green'>(Divide enhanced value by 1.1 to find base)</span></li>".
-              "<li><span class='text-yellow'>+5%</span> Attack, Defense <span class='text-green'>(Divide enhanced value by 1.05 to find base)</span></li>".
+              "<li><span class='text-yellow'>+10%</span> Health, Elemental Damage, Elemental Resist <span class='text-green'>[Divide enhanced value by (1 + (LEVEL/10)) to find base]</span></li>".
+              "<li><span class='text-yellow'>+5%</span> Attack, Defense <span class='text-green'>[Divide enhanced value by (1 + (LEVEL/20)) to find base]</span></li>".
               "<li><span class='text-red'>There is never an increase for Speed</span></li>".
               "</ul>".
               "</div>".
