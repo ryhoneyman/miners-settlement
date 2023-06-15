@@ -1,12 +1,24 @@
 #!/usr/bin/php
 <?php
 include_once 'miners-settlement-init.php';
+include_once 'local/minersmain.class.php';
 
-include_once 'common/debug.class.php';
-include_once 'local/simulator.class.php';
+$main = new MinersMain(array(
+   'debugLevel'     => 0,
+   'errorReporting' => false,
+   'sessionStart'   => array('read_and_close' => true),
+   'memoryLimit'    => null,
+   'sendHeaders'    => true,
+   'database'       => true,
+   'input'          => true,
+   'html'           => true,
+   'adminlte'       => true,
+));
 
-$debug     = new Debug(9,DEBUG_CLI);
-$simulator = new Simulator($debug);
+$main->buildClass('constants','Constants',null,'local/constants.class.php');
+$main->buildClass('simulator','Simulator',array('db' => $main->db()),'local/simulator.class.php');
+
+$simulator = $main->obj('simulator');
 
 $opts = getopt(null,array('verbose','short','debug:','type:','area:','attacker:','aname:','defender:','iterations:','godroll','enhance:','adjust:','equip:','runes:'));
 
@@ -15,9 +27,8 @@ $verbose       = (isset($opts['verbose'])) ? true : false;
 $shortResults  = (isset($opts['short'])) ? true : false;
 $simulateType  = strtolower($opts['type']) ?: 'pve';
 $uArea         = strtolower($opts['area']) ?: null;
-$attackerBuild = $opts['attacker'] ?: 'player';
 $attackerName  = $opts['aname'] ?: null;
-$defenderBuild = $opts['defender'] ?: null;
+$defenderName  = $opts['defender'] ?: null;
 $uIterations   = $opts['iterations'] ?: 100;
 $uGodroll      = (isset($opts['godroll'])) ? true : false;
 $uAdjust       = $opts['adjust'] ?: null;
@@ -27,11 +38,11 @@ $uRunes        = $opts['runes'] ?: null;
 
 if ($uArea) { $simulateType = 'area'; }
 
-$debug->level($debugLevel);
+$main->debug->level($debugLevel);
 
 $baseConfig = array(
-   'attacker'   => array('id' => $attackerBuild),
-   'defender'   => array('id' => $defenderBuild),
+   'attacker'   => array('type' => 'player', 'name' => 'Player'),
+   'defender'   => array('type' => 'monster', 'name' => $defenderName),
    'type'       => $simulateType,
    'iterations' => $uIterations,
    'godroll'    => $uGodroll,
@@ -43,7 +54,7 @@ $baseConfig = array(
    'label'      => $simulateType,
 );
 
-if (preg_match('/^(pve|pvp)$/i',$simulateType) && $attackerBuild && $defenderBuild) { 
+if (preg_match('/^(pve|pvp)$/i',$simulateType) && $defenderName) { 
    $simParams = $baseConfig;
    $results   = $simulator->start($simParams);
 
@@ -51,6 +62,7 @@ if (preg_match('/^(pve|pvp)$/i',$simulateType) && $attackerBuild && $defenderBui
 
    print "\n".$simulator->formatResults($results,array('short' => $shortResults, 'name' => $testName))."\n\n\n";
 }
+/*
 else if (preg_match('/^(tower)/i',$simulateType) && $attackerBuild) {
    $testList   = array();
    $towerMobs  = array();
@@ -196,6 +208,7 @@ else if (preg_match('/^(minimum)/i',$simulateType) && $uEquip) {
       }
    }
 }
+*/
 
 ?>
 <?php
