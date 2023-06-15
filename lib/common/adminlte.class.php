@@ -77,7 +77,7 @@ class AdminLTE extends Base
       $containerClass = $cardProps['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';
       $cardClass      = $cardProps['card'] ?: 'card-primary';
       $headerClass    = $cardProps['header'] ?: '';
-      $cardTitle      = $cardProps['title'] ?: 'Card';
+      $cardTitle      = $cardProps['title'] ?: '';
       $cardId         = $cardProps['id'] ?: 'card';
       $footerClass    = $cardProps['footer'] ?: '';
       $footerContent  = $cardProps['footerContent'] ?: '';
@@ -97,7 +97,7 @@ class AdminLTE extends Base
    {
       $containerClass = $cardProps['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';
       $cardClass      = $cardProps['card'] ?: 'card-primary';
-      $cardTitle      = $cardProps['title'] ?: 'Card';
+      $cardTitle      = $cardProps['title'] ?: '';
       $cardId         = $cardProps['id'] ?: 'tabcard';
    
       $headerContent = array();
