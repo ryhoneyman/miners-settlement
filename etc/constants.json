@@ -19,6 +19,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "add",
             "min": 0,
             "abbr": "HP",
             "enhance": {
@@ -34,6 +35,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "add",
             "min": 0,
             "abbr": "ATK",
             "enhance": {
@@ -49,6 +51,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "multiply",
             "min": 0,
             "abbr": "DEF",
             "enhance": {
@@ -64,6 +67,8 @@
             "format": "%1.2f",
             "range-format": "%1.2f | %1.2f",
             "datatype": "float",
+            "inverse": true,
+            "stacking": "add",
             "min": 0,
             "abbr": "SPD",
             "reversed": true,
@@ -81,6 +86,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "add",
             "min": 0,
             "text": "FIRE DAMAGE",
             "abbr": "FIR.DMG",
@@ -99,6 +105,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "add",
             "min": 0,
             "text": "WATER DAMAGE",
             "abbr": "WTR.DMG",
@@ -117,6 +124,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "add",
             "min": 0,
             "text": "WIND DAMAGE",
             "abbr": "WND.DMG",
@@ -135,6 +143,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "add",
             "min": 0,
             "text": "EARTH DAMAGE",
             "abbr": "EAR.DMG",
@@ -153,6 +162,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "add",
             "min": 0,
             "text": "LIGHTNING DAMAGE",
             "abbr": "LIT.DMG",
@@ -171,6 +181,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "add",
             "text": "FIRE RESIST",
             "abbr": "FIR.RES",
             "enhance": {
@@ -188,6 +199,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "add",
             "text": "WATER RESIST",
             "abbr": "WTR.RES",
             "enhance": {
@@ -205,6 +217,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "add",
             "text": "WIND RESIST",
             "abbr": "WND.RES",
             "enhance": {
@@ -222,6 +235,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "add",
             "text": "EARTH RESIST",
             "abbr": "EAR.RES",
             "enhance": {
@@ -239,6 +253,7 @@
             "format": "%d",
             "range-format": "%d - %d",
             "datatype": "int",
+            "stacking": "add",
             "text": "LIGHTNING RESIST",
             "abbr": "LIT.RES",
             "enhance": {
@@ -253,35 +268,35 @@
         "lifesteal": {
             "format": "%1.2f",
             "datatype": "float",
-            "initialize": 1
+            "stacking": "add"
         },
         "extra-defense": {
             "format": "%d",
             "datatype": "int",
-            "initialize": 1,
-            "until.hit": true
+            "stacking": "add"
         },
         "critical-hit": {
             "format": "%d",
             "datatype": "int",
-            "initialize": 1,
-            "only.once": true
+            "stacking": "add"
         },
         "stun": {
             "format": "%d",
-            "datatype": "int"
+            "datatype": "int",
+            "stacking": "add"
         },
         "stun-resist": {
             "format": "%1.2f",
+            "inverse": true,
             "datatype": "float",
-            "initialize": 1
+            "stacking": "add"
         }
     },
     "effectDesc": {
         "myself": {
             "stun-resist": {
                 "format": "STUN RESIST: %d%%", 
-                "vars": ["percent.chance"]
+                "vars": ["percent.adjust"]
             },
             "speed": {
                 "format": "INCREASE ATTACK SPEED BY %d%%",
