@@ -64,6 +64,8 @@ function pageDisplay($main)
       'label'      => $simulateType,
    );
 
+   //print "./simulate --defender $defenderName --equip '$uEquip' --adjust '$uAdjust' --runes '$uRunes' --debug 9 --iterations 1\n";
+
    if (preg_match('/^(pve|pvp)$/i',$simulateType) && $attackerName && $defenderName) {
       $simParams = $baseConfig;
       $results   = $simulator->start($simParams);
