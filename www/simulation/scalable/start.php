@@ -77,9 +77,14 @@ function pageDisplay($main)
       $main->logger('scalableSimulation',array('type' => $results['type'], 'defender' => $results['defender']['name'], 
                                                'iterations' => $results['iterations'], 'time' => sprintf("%1.3f",$results['time']['total'])));
 
-      return "<div class='text-white text-sm' style='font-family:monospace; white-space:pre;'>".
-             $simulator->formatResults($results,array('short' => $shortResults, 'name' => $testName)).
-             "</div>";
+      $tabs = array(
+         array('name' => 'Overview', 'data' => "<div class='text-white text-sm' style='font-family:monospace; white-space:pre;'>".
+                                               $simulator->formatResults($results,array('short' => $shortResults, 'name' => $testName))."</div>"),
+         array('name' => 'Battle Log', 'data' => "<div class='text-white text-sm' style='font-family:monospace; white-space:pre;'>".
+                                                 $simulator->formatBattleLog($results['log'])."</div>"),
+      );
+
+      return $alte->displayTabbedCard($tabs,array('container' => 'col-12 col-xl-12 col-lg-12 col-md-12 col-sm-12', 'id' => 'results'));
    }
 
 
