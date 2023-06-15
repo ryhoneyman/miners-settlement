@@ -20,7 +20,7 @@ include 'ui/header.php';
       </div>
       <div class="card-body">
         <ul>
-          <li><span class='text-green'>Frontend:</span> Added Battle Log to Monster Viewer</li>
+          <li><span class='text-green'>Frontend:</span> Added Battle Log to Scalable Simulation</li>
           <li><span class='text-green'>Frontend:</span> Unlocked Simulation for all users (default 10 iterations)</li>
           <li><span class='text-red'>Backend:</span> Updated stun-resist property on all runewords</li>
           <li><span class='text-red'>Backend:</span> Updated all dragon attributes</li>
