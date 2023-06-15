@@ -16,6 +16,27 @@ include 'ui/header.php';
   <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
     <div class="card card-outline card-success">
       <div class="card-header">
+        <b class="text-xl">v1.5.1</b><div class="card-tools text-yellow">2023-06-15 05:30 UTC</div>
+      </div>
+      <div class="card-body">
+        <ul>
+          <li><span class='text-green'>Frontend:</span> Added Battle Log to Monster Viewer</li>
+          <li><span class='text-red'>Backend:</span> Updated stun-resist property on all runewords</li>
+          <li><span class='text-red'>Backend:</span> Updated all dragon attributes</li>
+          <li><span class='text-red'>Backend:</span> Corrected extra defense to be activated on attacker hit (battle engine)</li>
+          <li><span class='text-red'>Backend:</span> Corrected stun resist to mitigate a percentage of stun, not the entire thing (battle engine)</li>
+          <li><span class='text-red'>Backend:</span> Corrected defense lower stacking from additive to multiplicative (battle engine)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
+    <div class="card card-outline card-success">
+      <div class="card-header">
         <b class="text-xl">v1.5.0</b><div class="card-tools text-yellow">2023-06-12 18:00 UTC</div>
       </div>
       <div class="card-body">
