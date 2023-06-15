@@ -272,9 +272,9 @@ class Battle extends Base
 
       $this->battleInfo['stats'][$role]['hits']++;
 
-      // The enemy role has the stun attribute applied if a stun roll is made
+      // The enemy role has the stun attribute applied if a stun roll is made against it
       if ($this->battleInfo[$enemyRole]['stun']) {
-         $stunDuration = $this->battleInfo[$enemyRole]['stun'] * $this->battleInfo[$enemyRole]['stun-resist']; 
+         $stunDuration = sprintf("%1.2f",$this->battleInfo[$enemyRole]['stun'] * $this->battleInfo[$enemyRole]['stun-resist']); 
 
          $this->logEvent("$entityName stunned $enemyName for {$stunDuration}s");
 
