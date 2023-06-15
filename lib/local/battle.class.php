@@ -127,7 +127,7 @@ class Battle extends Base
 
          if (!$entityRunes) { $entityRunes = array(); }
 
-         $this->debug(9,"found ".count($entityRunes)." runes for $entityName");
+         $this->debug(9,"found ".count($entityRunes)." runes for $role");
 
          // decode rune attribs 
          foreach ($entityRunes as $runeName => $rune) {
@@ -152,37 +152,62 @@ class Battle extends Base
             $runeList['INNATE'] = $entity->effects();
          }
 
-         $currentEffects = array();
-         $roleEffects    = array();
+         $entityEffectList = array();
+         $roleEffects      = array();
+         $aggregateEffects = array();
 
+         // process the entity effects
          foreach ($runeList as $runeName => $runeAttribs) {
             foreach ($runeAttribs as $affects => $runeAttribList) {
                foreach ($runeAttribList as $runeAttribName => $runeAttribValue) {
                   $this->debug(9,"$runeName has $runeAttribName properties ($affects)");
 
-                  $runePChance = $runeAttribValue['percent.chance'];
-                  $runePAdjust = $runeAttribValue['percent.adjust'];
-                  $runeFAdjust = $runeAttribValue['flat.adjust'];
+                  $entityEffectList[$affects][$runeAttribName][] = $runeAttribValue;
 
-                  $currentEffects[$affects][$runeAttribName][] = $runeAttribValue;
+                  $aggregateEffects[$affects][$runeAttribName]['pChances'][] = $runeAttribValue['percent.chance'];
+                  $aggregateEffects[$affects][$runeAttribName]['pAdjusts'][] = $runeAttribValue['percent.adjust'];
+                  $aggregateEffects[$affects][$runeAttribName]['fAdjusts'][] = $runeAttribValue['flat.adjust'];
 
-                  if ($runePAdjust) {
-                     // speed is inversely applied (more = slower, less = faster)
-                     $percentAdjustBase = (preg_match('/^(speed)$/i',$runeAttribName)) ? (100 - $runePAdjust) : (($runePAdjust < 0) ? (100 + $runePAdjust) : $runePAdjust);
-                  }
-
-                  $percentChance = ($runePChance) ? (float)sprintf("%1.2f",$runePChance/100) : 1;
-                  $percentAdjust = ($runePAdjust) ? (float)sprintf("%1.2f",$percentAdjustBase/100) : 0;
-                  $flatAdjust    = ($runeFAdjust) ? (int)$runeFAdjust : 0;
-
-                  $roleEffects[$affects][$runeAttribName][$runeName] = array('pChance' => $percentChance, 'pAdjust' => $percentAdjust, 'fAdjust' => $flatAdjust);
-
-                  $this->debug(9,"Added effect: $affects/$runeAttribName($runeName) = ".json_encode($roleEffects[$affects][$runeAttribName][$runeName]));
+                  $this->debug(9,"Added effect: $affects/$runeAttribName($runeName) = ".json_encode($runeAttribValue));
                }
             }
          }
 
-         $entity->var('effects',$currentEffects);
+         // store the effect list in order to display them later
+         $entity->var('effects',$entityEffectList);
+
+         $attribData = $this->constants->attribs();
+
+         // post-process the aggregated effects
+         foreach ($aggregateEffects as $affects => $attribList) {
+            foreach ($attribList as $attribName => $attribValue) {
+               // we need to resolve stacking on a per attribute basis as some are additive and others multiplicative 
+               $stacking = $attribData[$attribName]['stacking'] ?: 'add';
+
+               $attribValue['pChance'] = $this->stackPercentage($stacking,$attribValue['pChances']);
+               $attribValue['pAdjust'] = $this->stackPercentage($stacking,$attribValue['pAdjusts']);
+               $attribValue['fAdjust'] = array_sum($attribValue['fAdjusts']);  // flat adjusts are always additive
+
+               $pChance = ($attribValue['pChance'] > 1) ? 1 : $attribValue['pChance'];  // cap at 100%
+               $pAdjust = $attribValue['pAdjust'];
+               $fAdjust = $attribValue['fAdjust'];
+
+               if ($pAdjust) {
+                  $pAdjustBase = ($attribData[$attribName]['inverse']) ? (1 - $pAdjust) : (($pAdjust < 0) ? (1 + $pAdjust) : $pAdjust);
+               }
+
+               $percentChance = ($pChance) ? (float)sprintf("%1.2f",$pChance) : 1;
+               $percentAdjust = ($pAdjust) ? (float)sprintf("%1.2f",$pAdjustBase) : 0;
+               $flatAdjust    = ($fAdjust) ? (int)$fAdjust : 0;
+
+               $roleEffects[$affects][$attribName] = array('pChance' => $percentChance, 'pAdjust' => $percentAdjust, 'fAdjust' => $flatAdjust);
+            }
+         }
+
+         // dragon's double the percentage to speed adjust against the player
+         //if (preg_match('/^(Red|Wind)\s+Dragon\s+L/i',$entityName)) {
+         //   $roleEffects['enemy']['speed']['pAdjust'] *= 2;
+         //}
 
          $baseHealth  = (int)$entity->baseValue('health');
          $baseAttack  = (int)$entity->baseValue('attack');
@@ -206,28 +231,6 @@ class Battle extends Base
 
          if (!array_key_exists('myself',$entityEffects)) { $entityEffects['myself'] = array(); }
          if (!array_key_exists('enemy',$entityEffects))  { $entityEffects['enemy'] = array(); }
-
-         // Aggregate critical.hit into a singular value
-         if ($entityEffects['myself']['critical-hit']) {
-            $effectInfo = $entityEffects['myself']['critical-hit'];
-
-            $critPChance    = 0;
-            $critPAdjust    = 0;
-            $critFAdjust    = 0;
-            $critMaxPChance = 0;
-
-            foreach ($effectInfo as $effectName => $effectValues) {
-               $critPChance += $effectValues['pChance'];
-               $critPAdjust += $effectValues['pAdjust'];
-               $critFAdjust += $effectValues['fAdjust'];
-
-               if ($effectValues['pChance'] > $critMaxPChance) { $critMaxPChance = $effectValues['pChance']; }
-            }
-
-            $newEffectValues = array('pChance' => $critPChance, 'pAdjust' => $critPAdjust, 'fAdjust' => $critFAdjust);
-
-            $entityEffects['myself']['critical-hit'] = array('critical-hit' => $newEffectValues);
-         }
 
          $this->battleInfo['base'][$role]["effects"] = $entityEffects;
 
@@ -270,9 +273,10 @@ class Battle extends Base
       $this->battleInfo['stats'][$role]['hits']++;
 
       // The enemy role has the stun attribute applied if a stun roll is made
-      if ($this->battleInfo[$enemyRole]['stun'] && !$this->battleInfo[$enemyRole]['stun-resist']) {
-         $this->debug(7,$this->battleInfo['stats']['duration'].": $entityName stunned $enemyName for ".$this->battleInfo[$enemyRole]['stun']."s");
-         $this->battleInfo['timer'][$enemyRole] = -($this->battleInfo[$enemyRole]['stun']); 
+      if ($this->battleInfo[$enemyRole]['stun']) {
+         $stunDuration = $this->battleInfo[$enemyRole]['stun'] * $this->battleInfo[$enemyRole]['stun-resist']; 
+         $this->debug(7,$this->battleInfo['stats']['duration'].": $entityName stunned $enemyName for {$stunDuration}s");
+         $this->battleInfo['timer'][$enemyRole] = -($stunDuration); 
       }
 
       foreach ($damageList as $damageType => $damageAmount) {
@@ -321,7 +325,6 @@ class Battle extends Base
       $normalAttack    = ($attacker['attack'] * (($criticalHit) ? $attacker['critical-hit'] : 1)) - $defenderDefense;
 
       if ($extraDefense > 1) { $this->debug(7,$this->battleInfo['stats']['duration'].": ".ucfirst($defendRole)." extra defense! (now at $defenderDefense defense)"); }
-
       if ($normalAttack > 0) { $damage[(($criticalHit) ? 'critical' : 'normal')] = $normalAttack; }
 
       foreach ($this->elements as $element) {
@@ -350,34 +353,29 @@ class Battle extends Base
                                      count($this->battleInfo['base'][$role]['effects']['enemy'])." enemy effects");
 
          foreach ($this->battleInfo['base'][$role]['effects'] as $affects => $effectAttribList) {
-            foreach ($effectAttribList as $attribName => $effectInfo) {
-               // stun resist and extra defense are rolled on-demand, not every turn
-               if (preg_match('/^(stun-resist|extra-defense)$/i',$effectName)) { continue; }
-
+            foreach ($effectAttribList as $attribName => $attribValues) {
                $attribInfo = $this->attribList[$attribName];
 
-               foreach ($effectInfo as $effectName => $effectValues) { 
-                  $this->debug(9,"EFFECT: $role/$affects/$effectName/$attribName ".json_encode($effectValues));
-                  $pChance = $effectValues['pChance'];
-                  $pAdjust = $effectValues['pAdjust'];
-                  $fAdjust = $effectValues['fAdjust'];
+               $this->debug(9,"EFFECT: $role/$affects/$attribName ".json_encode($attribValues));
+               $pChance = $attribValues['pChance'];
+               $pAdjust = $attribValues['pAdjust'];
+               $fAdjust = $attribValues['fAdjust'];
 
-                  if ($this->rollChance($pChance)) { 
-                     if ($pChance != 1) { $this->debug(9,"made a successful roll for $attribName"); }
-   
-                     if ($attribInfo['only.once'] && $this->battleInfo[$role]['effects'][$affects][$attribName]) { $this->debug(9,"we already have a $attribName loaded"); continue; }
+               if ($this->rollChance($pChance)) { 
+                  if ($pChance != 1) { $this->debug(9,"made a successful roll for $attribName"); }
+  
+                  //if ($attribInfo['only.once'] && $this->battleInfo[$role]['effects'][$affects][$attribName]) { $this->debug(9,"we already have a $attribName loaded"); continue; }
 
-                     $this->debug(9,"BEFORE - $affects/$attribName: ".json_encode($this->battleInfo[$role]['effects'][$affects][$attribName]));
+                  $this->debug(9,"BEFORE - $affects/$attribName: ".json_encode($this->battleInfo[$role]['effects'][$affects][$attribName]));
 
-                     if ($pAdjust && !$this->battleInfo[$role]['effects'][$affects][$attribName]['pAdjust']) {
-                        $this->battleInfo[$role]['effects'][$affects][$attribName]['pAdjust'] = 1;
-                     }
-   
-                     $this->battleInfo[$role]['effects'][$affects][$attribName]['pAdjust'] *= $pAdjust;
-                     $this->battleInfo[$role]['effects'][$affects][$attribName]['fAdjust'] += $fAdjust;
-
-                     $this->debug(9,"AFTER - $affects/$attribName: ".json_encode($this->battleInfo[$role]['effects'][$affects][$attribName]));
+                  if ($pAdjust && !$this->battleInfo[$role]['effects'][$affects][$attribName]['pAdjust']) {
+                     $this->battleInfo[$role]['effects'][$affects][$attribName]['pAdjust'] = 1;
                   }
+
+                  $this->battleInfo[$role]['effects'][$affects][$attribName]['pAdjust'] *= $pAdjust;
+                  $this->battleInfo[$role]['effects'][$affects][$attribName]['fAdjust'] += $fAdjust;
+
+                  $this->debug(9,"AFTER - $affects/$attribName: ".json_encode($this->battleInfo[$role]['effects'][$affects][$attribName]));
                }
             }
          }
@@ -395,7 +393,7 @@ class Battle extends Base
 
                $beforeValue = $this->battleInfo[$role][$attribName];
 
-               if ($pAdjust) { $this->battleInfo[$role][$attribName] = $this->valueCalculate($attribInfo,$this->battleInfo[$role][$attribName] * $pAdjust); }
+               if ($pAdjust) { $this->battleInfo[$role][$attribName] = $this->valueCalculate($attribInfo,($this->battleInfo[$role][$attribName] ?: 1) * $pAdjust); }
                if ($fAdjust) { $this->battleInfo[$role][$attribName] = $this->valueCalculate($attribInfo,$this->battleInfo[$role][$attribName] + $fAdjust); }
 
                $afterValue = $this->battleInfo[$role][$attribName];
@@ -425,7 +423,7 @@ class Battle extends Base
 
                $beforeValue = $this->battleInfo[$impactRole][$attribName];
 
-               if ($pAdjust) { $this->battleInfo[$impactRole][$attribName] = $this->valueCalculate($attribInfo,$this->battleInfo[$impactRole][$attribName] * $pAdjust); }
+               if ($pAdjust) { $this->battleInfo[$impactRole][$attribName] = $this->valueCalculate($attribInfo,($this->battleInfo[$impactRole][$attribName] ?: 1) * $pAdjust); }
                if ($fAdjust) { $this->battleInfo[$impactRole][$attribName] = $this->valueCalculate($attribInfo,$this->battleInfo[$impactRole][$attribName] + $fAdjust); }
 
                $afterValue = $this->battleInfo[$impactRole][$attribName];
@@ -477,6 +475,19 @@ class Battle extends Base
       $this->debug(8,"rolled a $roll (chance $chance) [".json_encode($outcome)."]");
 
       return $outcome;
+   }
+
+   public function stackPercentage($stackType, $stackList)
+   {
+      $return = null;
+
+      if ($stackType == 'add') { $return = array_sum($stackList)/100; }
+      else if ($stackType == 'multiply') {
+         $return = 1;
+         foreach ($stackList as $stackItem) { $return *= ((100+$stackItem)/100); }
+      }
+
+      return $return;
    }
 }
 
