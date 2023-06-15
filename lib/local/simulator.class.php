@@ -158,12 +158,19 @@ class Simulator extends Base
       if ($simType == 'pvp') { $battleOpts['revive'] = false; }
 
       $iterCount = 0;
+      $maxDamage = 0;
 
       while ($iterations-- > 0) {
          $iterCount++;
          $results     = $battle->start($attacker,$defender,$battleOpts);
          $resultStats = $results['info']['stats'];
          $duration    = $resultStats['duration'];
+         $iterDamage  = $resultStats['attacker']['damage']['total'];
+
+         if ($iterDamage > $maxDamage) { 
+            $maxDamage    = $iterDamage; 
+            $stats['log'] = $results['info']['log'];
+         }
 
          if ($iterCount == 1) { 
             $battleOpts['fast.start'] = $results['info']['fast.start']; 
@@ -173,19 +180,19 @@ class Simulator extends Base
          // Finalize information for display on final run
          if ($iterations == 0) {
             foreach ($roles as $role => $entity) {
-               $stats[$role]["name"]        = $entity->name();
-               $stats[$role]["description"] = $entity->description();
-               $stats[$role]["type"]        = $entity->type();
+               $stats[$role]['name']        = $entity->name();
+               $stats[$role]['description'] = $entity->description();
+               $stats[$role]['type']        = $entity->type();
 
-               $stats[$role]["gear"] = array(
+               $stats[$role]['gear'] = array(
                   'runes' => ($entity->runes()) ? array_keys($entity->runes()) : 'NONE',
                );
 
-               $stats[$role]["effects"] = $entity->effects();
+               $stats[$role]['effects'] = $entity->effects();
 
                foreach ($this->constants->gearTypes() as $gearType => $gearTypeLabel) {
                   $gearItem = $entity->getItemByType($gearType);
-                  $stats[$role]["gear"][$gearType] = (is_null($gearItem)) ? null : $gearItem->export();
+                  $stats[$role]['gear'][$gearType] = (is_null($gearItem)) ? null : $gearItem->export();
                }
 
                $stats[$role]['power'] = $results['info'][$role]['power'];
@@ -254,6 +261,17 @@ class Simulator extends Base
 
       if ($results['type'] == 'pvp')      { return $this->formatResultsPVP($results,$options); }
       else if ($results['type'] == 'pve') { return $this->formatResultsPVE($results,$options); }
+   }
+
+   public function formatBattleLog($battleLog)
+   {
+      $output = sprintf("==== Battle Log from highest damage iteration ================\n\n"); 
+
+      foreach ($battleLog as $logEntry) {
+         $output .= sprintf("%5.2f: %s\n",$logEntry['timer'],$logEntry['event']);
+      }
+
+      return $output;
    }
 
    public function formatResultsPVE($results, $options = null)
