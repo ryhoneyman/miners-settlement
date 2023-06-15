@@ -276,13 +276,13 @@
             "stacking": "add"
         },
         "critical-hit": {
-            "format": "%d",
-            "datatype": "int",
+            "format": "%1.2f",
+            "datatype": "float",
             "stacking": "add"
         },
         "stun": {
-            "format": "%d",
-            "datatype": "int",
+            "format": "%1.2f",
+            "datatype": "float",
             "stacking": "add"
         },
         "stun-resist": {
