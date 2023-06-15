@@ -158,7 +158,7 @@ class Simulator extends Base
       if ($simType == 'pvp') { $battleOpts['revive'] = false; }
 
       $iterCount = 0;
-      $maxDamage = 0;
+      $maxDamage = null;
 
       while ($iterations-- > 0) {
          $iterCount++;
@@ -167,7 +167,7 @@ class Simulator extends Base
          $duration    = $resultStats['duration'];
          $iterDamage  = $resultStats['attacker']['damage']['total'];
 
-         if ($iterDamage > $maxDamage) { 
+         if (is_null($maxDamage) || $iterDamage > $maxDamage) { 
             $maxDamage    = $iterDamage; 
             $stats['log'] = $results['info']['log'];
          }
