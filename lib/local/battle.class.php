@@ -102,7 +102,7 @@ class Battle extends Base
 
    public function revive($role)
    {
-      $this->debug(7,$this->battleInfo['info'][$role]['name']." revived!");
+      $this->logEvent($this->battleInfo['info'][$role]['name']." revived!");
 
       $this->battleInfo['current'][$role]['revived'] = true;
       $this->battleInfo['current'][$role]['health']  = round($this->battleInfo['base'][$role]['health']/2,0,PHP_ROUND_HALF_DOWN);
@@ -193,7 +193,7 @@ class Battle extends Base
                $fAdjust = $attribValue['fAdjust'];
 
                if ($pAdjust) {
-                  $pAdjustBase = ($attribData[$attribName]['inverse']) ? (1 - $pAdjust) : (($pAdjust < 0) ? (1 + $pAdjust) : $pAdjust);
+                  $pAdjustBase = ($attribData[$attribName]['inverse']) ? (($pAdjust >= 1) ? $pAdjust : (1 - $pAdjust)) : (($pAdjust < 0) ? (1 + $pAdjust) : $pAdjust);
                }
 
                $percentChance = ($pChance) ? (float)sprintf("%1.2f",$pChance) : 1;
@@ -275,7 +275,9 @@ class Battle extends Base
       // The enemy role has the stun attribute applied if a stun roll is made
       if ($this->battleInfo[$enemyRole]['stun']) {
          $stunDuration = $this->battleInfo[$enemyRole]['stun'] * $this->battleInfo[$enemyRole]['stun-resist']; 
-         $this->debug(7,$this->battleInfo['stats']['duration'].": $entityName stunned $enemyName for {$stunDuration}s");
+
+         $this->logEvent("$entityName stunned $enemyName for {$stunDuration}s");
+
          $this->battleInfo['timer'][$enemyRole] = -($stunDuration); 
       }
 
@@ -285,7 +287,7 @@ class Battle extends Base
 
          $this->battleInfo['current'][$enemyRole]['health'] -= $damageAmount;
 
-         $this->debug(7,$this->battleInfo['stats']['duration'].": $entityName hit with $damageType damage for $damageAmount ($enemyName at ".$this->battleInfo['current'][$enemyRole]['health']." health)");
+         $this->logEvent("$entityName hit with $damageType damage for $damageAmount ($enemyName at ".$this->battleInfo['current'][$enemyRole]['health']." health)");
 
          if ($this->battleInfo[$role]['lifesteal']) {
             $lifestealAmount = round($damageAmount * $this->battleInfo[$role]['lifesteal'],0,PHP_ROUND_HALF_DOWN);
@@ -296,7 +298,7 @@ class Battle extends Base
                $this->battleInfo['current'][$role]['health'] = $this->battleInfo['base'][$role]['health']; 
             }
 
-            $this->debug(7,$this->battleInfo['stats']['duration'].": $entityName healed for $lifestealAmount lifesteal (now at ".$this->battleInfo['current'][$role]['health']." health)");
+            $this->logEvent("$entityName healed for $lifestealAmount lifesteal (now at ".$this->battleInfo['current'][$role]['health']." health)");
          }
       }
 
@@ -324,7 +326,7 @@ class Battle extends Base
       $defenderDefense = $defender['defense'] * $extraDefense;
       $normalAttack    = ($attacker['attack'] * (($criticalHit) ? $attacker['critical-hit'] : 1)) - $defenderDefense;
 
-      if ($extraDefense > 1) { $this->debug(7,$this->battleInfo['stats']['duration'].": ".ucfirst($defendRole)." extra defense! (now at $defenderDefense defense)"); }
+      if ($extraDefense > 1) { $this->logEvent($this->battleInfo['info'][$defendRole]['name']." has extra defense! (now at $defenderDefense defense)"); }
       if ($normalAttack > 0) { $damage[(($criticalHit) ? 'critical' : 'normal')] = $normalAttack; }
 
       foreach ($this->elements as $element) {
@@ -488,6 +490,14 @@ class Battle extends Base
       }
 
       return $return;
+   }
+
+   public function logEvent($message)
+   {
+      $currentTimer = $this->battleInfo['stats']['duration'];
+
+      $this->battleInfo['log'][] = array('timer' => $currentTimer, 'event' => $message);
+      $this->debug(7,"$currentTimer: $message");
    }
 }
 
