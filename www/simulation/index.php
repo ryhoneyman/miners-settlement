@@ -29,8 +29,9 @@ function pageDisplay($main)
 {
    $alte           = $main->obj('adminlte');
    $simEntitlement = $main->getProfileEntitlement('simulation-usage',false);
+   $overrideAuth   = true;
 
-   if (!$simEntitlement) { return $alte->displayRow($alte->displayCard("You do not currently have any simulation privileges.",array('title' => 'Warning', 'header' => 'bg-danger'))); }
+   if (!$simEntitlement && !$overrideAuth) { return $alte->displayRow($alte->displayCard("You do not currently have any simulation privileges.",array('title' => 'Warning', 'header' => 'bg-danger'))); }
 
    return $alte->displayRow(
              $alte->infoBox('Scalable Simulation','/simulation/scalable/','Run simulations by adjusting scalable parameters.',

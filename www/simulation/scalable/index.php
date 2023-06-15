@@ -24,10 +24,11 @@ $main->buildClass('constants','Constants',null,'local/constants.class.php');
 $main->buildClass('format','Format',null,'local/format.class.php');
 
 $simEntitlement = $main->getProfileEntitlement('simulation-usage',false);
+$overrideAuth   = true;
 
 include 'ui/header.php';
 
-if ($simEntitlement) { 
+if ($simEntitlement || $overrideAuth) { 
    $sessionInput = $main->sessionValue('simulation/pageInput') ?: array();
    $pageInput    = processInput($sessionInput);
 
