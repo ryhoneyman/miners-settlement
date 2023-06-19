@@ -87,7 +87,7 @@ function gearDisplay($main)
                                  $gearInfo['label'],$gearInfo['item_hash']); 
          $gearContent .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
                                  $deleteButton,$gearImage,$gearLabel,$levelBadge,$gearPrimary,$gearElement,
-                                 "<a href='/item/analytics/?pg".$gearInfo['item_hash']."'><i class='fas fa-analytics text-white'</i></a>");
+                                 "<a href='/item/analytics/?".$gearInfo['item_hash']."'><i class='fas fa-analytics text-white'</i></a>");
       }
    }
    else { $gearContent .= "<tr><td colspan=6>No gear found on this profile.</td></tr>"; }

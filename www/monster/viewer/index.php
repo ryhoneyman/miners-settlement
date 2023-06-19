@@ -47,7 +47,7 @@ function monsterDisplay($main)
    $monsterSelect = array('' => "Select Monster");
 
    foreach ($monsterList as $monsterId => $monsterInfo) {
-      $monsterHash = sprintf("%s%s",'mo',hash("crc32",$monsterId));
+      $monsterHash = $main->hashMonsterId($monsterId);
       $monsterName = $monsterInfo['name'];
       $monsterArea = $monsterInfo['area'] ?: 'General';
       $monsterSelect[$monsterArea][$monsterHash] = $monsterInfo['label'];

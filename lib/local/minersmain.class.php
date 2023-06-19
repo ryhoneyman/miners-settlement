@@ -8,6 +8,7 @@ include_once 'common/random.class.php';
 class MinersMain extends Main
 {
    public $userId         = null;
+   public $hashTypes      = null;
    public $currentVersion = '1.5.1';
 
    public function __construct($options = null)
@@ -17,6 +18,18 @@ class MinersMain extends Main
       if ($options['format']) {
          $this->buildClass('format','Format',null,'local/format.class.php');
       }
+
+      $this->hashTypes = array(
+         ''            => '',    // simple data hash, no type
+         'profile'     => 'pr',  // profile id from profile table
+         'player'      => 'pl',  // player id from player table
+         'item'        => 'it',  // item id from item table
+         'playergear'  => 'pg',  // player gear id from gear table
+         'playerbuild' => 'pb',  // player build id from player_build table
+         'itemlink'    => 'il',  // item id from item_link table
+         'gear'        => 'gi',  // gear-only item id from item table
+         'monster'     => 'mo',  // monster id from monster table
+      );
    }
 
    public function title($name = null)
@@ -161,6 +174,19 @@ class MinersMain extends Main
    
       return $success;
    }
+
+   public function fetchPlayerBuildList()
+   {
+      $userId    = $this->userId;
+      $buildList = $this->db()->query(sprintf("select pb.*, p.profile_id, p.name as player_name from player_build pb, player p where pb.player_id = p.id and p.profile_id = '%s'",
+                                               $this->db()->escapeString($userId)),array('keyid' => 'id'));
+
+      if ($buildList === false) { $this->error('Could not query player build list'); return false; }
+
+      $this->var('playerBuildList',$buildList);
+
+      return true;
+   }
    
    public function fetchPlayerList()
    {
@@ -190,7 +216,7 @@ class MinersMain extends Main
    {
       $result = $this->db()->query(sprintf("select * from item where name = '%s' and active = 1",$this->db()->escapeString($itemName)),array('multi' => false));
 
-      if ($result === false) { $this->error('Could not query monster list'); return false; }
+      if ($result === false) { $this->error('Could not query item list'); return false; }
 
       return $result;
    }
@@ -226,6 +252,63 @@ class MinersMain extends Main
       $this->var('gearList',$gearList);
 
       return true;
+   }
+
+   public function getPlayerGearHashList() { return $this->getHashList('playergear'); }
+   public function getGearHashList()       { return $this->getHashList('gear'); }
+   public function getMonsterHashList()    { return $this->getHashList('monster'); }
+
+   public function getHashList($type) 
+   {
+      $return = array();
+      $type   = strtolower($type);
+      $prefix = $this->hashTypes[$type];
+      
+      if (!$prefix) { return false; }  // even if a type is defined, we don't want the non-prefixed types
+
+      if ($type == 'gear') {
+         if (!$this->var('gearList')) { $this->fetchGearList(); }
+
+         foreach ($this->var('gearList') as $gearType => $gearTypeList) {
+            foreach ($gearTypeList as $itemId => $itemInfo) {
+               $return[$this->generateLookupHash($type,$itemId)] = $itemInfo['name'];
+            }
+         }
+      } 
+      else if ($type == 'playergear') {
+         if (!$this->var('playerGearList')) { $this->fetchPlayerGearList(); }
+
+         foreach ($this->var('playerGearList') as $gearId => $gearInfo) {
+            $return[$this->generateLookupHash($type,$gearId)] = $gearInfo['name'];
+         }
+      }
+      else if ($type == 'monster') {
+         if (!$this->var('monsterList')) { $this->fetchMonsterList(); }
+
+         foreach ($this->var('monsterList') as $monsterId => $monsterInfo) {
+            $return[$this->generateLookupHash($type,$monsterId)] = $monsterInfo['name'];
+         }
+      }
+
+
+      return $return;
+   }
+
+   public function hashData($data)                     { return $this->generateLookupHash('',$data); }
+   public function hashItemId($itemId)                 { return $this->generateLookupHash('item',$itemId); }
+   public function hashUniqueItem($itemName,$itemData) { return $this->generateLookupHash('itemlink',json_encode(array('item_name' => $itemName, 'stats' => $this->normalizeItemData($itemData)))); }
+   public function hashPlayerGearId($itemId)           { return $this->generateLookupHash('playergear',$itemId); }
+   public function hashGearId($itemId)                 { return $this->generateLookupHash('gear',$itemId); }
+   public function hashMonsterId($monsterId)           { return $this->generateLookupHash('monster',$monsterId); }
+
+   // lookup hashes are used to obscure item ids and names in the database when passing between client and server
+   public function generateLookupHash($type, $data)
+   {
+      $type = strtolower($type);
+
+      if (!array_key_exists($type,$this->hashTypes)) { return false; }
+
+      return sprintf("%s%s",$this->hashTypes[$type],hash("crc32",$data));
    }
 
    public function fetchMonsterList($area = null)

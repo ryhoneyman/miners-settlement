@@ -34,7 +34,9 @@ function pageDisplay($main)
 
    $clearStats = $main->obj('input')->get('clear','alphanumeric');
    $gearType   = $main->obj('input')->get('type','alphanumeric,dash');
-   $gearName   = $main->obj('input')->get('name','alphanumeric,dash');
+   $gearHash   = $main->obj('input')->get('hash','alphanumeric');
+   $hashLookup = $main->getGearHashList();
+   $gearName   = $hashLookup[$gearHash] ?: null;
 
    if ($clearStats == 'true') { $pageInput = array(); }
 

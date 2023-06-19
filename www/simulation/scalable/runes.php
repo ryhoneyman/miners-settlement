@@ -34,18 +34,21 @@ function pageDisplay($main)
 
    if (!$gearState) { return ''; }
 
+   $main->fetchGearList();
    $main->fetchRunewordList();
 
+   $gearList     = $main->var('gearList');
    $runewordList = $main->var('runewordList');
    $runeList     = array('' => "Select Runes");
-
-   $gearList = array('' => 'General');
+   $gearRuneList = array('' => 'General');
+   $hashLookup   = $main->getGearHashList();
 
    foreach ($main->obj('constants')->gearTypes() as $gearType => $gearTypeLabel) {
-      if ($gearState[$gearType]) { $gearList[$gearState[$gearType]] = $gearTypeLabel; }
+      if ($gearState[$gearType]) { $gearRuneList[$gearState[$gearType]] = $gearTypeLabel; }
    }
 
-   foreach ($gearList as $gearName => $gearTypeLabel) {
+   foreach ($gearRuneList as $gearHash => $gearTypeLabel) {
+      $gearName  = $hashLookup[$gearHash];
       $gearRunes = $runewordList[$gearName];
 
       if (!$gearRunes) { continue; }

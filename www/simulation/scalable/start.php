@@ -40,6 +40,7 @@ function pageDisplay($main)
    $uIterations   = $pageInput['iterations'] ?: 1000;
    $uGodroll      = (isset($pageInput['godroll'])) ? true : false;
 
+   $main->fetchGearList();
 
    $uEquip  = buildEquipMap($main);
    $uAdjust = buildAdjustMap($main);
@@ -124,13 +125,14 @@ function buildRunesMap($main)
 
 function buildEquipMap($main)
 {
-   $pageInput = $main->sessionValue('simulation/pageInput');
-
-   $equipMap = array();
+   $pageInput  = $main->sessionValue('simulation/pageInput');
+   $hashLookup = $main->getGearHashList();
+   $equipMap   = array();
  
    foreach ($main->obj('constants')->gearTypes() as $gearType => $gearTypeLabel) {
+      $gearName = $hashLookup[$pageInput[$gearType]];
       $equipMap[$gearType] = array(
-         'name'  => $pageInput[$gearType] ?: '',
+         'name'  => $gearName ?: '',
          'level' => (int)$pageInput[sprintf("%s_level",$gearType)] ?: 0, 
       );
    }

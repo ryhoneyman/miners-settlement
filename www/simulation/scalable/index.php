@@ -60,8 +60,8 @@ function pageDisplay($main)
              tabsDisplay($main).
              $html->endForm().
              resultsDisplay($main).
-             //"<div><pre>".json_encode($main->var('pageInput'),JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."</pre></div>".
              "<script src='/assets/js/simulation.js?t=".$main->now."' type='text/javascript'></script>\n".
+             "<script src='/assets/js/runeselect.js?t=".$main->now."' type='text/javascript'></script>\n".
              "<link rel='stylesheet' href='/assets/css/simulation.css?t=".$main->now."'>\n";
 
    $return .= "<script>\n";
@@ -71,7 +71,7 @@ function pageDisplay($main)
       if ($pageInput[$gearType]) { $return .= "  updateScalableGear('$gearType');\n"; }
    }
 
-   $return .= "  updateScalableRunes();\n".
+   $return .= "  updateRunes('scalable');\n".
               "</script>\n";
 
    return $return;
@@ -156,8 +156,11 @@ function gearDisplay($main)
       $selectOpts = array('id' => $gearType, 'class' => 'form-control gear', 'style' => 'width:300px;', 'script' => "onChange='updateScalableGear(&quot;$gearType&quot;,true,true)'");
 
       foreach ($gearList[$gearType] as $gearId => $gearInfo) {
-         $typeList[$gearInfo['name']] = $gearInfo['label'];
-         $selectOpts['data'][$gearInfo['name']]['image'] = $gearInfo['image'];
+         $gearHash = $main->hashGearId($gearId);
+
+         $typeList[$gearHash] = $gearInfo['label'];
+
+         $selectOpts['data'][$gearHash]['image'] = $gearInfo['image'];
       }
 
       $typeSelected = $pageInput[$gearType];

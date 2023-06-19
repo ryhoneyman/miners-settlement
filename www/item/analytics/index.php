@@ -37,9 +37,9 @@ $itemInput    = ($select) ? array() : getItemInput();
 $inputErrors  = array();
 
 // Allow inbound item link and player gear decoding for quick hash
-if (preg_match('/^(il|pg)(\w{8})$/i',$_SERVER['QUERY_STRING'],$match)) {
-   $loadType   = strtolower($match[1]);
-   $itemHash   = $match[2];
+if (preg_match('/^((il|pg)\w{8})$/i',$_SERVER['QUERY_STRING'],$match)) {
+   $itemHash   = $match[1];
+   $loadType   = strtolower($match[2]);
    $itemResult = ($loadType == 'il') ? $main->getItemLink($itemHash) : $main->getGear($itemHash);
 
    if ($itemResult) { 
