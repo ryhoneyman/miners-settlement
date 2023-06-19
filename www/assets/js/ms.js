@@ -7,14 +7,18 @@ function select2_template(obj)
    var data     = $(obj.element).data();
    var text     = $(obj.element).text();
    var type     = $(obj.element).prop('nodeName');
+   var raw      = (data && data['raw']) ? data['raw'] : null;
    var image    = (data && data['image']) ? data['image'] : null;
    var icon     = (data && data['icon']) ? data['icon'] : null;
-   var css      = (data && data['css']) ? data['css'] : null;
+   var css      = (data && data['css']) ? data['css'] : '';
    var template = '';
 
    if (type == 'OPTGROUP') {
       var label = $(obj.element).attr('label');
       template  = $('<div><span>' + label + '</span></div>');
+   }
+   else if (raw) {
+      template = $('<div class=\"' + css + '\">' + raw + '</div>');
    }
    else if (image) {
       template = $('<div class=\"' + css + '\"><img src=\"' + image + '\" style=\"width:25px; height:25px;\"/> <span style=\"font-weight:bold;\">' + text + '</span></div>');
@@ -38,4 +42,5 @@ function select2_template(obj)
 
    return template;
 }
+
 
