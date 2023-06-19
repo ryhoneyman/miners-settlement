@@ -16,7 +16,7 @@ $versionList = array(
       'changes' => array(
          'backend' => array(
             'Updated all pass-by-hash references and lookups',
-         );
+         ),
       ),
    ),
 );
