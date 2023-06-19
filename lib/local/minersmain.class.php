@@ -294,12 +294,13 @@ class MinersMain extends Main
       return $return;
    }
 
-   public function hashData($data)                     { return $this->generateLookupHash('',$data); }
-   public function hashItemId($itemId)                 { return $this->generateLookupHash('item',$itemId); }
-   public function hashUniqueItem($itemName,$itemData) { return $this->generateLookupHash('itemlink',json_encode(array('item_name' => $itemName, 'stats' => $this->normalizeItemData($itemData)))); }
-   public function hashPlayerGearId($itemId)           { return $this->generateLookupHash('playergear',$itemId); }
-   public function hashGearId($itemId)                 { return $this->generateLookupHash('gear',$itemId); }
-   public function hashMonsterId($monsterId)           { return $this->generateLookupHash('monster',$monsterId); }
+   public function hashData($data)                   { return $this->generateLookupHash('',$data); }
+   public function hashItemId($itemId)               { return $this->generateLookupHash('item',$itemId); }
+   public function hashItemLink($itemName,$itemData) { return $this->generateLookupHash('itemlink',$this->uniqueItemData($itemName,$itemData)); }
+   public function hashSaveGear($itemName,$itemData) { return $this->generateLookupHash('playergear',$this->uniqueItemData($itemName,$itemData)); }
+   public function hashPlayerGearId($itemId)         { return $this->generateLookupHash('playergear',$itemId); }
+   public function hashGearId($itemId)               { return $this->generateLookupHash('gear',$itemId); }
+   public function hashMonsterId($monsterId)         { return $this->generateLookupHash('monster',$monsterId); }
 
    // lookup hashes are used to obscure item ids and names in the database when passing between client and server
    public function generateLookupHash($type, $data)
@@ -309,6 +310,11 @@ class MinersMain extends Main
       if (!array_key_exists($type,$this->hashTypes)) { return false; }
 
       return sprintf("%s%s",$this->hashTypes[$type],hash("crc32",$data));
+   }
+
+   public function uniqueItemData($itemName, $itemData)
+   {
+      return json_encode(array('item_name' => $itemName, 'stats' => $this->normalizeItemData($itemData)));
    }
 
    public function fetchMonsterList($area = null)
@@ -336,15 +342,6 @@ class MinersMain extends Main
       return $itemData;
    }
 
-   public function generateItemHash($itemName, $itemData)
-   {
-      $itemData = $this->normalizeItemData($itemData);
-
-      $itemHash = hash("crc32",json_encode(array('item_name' => $itemName, 'stats' => $itemData)));
-
-      return $itemHash;
-   }
-
    public function getItemLink($itemHash)
    {
       $itemInfo = $this->db()->query(sprintf("select * from item_link where id = '%s'",$this->db()->escapeString($itemHash)),array('keyid' => 'id', 'multi' => false));
@@ -356,9 +353,10 @@ class MinersMain extends Main
       return array('item_name' => $itemInfo['item_name'], 'stats' => json_decode($itemInfo['stats'],true), 'raw' => $itemInfo);
    }
 
-   public function saveItemLink($itemHash, $itemName, $itemData)
+   public function saveItemLink($itemName, $itemData)
    {
       $itemData = $this->normalizeItemData($itemData);
+      $itemHash = $this->hashItemLink($itemName, $itemData);
 
       $itemStats  = json_encode($itemData,JSON_UNESCAPED_SLASHES);
       $dbResult   = $this->db()->bindExecute("insert into item_link (id,item_name,stats,created) values (?,?,?,now()) ".
@@ -388,7 +386,7 @@ class MinersMain extends Main
    public function saveGear($itemId, $itemName, $itemData)
    {
       $userId    = $this->userId;
-      $itemHash  = $this->generateItemHash($itemName,$itemData);
+      $itemHash  = $this->hashSaveGear($itemName,$itemData);
       $itemData  = $this->normalizeItemData($itemData);
       $itemStats = json_encode($itemData,JSON_UNESCAPED_SLASHES);
       $dbResult  = $this->db()->bindExecute("insert into gear (profile_id,item_hash,item_id,stats,created,updated) values (?,?,?,?,now(),now()) ".

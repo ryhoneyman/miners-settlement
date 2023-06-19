@@ -85,11 +85,11 @@ if ($selectedItem && $calculate) {
 $itemValid = ($selectedItem && !$inputErrors && $itemSubmit) ? true : false;
 
 if ($itemValid) {
-   $itemHash    = $main->generateItemHash($selectedItem,$itemInput);
-   $itemLinkUrl = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].preg_replace('/\?.*$/','',$_SERVER['REQUEST_URI'])."?il$itemHash";
+   $itemHash    = $main->hashItemLink($selectedItem,$itemInput);
+   $itemLinkUrl = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].preg_replace('/\?.*$/','',$_SERVER['REQUEST_URI'])."?$itemHash";
 
-   if ($share)     { $shareResult = $main->saveItemLink($itemHash,$selectedItem,$itemInput); }
-   else if ($save) { $saveResult = $main->saveGear($itemBase['id'],$selectedItem,$itemInput); }
+   if ($share)     { $shareResult = $main->saveItemLink($selectedItem,$itemInput); }
+   else if ($save) { $saveResult  = $main->saveGear($itemBase['id'],$selectedItem,$itemInput); }
 }
 
 include 'ui/header.php';
