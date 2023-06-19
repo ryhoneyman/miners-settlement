@@ -10,7 +10,34 @@ $main->title('Patch Notes History');
 
 include 'ui/header.php';
 
+$versionList = array(
+   '1.5.2' => array(
+      'datetime' => '2023-06-18 01:30 UTC',
+      'changes' => array(
+         'backend' => array(
+            'Updated all pass-by-hash references and lookups',
+         );
+      ),
+   ),
+);
+
 ?>
+
+<div class="row">
+  <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
+    <div class="card card-outline card-success">
+      <div class="card-header">
+        <b class="text-xl">v1.5.2</b><div class="card-tools text-yellow">2023-06-18 01:30 UTC</div>
+      </div>
+      <div class="card-body">
+        <ul>
+          <li><span class='text-red'>Backend:</span> Updated all pass-by-hash references and lookups</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div class="row">
   <div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">
