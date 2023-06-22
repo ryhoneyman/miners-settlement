@@ -27,10 +27,17 @@ function updateScalableGear(gearType, clearStats = false, refreshRunes = false)
    if (refreshRunes) { updateRunes('scalable'); }
 }
 
-function loadScalableResults() 
+function loadScalableSimulationResults() 
 {
    $('#results').html();
 
    $.ajax({url:'/simulation/scalable/start.php', async:true}).done(function(data) { $('#results').html(data); });
+}
+
+function loadBuildSimulationResults()
+{
+   $('#results').html();
+
+   $.ajax({url:'/simulation/build/start.php', async:true}).done(function(data) { $('#results').html(data); });
 }
 
