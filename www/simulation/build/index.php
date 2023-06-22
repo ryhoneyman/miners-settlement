@@ -28,6 +28,7 @@ $main->var('sessionName','buildsim/pageInput');
 $buildHash = $input->get('build','alphanumeric,dot,dash,underscore,space');
 $load      = ($input->isDefined('load')) ? true : false;
 $clear     = ($input->isDefined('clear')) ? true : false;
+$start     = ($input->isDefined('start')) ? true : false;
 
 $simEntitlement = $main->getProfileEntitlement('simulation-usage',false);
 $overrideAuth   = true;
@@ -142,6 +143,7 @@ function tabsDisplay($main)
 
    $tabs[] = array('name' => 'Monster', 'data' => $html->select('monster',$monsterList,$selectedMonster,array('required' => true, 'style' => 'width:300px;')).
                                                   $html->select('iterations',$iterationsList,$selectedIterations,array('class' => 'form-control iterationSelect', 'style' => 'width:150px;')).
+                                                  $html->inputHidden('build',$main->var('build')).
                                                   $html->submitButton('start','monster','Run'));
    //$tabs[] = array('name' => 'Tower', 'data' => '');
    //$tabs[] = array('name' => 'Progression', 'data' => $html->select('area',array('Select an Area','Dungeon','Necromancer\'s Lair','Mitar','Einlor'),null,array('style' => 'width:300px;')));
