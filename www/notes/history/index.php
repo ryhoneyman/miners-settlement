@@ -32,7 +32,8 @@ $versionList = array(
       <div class="card-body">
         <ul>
           <li><span class='text-green'>Frontend:</span> Added Build Simulation</li>
-          <li><span class='text-green'>Frontend:</span> Added Build Manager</li>
+          <li><span class='text-green'>Frontend:</span> Added Build Management</li>
+          <li><span class='text-green'>Frontend:</span> Grouped items by type in Gear Management</li>
         </ul>
       </div>
     </div>
