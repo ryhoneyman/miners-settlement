@@ -11,11 +11,13 @@ $main = new MinersMain(array(
    'database'       => true,
    'input'          => true,
    'html'           => true,
+   'adminlte'       => true,
 ));
 
 $main->title('Feature Activation');
 
 $input = $main->obj('input');
+$alte  = $main->obj('adminlte');
 
 $aCode  = $input->get('code','alphanumeric');
 $submit = ($input->get('submit')) ? true : false;
@@ -34,11 +36,9 @@ $errors = $main->error();
 include 'ui/header.php';
 
 
-if ($errors) { 
-   print displayRow(errorCard($errors));
-}
+if ($errors) { print $alte->displayRow($alte->errorCard($errors)); }
 
-codeDisplay($main);
+print codeDisplay($main);
 
 include 'ui/footer.php';
 
@@ -95,6 +95,7 @@ function applyCode($main, $code)
 function codeDisplay($main)
 {
    $html    = $main->obj('html');
+   $alte    = $main->obj('adminlte');
    $userId  = $main->userId;
 
    $addContent = "<div class='input-group'>".
@@ -104,82 +105,9 @@ function codeDisplay($main)
                  "</span>".
                  "</div>";
 
-   print $html->startForm(array('method' => 'post')).
-         displayRow(displayCard(array('container' => 'col-12 col-xl-6 col-lg-6 col-md-9 col-sm-12', 'header' => 'Enter Activation Code'),$addContent)).
-         $html->endForm();
+   return $html->startForm(array('method' => 'post')).
+          $alte->displayRow($alte->displayCard($addContent,array('container' => 'col-12 col-xl-6 col-lg-6 col-md-9 col-sm-12', 'title' => 'Enter Activation Code'))).
+          $html->endForm();
 }
-
-function displayRow($content)
-{
-   return "<div class='row'>".
-          $content.
-          "</div>";
-}
-
-function errorCard($message, $options = null)
-{
-   $containerClass = $options['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';;
-   $cardClass      = $options['card'] ?: 'card-danger';
-   $cardTitle      = $options['title'] ?: 'Error';
-
-   return "<div class='$containerClass'>".
-          "    <div class='card $cardClass'>".
-          "       <div class='card-header'><b>$cardTitle</b>".
-          "          <div class='card-tools'>".
-          "             <button type='button' class='btn bg-danger btn-sm' data-card-widget='remove'><i class='fas fa-times'></i></button>".
-          "          </div>".
-          "       </div>".
-          "       <div class='card-body'>".
-          "       ".$message.
-          "       </div>".
-          "   </div>".
-          "</div>";
-}
-
-function displayCard($cardProperties, $content)
-{
-   $containerClass = $cardProperties['container'] ?: 'col-12 col-xl-3 col-lg-6 col-md-6 col-sm-12';;
-   $cardClass      = $cardProperties['card'] ?: 'card-primary';
-   $cardHeader     = $cardProperties['header'] ?: 'Card';
-
-   return "<div class='$containerClass'>".
-          "    <div class='card $cardClass'>".
-          "       <div class='card-header'><b>$cardHeader</b></div>".
-          "       <div class='card-body'>".
-          "       ".$content.
-          "       </div>".
-          "   </div>".
-          "</div>";
-
-}
-
-function insertModal()
-{
-   print "<div class='modal fade' id='modal-window' aria-hidden='true' style='display:none;'>\n".
-         "<div class='modal-dialog modal-sm'>\n".
-         "<div class='modal-content'><form>\n".
-         "<div class='modal-header'><h4 class='modal-title'>Confirm Delete?</h4>\n".
-         "  <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>\n".
-         "</div>\n".
-         "<div class='modal-body' id='modal-body'>\n".
-         "</div>\n".
-         "<div class='modal-footer justify-content-between'>\n".
-         "  <button type='button' class='btn btn-default' data-dismiss='modal'>No</button>\n".
-         "  <button type='submit' class='btn btn-primary'>Yes</button>\n".
-         "</div>\n".
-         "</form></div><!-- /.modal-content -->\n".
-         "</div><!-- /.modal-dialog -->\n".
-         "</div> <!-- /.modal -->\n";
-
-   print "<script>\n".
-         "  $(document).on('click', '.open-modal', function() {\n".
-         "     var deleteName  = $(this).data('name');\n".
-         "     var modalHTML   = \"<p>Are you sure you want to delete \"+deleteName+\"?<input type='hidden' name='delete' id='delete' value='\"+deleteName+\"'/>\";\n".
-         "     $('#modal-body').html(modalHTML);\n".
-         "     $('#modal-window').modal('show');\n".
-         "  });\n".
-         "</script>\n";
-}
-
 
 ?>
