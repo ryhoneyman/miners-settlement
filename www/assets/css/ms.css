@@ -1,6 +1,6 @@
-.ia-input-line {
-   font-size:0.9em;
-}
+.text-tiny { font-size:0.5em !important; }
+
+.ia-input-line { font-size:0.9em; }
 
 .miners-health  { color:#aa0000; }
 .miners-attack  { color:#ff6600; }
