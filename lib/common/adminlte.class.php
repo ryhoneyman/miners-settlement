@@ -135,10 +135,10 @@ class AdminLTE extends Base
    public function infoBox($label, $link, $description = null, $boxProps = null)
    {
       $containerClass    = $boxProps['container'] ?: 'col-10 col-sm-6 col-md-6 col-lg-6 col-xl-3';
-      $boxIcon           = $boxProps['icon'] ?: 'question';
-      $boxIconBackground = $boxProps['icon-background'] ?: 'bg-primary';
+      $boxIcon           = $boxProps['icon'] ?: 'fa-question';
+      $boxIconBackground = $boxProps['icon-bg'] ?: 'bg-primary';
       $ribbonLabel       = $boxProps['ribbon'] ?: null;
-      $ribbonBackground  = $boxProps['ribbon-background'] ?: 'bg-danger';
+      $ribbonBackground  = $boxProps['ribbon-bg'] ?: 'bg-danger';
       
       return "<div class='$containerClass'>\n".
              "   <div class='info-box'>\n".
