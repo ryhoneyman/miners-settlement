@@ -237,7 +237,7 @@ class Entity extends Base
           
             if (!$itemName) { continue; }
  
-            $entityInfo[$itemType] = array('id' => $itemName, 'data' => null, 'options' => array('enhance' => $itemInfo['level']));
+            $entityInfo[$itemType] = array('id' => $itemName, 'data' => $itemInfo['data'], 'options' => array('level' => $itemInfo['level'], 'enhance' => $itemInfo['enhance']));
          }
       }
 
