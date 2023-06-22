@@ -17,6 +17,8 @@ $main = new MinersMain(array(
 $main->buildClass('constants','Constants',null,'local/constants.class.php');
 $main->buildClass('simulator','Simulator',array('db' => $main->db()),'local/simulator.class.php');
 
+$main->var('sessionName','scalablesim/pageInput');
+
 print pageDisplay($main);
 
 ?>
@@ -29,7 +31,9 @@ function pageDisplay($main)
    $alte      = $main->obj('adminlte');
    $attribs   = $main->obj('constants')->attribs();
    $simulator = $main->obj('simulator');
-   $pageInput = $main->sessionValue('simulation/pageInput');
+   $pageInput = $main->sessionValue($main->var('sessionName'));
+
+   $main->var('pageInput',$pageInput);
 
    $verbose       = (isset($pageInput['verbose'])) ? true : false;
    $shortResults  = (isset($pageInput['short'])) ? true : false;
@@ -39,8 +43,6 @@ function pageDisplay($main)
    $defenderName  = $pageInput['monster'] ?: null;
    $uIterations   = $pageInput['iterations'] ?: 1000;
    $uGodroll      = (isset($pageInput['godroll'])) ? true : false;
-
-   $main->fetchGearList();
 
    $uEquip  = buildEquipMap($main);
    $uAdjust = buildAdjustMap($main);
@@ -94,7 +96,7 @@ function pageDisplay($main)
 
 function buildAdjustMap($main)
 {
-   $pageInput = $main->sessionValue('simulation/pageInput');
+   $pageInput = $main->var('pageInput');
 
    $adjustMap = array();
 
@@ -118,22 +120,30 @@ function buildAdjustMap($main)
 
 function buildRunesMap($main)
 {
-   $pageInput = $main->sessionValue('simulation/pageInput');
+   $pageInput = $main->var('pageInput');
 
    return json_encode($pageInput['runes'],JSON_UNESCAPED_SLASHES);
 }
 
 function buildEquipMap($main)
 {
-   $pageInput  = $main->sessionValue('simulation/pageInput');
-   $hashLookup = $main->getGearHashList();
-   $equipMap   = array();
+   $pageInput    = $main->var('pageInput');
+   $itemGearList = $main->getItemGearListByType();
+   $hashLookup   = $main->getItemGearHashList();
+   $equipMap     = array();
  
    foreach ($main->obj('constants')->gearTypes() as $gearType => $gearTypeLabel) {
-      $gearName = $hashLookup[$pageInput[$gearType]];
+      $gearId = $hashLookup[$pageInput[$gearType]];
+
+      if (!$gearId) { continue; }
+
+      $gearEntry = $itemGearList[$gearType][$gearId];
+      $gearName  = $gearEntry['name'];
+
       $equipMap[$gearType] = array(
-         'name'  => $gearName ?: '',
-         'level' => (int)$pageInput[sprintf("%s_level",$gearType)] ?: 0, 
+         'name'    => $gearName ?: '',
+         'level'   => 0,
+         'enhance' => (int)$pageInput[sprintf("%s_level",$gearType)] ?: 0, 
       );
    }
 

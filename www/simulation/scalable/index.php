@@ -3,8 +3,8 @@ include_once 'miners-settlement-init.php';
 include_once 'local/minersmain.class.php';
 
 $main = new MinersMain(array(
-   'debugLevel'     => 0,
-   'errorReporting' => false,
+   'debugLevel'     => 9,
+   'errorReporting' => true,
    'sessionStart'   => true,
    'memoryLimit'    => null,
    'sendHeaders'    => true,
@@ -14,14 +14,16 @@ $main = new MinersMain(array(
    'adminlte'       => true,
 ));
 
+$main->buildClass('constants','Constants',null,'local/constants.class.php');
+$main->buildClass('format','Format',null,'local/format.class.php');
+
 $main->title('Scalable Simulation');
 
 $input = $main->obj('input');
 $html  = $main->obj('html');
 $alte  = $main->obj('adminlte');
 
-$main->buildClass('constants','Constants',null,'local/constants.class.php');
-$main->buildClass('format','Format',null,'local/format.class.php');
+$main->var('sessionName','scalablesim/pageInput');
 
 $simEntitlement = $main->getProfileEntitlement('simulation-usage',false);
 $overrideAuth   = true;
@@ -29,14 +31,14 @@ $overrideAuth   = true;
 include 'ui/header.php';
 
 if ($simEntitlement || $overrideAuth) { 
-   $sessionInput = $main->sessionValue('simulation/pageInput') ?: array();
+   $sessionInput = $main->sessionValue($main->var('sessionName')) ?: array();
    $pageInput    = processInput($sessionInput);
 
    $main->var('pageInput',$pageInput);
    $main->var('simEntitlement',$simEntitlement);
 
    // save the session back without the start parameter
-   $main->sessionValue('simulation/pageInput',array_diff_key($pageInput,array_flip(array('start'))));
+   $main->sessionValue($main->var('sessionName'),array_diff_key($pageInput,array_flip(array('start'))));
 
    print pageDisplay($main);
 }
@@ -71,7 +73,7 @@ function pageDisplay($main)
       if ($pageInput[$gearType]) { $return .= "  updateScalableGear('$gearType');\n"; }
    }
 
-   $return .= "  updateRunes('scalable');\n".
+   $return .= "  updateRunes('scalablesim');\n".
               "</script>\n";
 
    return $return;
@@ -87,7 +89,7 @@ function resultsDisplay($main)
    $results = "<div id='results'><i class='fa fa-sync fa-spin'></i></div>";
 
    return $alte->displayRow($alte->displayCard($results,array('container' => 'col-12 col-xl-9 col-lg-12 col-md-12 col-sm-12', 'title' => 'Results'))).
-          "<script>$(function() { loadScalableResults(); });</script>";
+          "<script>$(function() { loadScalableSimulationResults(); });</script>";
 }
 
 function tabsDisplay($main)
@@ -101,10 +103,8 @@ function tabsDisplay($main)
    $selectedMonster    = $pageInput['monster'];
    $selectedIterations = $pageInput['iterations'];
 
-   $main->fetchMonsterList();
-
    $monsterList = array('' => "Select Monster");
-   foreach ($main->var('monsterList') as $monsterId => $monsterInfo) {
+   foreach ($main->getMonsterList() as $monsterId => $monsterInfo) {
       $monsterName = $monsterInfo['name'];
       $monsterArea = $monsterInfo['area'] ?: 'General';
       $monsterList[$monsterArea][$monsterName] = $monsterInfo['label'];
@@ -119,7 +119,7 @@ function tabsDisplay($main)
       if ($totalIterations <= $userIterations) { $iterationsList[$totalIterations] = "$totalIterations iterations"; }
    }
 
-   $tabs[] = array('name' => 'Monster', 'data' => $html->select('monster',$monsterList,$selectedMonster,array('style' => 'width:300px;')).
+   $tabs[] = array('name' => 'Monster', 'data' => $html->select('monster',$monsterList,$selectedMonster,array('required' => true, 'style' => 'width:300px;')).
                                                   $html->select('iterations',$iterationsList,$selectedIterations,array('class' => 'form-control iterationSelect', 'style' => 'width:150px;')).
                                                   $html->submitButton('start','monster','Run'));
    //$tabs[] = array('name' => 'Tower', 'data' => '');
@@ -143,20 +143,17 @@ function gearDisplay($main)
 {
    $gear = '';
 
-   $html      = $main->obj('html');
-   $alte      = $main->obj('adminlte');
-   $pageInput = $main->var('pageInput');
-
-   $main->fetchGearList();
-
-   $gearList = $main->var('gearList');
+   $html         = $main->obj('html');
+   $alte         = $main->obj('adminlte');
+   $pageInput    = $main->var('pageInput');
+   $itemGearList = $main->getItemGearListByType();
 
    foreach ($main->obj('constants')->gearTypes() as $gearType => $gearTypeLabel) {
       $typeList   = array('' => "Select $gearTypeLabel", 'none' => 'NONE');
       $selectOpts = array('id' => $gearType, 'class' => 'form-control gear', 'style' => 'width:300px;', 'script' => "onChange='updateScalableGear(&quot;$gearType&quot;,true,true)'");
 
-      foreach ($gearList[$gearType] as $gearId => $gearInfo) {
-         $gearHash = $main->hashGearId($gearId);
+      foreach ($itemGearList[$gearType] as $gearId => $gearInfo) {
+         $gearHash = $main->hashItemGearId($gearId);
 
          $typeList[$gearHash] = $gearInfo['label'];
 

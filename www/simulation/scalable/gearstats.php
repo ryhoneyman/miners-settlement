@@ -14,10 +14,12 @@ $main = new MinersMain(array(
    'adminlte'       => true,
 ));
 
+$main->buildClass('constants','Constants',null,'local/constants.class.php');
+
 $input = $main->obj('input');
 $html  = $main->obj('html');
 
-$main->buildClass('constants','Constants',null,'local/constants.class.php');
+$main->var('sessionName','scalablesim/pageInput');
 
 print pageDisplay($main);
 
@@ -30,19 +32,19 @@ function pageDisplay($main)
    $alte       = $main->obj('adminlte');
    $constants  = $main->obj('constants');
    $attribList = $constants->attribs();
-   $pageInput  = $main->sessionValue('simulation/pageInput');
+   $pageInput  = $main->sessionValue($main->var('sessionName'));
 
    $clearStats = $main->obj('input')->get('clear','alphanumeric');
    $gearType   = $main->obj('input')->get('type','alphanumeric,dash');
    $gearHash   = $main->obj('input')->get('hash','alphanumeric');
-   $hashLookup = $main->getGearHashList();
-   $gearName   = $hashLookup[$gearHash] ?: null;
+   $hashLookup = $main->getItemGearHashList();
+   $gearId     = $hashLookup[$gearHash] ?: null;
 
    if ($clearStats == 'true') { $pageInput = array(); }
 
-   if (preg_match('/^(none|)$/i',$gearName)) { return ''; }
+   if (!$gearId) { return ''; }
 
-   $itemInfo = $main->getItemByName($gearName);
+   $itemInfo = $main->getItemById($gearId);
 
    if (!$itemInfo) { return ''; }
 
