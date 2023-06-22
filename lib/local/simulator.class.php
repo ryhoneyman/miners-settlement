@@ -162,6 +162,7 @@ class Simulator extends Base
 
       $iterCount = 0;
       $maxDamage = null;
+      $minDamage = null;
 
       while ($iterations-- > 0) {
          $iterCount++;
@@ -170,9 +171,14 @@ class Simulator extends Base
          $duration    = $resultStats['duration'];
          $iterDamage  = $resultStats['attacker']['damage']['total'];
 
+         if (is_null($minDamage) || $iterDamage < $minDamage) {
+            $minDamage = $iterDamage;
+            $stats['log']['min'] = $results['info']['log'];
+         }
+
          if (is_null($maxDamage) || $iterDamage > $maxDamage) { 
-            $maxDamage    = $iterDamage; 
-            $stats['log'] = $results['info']['log'];
+            $maxDamage = $iterDamage; 
+            $stats['log']['max'] = $results['info']['log'];
          }
 
          if ($iterCount == 1) { 
@@ -266,9 +272,11 @@ class Simulator extends Base
       else if ($results['type'] == 'pve') { return $this->formatResultsPVE($results,$options); }
    }
 
-   public function formatBattleLog($battleLog)
+   public function formatBattleLog($battleLog, $title = null)
    {
-      $output = sprintf("==== Battle Log from highest damage iteration ================\n\n"); 
+      if (!is_null($title)) { 
+         $output = sprintf("==== $title ================\n\n"); 
+      }
 
       foreach ($battleLog as $logEntry) {
          $output .= sprintf("%5.2f: %s\n",$logEntry['timer'],$logEntry['event']);
