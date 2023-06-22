@@ -122,6 +122,12 @@ class Main extends Base
       return true;
    }
 
+   public function redirect($url, $options = null)
+   {
+      header("Location: $url"); 
+      exit;
+   }
+
    public function setDefaultTimezone($tz = null)
    {
       if (is_null($tz)) { $tz = 'Etc/UTC'; }
