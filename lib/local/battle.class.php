@@ -266,19 +266,31 @@ class Battle extends Base
 
       if (!$damageList) { return null; }
 
-      $enemyRole  = ($role == 'attacker') ? 'defender' : 'attacker';
-      $entityName = $this->battleInfo['info'][$role]['name'];
-      $enemyName  = $this->battleInfo['info'][$enemyRole]['name'];
+      $enemyRole   = ($role == 'attacker') ? 'defender' : 'attacker';
+      $entityName  = $this->battleInfo['info'][$role]['name'];
+      $enemyName   = $this->battleInfo['info'][$enemyRole]['name'];
+      $battleTimer = $this->battleInfo['timer']['battle'];
 
       $this->battleInfo['stats'][$role]['hits']++;
 
-      // The enemy role has the stun attribute applied if a stun roll is made against it
+      // The enemy role has the stun attribute (number of seconds) applied if a stun roll is made against it
       if ($this->battleInfo[$enemyRole]['stun']) {
-         $stunDuration = sprintf("%1.2f",$this->battleInfo[$enemyRole]['stun'] * ($this->battleInfo[$enemyRole]['stun-resist'] ?: 1)); 
+         $stunDuration     = sprintf("%1.2f",$this->battleInfo[$enemyRole]['stun'] * ($this->battleInfo[$enemyRole]['stun-resist'] ?: 1)); 
+         $stunBlockedUntil = $battleTimer + $this->battleInfo[$enemyRole]['stun'];
+         $currentBlock     = $this->battleInfo['info'][$enemyRole]['stun-block'] ?: null;
 
-         $this->logEvent("$entityName stunned $enemyName for {$stunDuration}s");
+         // If there is no current stun block or an expired stun block, then perform the stun, otherwise no stun occurs
+         if (is_null($currentBlock) || $currentBlock < $battleTimer) {
+            $this->logEvent("$entityName stunned $enemyName for {$stunDuration}s");
+            //$this->logEvent("$enemyName cannot be stunned until {$stunBlockedUntil}s");
 
-         $this->battleInfo['timer'][$enemyRole] = -($stunDuration); 
+            $this->battleInfo['timer'][$enemyRole] = -($stunDuration); 
+            $this->battleInfo['info'][$enemyRole]['stun-block'] = $stunBlockedUntil;
+         }
+         else {
+            //$cooldownLeft = sprintf("%1.2f",$currentBlock - $battleTimer);
+            //$this->logEvent("$entityName wanted to stun $enemyName for {$stunDuration}s, but cooldown in effect for {$cooldownLeft} more seconds");
+         }
       }
 
       foreach ($damageList as $damageType => $damageAmount) {
