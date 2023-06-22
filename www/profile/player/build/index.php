@@ -116,7 +116,8 @@ function pageDisplay($main)
 
    if (!$main->getPlayerList()) { $return = "No players found, add them in <a href='/profile/player'>Player Management</a>"; }
    else {
-      $return = $html->startForm(array('method' => 'post')).
+      $return = aboutDisplay($main).
+                $html->startForm(array('method' => 'post')).
                 playerBuildSelect($main).
                 $html->endForm().
                 $html->startForm(array('method' => 'post')).
@@ -186,6 +187,14 @@ function gearDisplay($main)
    }
 
    return $alte->displayRow($alte->displayCard($gear,array('container' => 'col-12 col-xl-9 col-lg-12 col-md-12 col-sm-12','title' => 'Gear Selection')));
+}
+
+function aboutDisplay($main)
+{
+   $html = $main->obj('html');
+   $alte = $main->obj('adminlte');
+
+   return "<p class='text-yellow'>This tool is used to create gear builds for your players on your profile.</p>";
 }
 
 function formatGearStats($main, $gearStats)

@@ -56,7 +56,8 @@ function pageDisplay($main)
    $html      = $main->obj('html');
    $pageInput = $main->var('pageInput');
 
-   $return = $html->startForm(array('method' => 'post')).
+   $return = aboutDisplay($main).
+             $html->startForm(array('method' => 'post')).
              gearDisplay($main).
              runeDisplay($main).
              tabsDisplay($main).
@@ -168,6 +169,15 @@ function gearDisplay($main)
 
    return $alte->displayRow($alte->displayCard($gear,array('container' => 'col-12 col-xl-9 col-lg-12 col-md-12 col-sm-12','title' => 'Gear Selection')));
 }
+
+function aboutDisplay($main)
+{
+   $html = $main->obj('html');
+   $alte = $main->obj('adminlte');
+
+   return "<p class='text-yellow'>This tool is used to simulate battles using gear that you can variably scale to order to fine tune outcomes.</p>";
+}
+
 
 function processInput($sessionInput)
 {

@@ -80,7 +80,8 @@ function pageDisplay($main)
    $html      = $main->obj('html');
    $pageInput = $main->var('pageInput');
 
-   $return = $html->startForm(array('method' => 'post')).
+   $return = aboutDisplay($main).
+             $html->startForm(array('method' => 'post')).
              playerBuildSelect($main).
              $html->endForm().
              $html->startForm(array('method' => 'post')).
@@ -204,6 +205,14 @@ function gearDisplay($main)
    }
 
    return $alte->displayRow($alte->displayCard($gear,array('container' => 'col-12 col-xl-9 col-lg-12 col-md-12 col-sm-12','title' => 'Gear Selection')));
+}
+
+function aboutDisplay($main)
+{
+   $html = $main->obj('html');
+   $alte = $main->obj('adminlte');
+
+   return "<p class='text-yellow'>This tool is used in conjunction with <a href='/profile/player/build/'>Player Builds</a> to simulate battles based on gear builds in your profile.</p>";
 }
 
 function formatGearStats($main, $gearStats)
