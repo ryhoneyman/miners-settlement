@@ -14,10 +14,10 @@ $main = new MinersMain(array(
    'adminlte'       => true,
 ));
 
+$main->buildClass('constants','Constants',null,'local/constants.class.php');
+
 $input = $main->obj('input');
 $html  = $main->obj('html');
-
-$main->buildClass('constants','Constants',null,'local/constants.class.php');
 
 print pageDisplay($main);
 
@@ -37,32 +37,45 @@ function pageDisplay($main)
    $runeInput  = array();
    $hashLookup = array();
 
-   if ($caller == 'scalable') {
-      $runeInput = ($main->sessionValue('simulation/pageInput'))['runes'] ?: array();
-      $hashLookup = $main->getGearHashList();
+   if ($caller == 'scalablesim') {
+      $runeInput = ($main->sessionValue('scalablesim/pageInput'))['runes'] ?: array();
+      $hashLookup = $main->getItemGearHashList();
+      $gearLookup = $main->getItemGearList(); 
+   }
+   else if ($caller == 'buildsim') {
+      $runeInput = ($main->sessionValue('buildsim/pageInput'))['runes'] ?: array();
+      $hashLookup = $main->getPlayerGearHashList();
+      $gearLookup = $main->getPlayerGearList();
    }
    else if ($caller == 'playerbuild') {
       $runeInput = ($main->sessionValue('playerbuild/pageInput'))['runes'] ?: array();
       $hashLookup = $main->getPlayerGearHashList();
+      $gearLookup = $main->getPlayerGearList();
    }
-
-   $main->fetchRunewordList();
 
    $runeList     = array();
    $gearRuneList = array('' => 'General');
-   $runewordList = $main->var('runewordList');
+   $runewordList = $main->getRunewordList();
 
    foreach ($main->obj('constants')->gearTypes() as $gearType => $gearTypeLabel) {
       if (!preg_match('/^(none|)$/i',$gearState[$gearType])) { $gearRuneList[$gearState[$gearType]] = $gearTypeLabel; }
    }
 
+   // Load all item non-specific runes
+   foreach ($runewordList[''] as $runeId => $runeInfo) {
+      $runeList[$gearRuneList['']][$runeInfo['name']] = $runeInfo['label'];
+   }
+
    foreach ($gearRuneList as $gearHash => $gearTypeLabel) {
-      $gearName  = $hashLookup[$gearHash];
+      $gearId    = $hashLookup[$gearHash];
+      $gearName  = $gearLookup[$gearId]['name'];
       $gearRunes = $runewordList[$gearName];
 
-      if (!$gearRunes) { continue; }
+      if (!$gearName || !$gearRunes) { continue; }
 
-      foreach ($gearRunes as $runeId => $runeInfo) { $runeList[$gearTypeLabel][$runeInfo['name']] = $runeInfo['label']; }
+      foreach ($gearRunes as $runeId => $runeInfo) { 
+         $runeList[$gearTypeLabel][$runeInfo['name']] = $runeInfo['label']; 
+      }
    }
 
    $selectOpts = array('id' => 'runes', 'class' => 'form-control runes', 'multi' => true);
