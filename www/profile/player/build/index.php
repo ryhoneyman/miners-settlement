@@ -3,8 +3,8 @@ include_once 'miners-settlement-init.php';
 include_once 'local/minersmain.class.php';
 
 $main = new MinersMain(array(
-   'debugLevel'     => 9,
-   'errorReporting' => true,
+   'debugLevel'     => 0,
+   'errorReporting' => false,
    'sessionStart'   => true,
    'memoryLimit'    => null,
    'sendHeaders'    => true,
