@@ -14,14 +14,14 @@ $main = new MinersMain(array(
    'toastr'         => true,
 ));
 
+$main->buildClass('constants','Constants',null,'local/constants.class.php');
+$main->buildClass('item','Item',null,'local/item.class.php');
+
 $main->title('Item Analytics');
 
 $input  = $main->obj('input');
 $html   = $main->obj('html');
 $toastr = $main->obj('toastr');
-
-$main->buildClass('constants','Constants',null,'local/constants.class.php');
-$main->buildClass('item','Item',null,'local/item.class.php');
 
 $selectedItem = $input->get('item','alphanumeric,dash');
 $player       = $input->get('player','alphanumeric,dot,dash,underscore,space');
@@ -641,11 +641,10 @@ function getItemInput()
 
 function getGear($main)
 {
-   $main->fetchGearList();
+   $return       = array();
+   $itemGearList = $main->getItemGearListByType();
 
-   $gearList = array();
-
-   foreach ($main->var('gearList') as $gearType => $gearItems) {
+   foreach ($itemGearList as $gearType => $gearItems) {
       foreach ($gearItems as $resultId => $resultInfo) {
          $gearData = json_decode($resultInfo['attributes'],true);
 
@@ -655,11 +654,11 @@ function getGear($main)
          $gearData['type']  = $resultInfo['type'];
          $gearData['image'] = $resultInfo['image'];
 
-         $gearList[$gearData['name']] = $gearData;
+         $return[$gearData['name']] = $gearData;
       }
    }
 
-   return $gearList;
+   return $return;
 }
 
 ?>

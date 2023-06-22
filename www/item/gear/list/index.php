@@ -13,13 +13,13 @@ $main = new MinersMain(array(
    'html'           => true,
 ));
 
+$main->buildClass('constants','Constants',null,'local/constants.class.php');
+$main->buildClass('format','Format',null,'local/format.class.php');
+
 $main->title('Gear List');
 
 $input = $main->obj('input');
 $html  = $main->obj('html');
-
-$main->buildClass('constants','Constants',null,'local/constants.class.php');
-$main->buildClass('format','Format',null,'local/format.class.php');
 
 include 'ui/header.php';
 
@@ -34,17 +34,17 @@ function dataDisplay($main)
 {
    $return = '';
 
-   $main->fetchGearList();
+   $itemGearList = $main->getItemGearListByType();
 
    $gearNav = array();
-   foreach (array_keys($main->var('gearList')) as $gearType) {
+   foreach (array_keys($itemGearList) as $gearType) {
       $gearLabel = ($main->obj('constants')->gearTypes())[$gearType];
       $gearNav[] = sprintf("<a href='#gear-%s' class='text-green'>%s</a>",strtolower(preg_replace('/\W/','-',$gearType)),$gearLabel);
    }
 
    print '<div class="mb-4">'.implode(" | ",$gearNav).'</div>';
 
-   foreach ($main->var('gearList') as $gearType => $gearTypeList) {
+   foreach ($itemGearList as $gearType => $gearTypeList) {
       $return .= gearDisplay($main,$gearType,$gearTypeList);
    }
 

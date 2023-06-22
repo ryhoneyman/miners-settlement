@@ -14,14 +14,14 @@ $main = new MinersMain(array(
    'adminlte'       => true,
 ));
 
+$main->buildClass('constants','Constants',null,'local/constants.class.php');
+$main->buildClass('format','Format',null,'local/format.class.php');
+
 $main->title('Monster Viewer');
 
 $input = $main->obj('input');
 $html  = $main->obj('html');
 $alte  = $main->obj('adminlte');
-
-$main->buildClass('constants','Constants',null,'local/constants.class.php');
-$main->buildClass('format','Format',null,'local/format.class.php');
 
 include 'ui/header.php';
 
@@ -39,11 +39,9 @@ function monsterDisplay($main)
    $format = $main->obj('format');
    $alte   = $main->obj('adminlte');
 
-   $main->fetchMonsterList();
-
    $selectedId    = null;
    $selectedHash  = $input->get('monster','alphanumeric,dash');
-   $monsterList   = $main->var('monsterList');
+   $monsterList   = $main->getMonsterList();
    $monsterSelect = array('' => "Select Monster");
 
    foreach ($monsterList as $monsterId => $monsterInfo) {

@@ -14,12 +14,12 @@ $main = new MinersMain(array(
    'format'         => true,
 ));
 
+$main->buildClass('constants','Constants',null,'local/constants.class.php');
+
 $main->title('Scheme Crafting');
 
 $input = $main->obj('input');
 $html  = $main->obj('html');
-
-$main->buildClass('constants','Constants',null,'local/constants.class.php');
 
 include 'ui/header.php';
 

@@ -13,13 +13,13 @@ $main = new MinersMain(array(
    'html'           => true,
 ));
 
+$main->buildClass('constants','Constants',null,'local/constants.class.php');
+$main->buildClass('format','Format',null,'local/format.class.php');
+
 $main->title('Runeposts');
 
 $input = $main->obj('input');
 $html  = $main->obj('html');
-
-$main->buildClass('constants','Constants',null,'local/constants.class.php');
-$main->buildClass('format','Format',null,'local/format.class.php');
 
 include 'ui/header.php';
 

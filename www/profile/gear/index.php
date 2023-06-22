@@ -13,14 +13,11 @@ $main = new MinersMain(array(
    'html'           => true,
 ));
 
-$main->title('Gear Management');
-
-$input = $main->obj('input');
-
 $main->buildClass('constants','Constants',null,'local/constants.class.php');
 
-$main->fetchPlayerGearList();
+$main->title('Gear Management');
 
+$input      = $main->obj('input');
 $deleteGear = $input->get('delete','alphanumeric,dot,dash,underscore,space');
 
 if ($deleteGear) {
@@ -51,7 +48,7 @@ function gearDisplay($main)
    $html      = $main->obj('html');
    $constants = $main->obj('constants');
    $userId    = $main->userId;
-   $gearList  = $main->var('playerGearList');
+   $gearList  = $main->getPlayerGearList();
 
    $gearContent = "<table border=0 class='table' style='width:auto;'>".
                   "<thead><tr><th></th><th></th><th>Name</h><th>Level</th><th>Stats</th><th></th><th></th></tr></thead>".
