@@ -194,7 +194,7 @@ function aboutDisplay($main)
    $html = $main->obj('html');
    $alte = $main->obj('adminlte');
 
-   return "<p class='text-yellow'>This tool is used to create gear builds for your players on your profile.</p>";
+   return "<p class='text-yellow'>This tool is used to create gear builds from <a href='/profile/gear/'>Player Gear</a> for your players on your profile.</p>";
 }
 
 function formatGearStats($main, $gearStats)
