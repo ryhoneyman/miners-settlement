@@ -113,7 +113,7 @@ function aboutDisplay($main)
    $html = $main->obj('html');
    $alte = $main->obj('adminlte');
 
-   return "<p class='text-yellow'>This tool is used to view and manage gear added to your profile.</p>";
+   return "<p class='text-yellow'>This tool is used to view and manage gear saved to your profile from <a href='/item/analytics/'>Item Analytics</a>.</p>";
 }
 
 function insertModal()
