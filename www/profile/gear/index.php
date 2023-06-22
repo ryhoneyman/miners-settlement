@@ -88,13 +88,14 @@ function gearDisplay($main)
          }
          
       }
-      else { $gearListItems[$gearTypeLabel][] = "<tr><td colspan=6>No $gearTypeLabel items found on this profile.</td></tr>"; }
+      else { $gearListItems[$gearTypeLabel] = "<tr><td colspan=6>No $gearTypeLabel items found on this profile.</td></tr>"; }
    }
 
    $tabs = array();
 
    foreach ($gearListItems as $gearTypeLabel => $gearContentList) {
-      $gearContent = "<table border=0 class='table' style='width:auto;'>".
+      $gearContent = (!is_array($gearContentList)) ? $gearContentList :
+                     "<table border=0 class='table' style='width:auto;'>".
                      "<thead><tr><th></th><th></th><th>Name</h><th>Level</th><th>Stats</th><th></th><th></th></tr></thead>".
                      "<tbody>".
                      implode("\n",$gearContentList).
