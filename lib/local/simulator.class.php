@@ -80,6 +80,7 @@ class Simulator extends Base
             $equipData = array();
             $runeData  = array();
 
+            // we need to fetch/pass the item attributes outside of the entity/item class since it does not have database access
             if ($equipList) {
                $equipData = $this->db->query(sprintf("select *, name as id, label as name from item where name in (%s)",$equipList),array('keyid' => 'id'));
 
@@ -89,6 +90,7 @@ class Simulator extends Base
                }
             }
 
+            // we need to fetch/pass the rune attributes outside of the entity/item class since it does not have database access
             if ($runeList) {
                $runeData = $this->db->query(sprintf("select *, name as id, label as name from runeword where name in (%s)",$runeList),array('keyid' => 'id'));
  
@@ -98,12 +100,13 @@ class Simulator extends Base
                }
             }
 
+            // decode JSON database elements before passing
             foreach ($equipData as $itemName => $itemInfo) {
                if ($itemInfo['attributes']) { $equipData[$itemName] = array_merge($itemInfo,json_decode($itemInfo['attributes'],true)); }
             }
             foreach ($runeData as $runeName => $runeInfo) {
                if ($runeInfo['attributes']) { $runeData[$runeName]['attributes'] = json_decode($runeInfo['attributes'],true); }
-               if ($runeInfo['cost']) { $runeData[$runeName]['cost'] = json_decode($runeInfo['cost'],true); }
+               if ($runeInfo['cost'])       { $runeData[$runeName]['cost']       = json_decode($runeInfo['cost'],true); }
             }
 
             $loadData = array(
