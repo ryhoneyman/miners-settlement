@@ -35,9 +35,12 @@ function pageDisplay($main)
 
    return $alte->displayRow(
              $alte->infoBox('Scalable Simulation','/simulation/scalable/','Run simulations by adjusting scalable parameters.',
-                            array('icon' => 'fa-chart-bar', 'icon-background' => 'bg-primary', 'ribbon' => 'NEW')).
-             $alte->infoBox('Gear Simulation','#','Run simulations by loading player gear.',
-                            array('icon' => 'fa-user-chart', 'icon-background' => 'bg-warning', 'ribbon' => '<span style="font-size:0.7em;">COMMING SOON</span>', 'ribbon-background' => 'bg-warning'))
+                            array('icon' => 'fa-chart-bar', 'icon-bg' => 'bg-primary', 'ribbon' => 'popular', 'ribbon-bg' => 'bg-success text-bold text-small')).
+             //$alte->infoBox('Build Simulation','/simulation/build/','Run simulations by loading player builds.',
+             //               array('icon' => 'fa-user-chart', 'icon-bg' => 'bg-warning', 'ribbon' => 'new', 'ribbon-bg' => 'bg-danger')).
+             $alte->infoBox('Build Simulation','','Run simulations by loading player builds.',
+                            array('icon' => 'fa-user-chart', 'icon-bg' => 'bg-warning', 'ribbon' => 'soon', 'ribbon-bg' => 'bg-danger')).
+             ''
           );
 }
 
