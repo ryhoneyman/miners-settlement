@@ -56,7 +56,7 @@ $main->var('itemList',$itemList);
 
 // Build the pulldown list of items
 $selectItem = array('' => 'Select an Item');
-$selectOpts = array('class' => 'form-control gear', 'style' => 'width:auto;');
+$selectOpts = array('class' => 'form-control gear', 'style' => 'width:80%%;');
 $gearTypes  = $main->obj('constants')->gearTypes();
 
 foreach ($itemList as $itemName => $itemData) { 
