@@ -9,7 +9,7 @@ class MinersMain extends Main
 {
    public $userId         = null;
    public $hashTypes      = null;
-   public $currentVersion = '1.5.2';
+   public $currentVersion = '1.6.0';
 
    public function __construct($options = null)
    {
@@ -27,7 +27,7 @@ class MinersMain extends Main
          'playergear'  => 'pg',  // player gear id from gear table
          'playerbuild' => 'pb',  // player build id from player_build table
          'itemlink'    => 'il',  // item id from item_link table
-         'gear'        => 'gi',  // gear-only item id from item table
+         'itemgear'    => 'ig',  // gear-only item id from item table
          'monster'     => 'mo',  // monster id from monster table
       );
    }
@@ -137,21 +137,23 @@ class MinersMain extends Main
       return $entitlement[$name];
    }
 
-   public function deletePlayer($playerName)
+   public function deletePlayer($playerHash)
    {
-      $userId     = $this->userId;
-      $playerList = $this->var('playerList');
+      $userId         = $this->userId;
+      $playerList     = $this->getPlayerList(array('skipCache' => true));
+      $playerHashList = $this->getPlayerHashList();
+      $playerId       = $playerHashList[$playerHash] ?: null;
    
-      if (!$userId) { $this->error('Cannot add player, no user ID detected.'); return false; }
+      if (!$userId)   { $this->error('Cannot delete player, no user ID detected.'); return false; }
+      if (!$playerId) { $this->error("Cannot delete player, player does not exist."); return false; }
    
-      if (!$playerList[$playerName]) { $this->error("Cannot delete player $playerName, player does not exist."); return false; }
-   
-      $dbResult = $this->db()->bindExecute("delete from player where profile_id = ? and name = ?",
-                                           "ss",array($userId,$playerName));
+      $dbResult = $this->db()->bindExecute("delete from player where profile_id = ? and id = ?",
+                                           "ss",array($userId,$playerId));
    
       $success = ($dbResult) ? true : false;
    
       if (!$success) { $main->this('Cannot delete player, database error.'); }
+      else { $this->fetchPlayerList(array('skipCache' => true)); }
    
       return $success;
    }
@@ -159,7 +161,7 @@ class MinersMain extends Main
    public function addPlayer($playerName)
    {
       $userId     = $this->userId;
-      $playerList = $this->var('playerList');
+      $playerList = $this->getPlayerList(array('skipCache' => true, 'keyId' => 'name'));
    
       if (!$userId) { $this->error('Cannot add player, no user ID detected.'); return false; }
    
@@ -171,45 +173,123 @@ class MinersMain extends Main
       $success = ($dbResult) ? true : false;
    
       if (!$success) { $this->error('Cannot add player, database error.'); }
+      else { $this->fetchPlayerList(array('skipCache' => true)); }
    
       return $success;
    }
 
-   public function fetchPlayerBuildList()
+   public function getPlayerBuildList($options = null)      { return $this->getList('playerbuild',$options); }
+   public function getPlayerList($options = null)           { return $this->getList('player',$options); }
+   public function getPlayerGearList($options = null)       { return $this->getList('playergear',$options); }
+   public function getRunewordList($options = null)         { return $this->getList('runeword',$options); }
+   public function getItemGearList($options = null)         { return $this->getList('itemgear',$options); }
+   public function getMonsterList($options = null)          { return $this->getList('monster',$options); }
+   public function getItemGearListByType($options = null)   { return $this->getItemGearList(array_replace($options ?: array(),array('subType' => 'bytype'))); }
+   public function getPlayerGearListByType($options = null) { return $this->getPlayerGearList(array_replace($options ?: array(),array('subType' => 'bytype'))); }
+
+   public function getList($type, $options = null)
    {
-      $userId    = $this->userId;
-      $buildList = $this->db()->query(sprintf("select pb.*, p.profile_id, p.name as player_name from player_build pb, player p where pb.player_id = p.id and p.profile_id = '%s'",
-                                               $this->db()->escapeString($userId)),array('keyid' => 'id'));
+      $type        = strtolower($type);
+      $subType     = strtolower($options['subType']) ?: 'default';
+      $keyId       = strtolower($options['keyId']) ?: 'id';
+      $varName     = sprintf("%s-%s-%s-%s",$type,$subType,$keyId,"list");
+      $fetchResult = $this->fetchList($type,$options);
 
-      if ($buildList === false) { $this->error('Could not query player build list'); return false; }
+      if ($fetchResult === false) { return false; }
 
-      $this->var('playerBuildList',$buildList);
+      return $this->var($varName);
+   }
+
+   public function fetchPlayerBuildList($options = null)      { return $this->fetchList('playerbuild',$options); }
+   public function fetchPlayerList($options = null)           { return $this->fetchList('player',$options); }
+   public function fetchPlayerGearList($options = null)       { return $this->fetchList('playergear',$options); }
+   public function fetchRunewordList($options = null)         { return $this->fetchList('runeword',$options); }
+   public function fetchItemGearList($options = null)         { return $this->fetchList('itemgear',$options); }
+   public function fetchMonsterList($options = null)          { return $this->fetchList('monster',$options); }
+   public function fetchItemGearListByType($options = null)   { return $this->fetchItemGearList(array_replace($options ?: array(),array('subType' => 'bytype'))); }
+   public function fetchPlayerGearListByType($options = null) { return $this->fetchPlayerGearList(array_replace($options ?: array(),array('subType' => 'bytype'))); }
+
+   public function fetchList($type, $options = null)
+   {
+      $listData  = array();
+      $skipCache = ($option['skipCache']) ? true : false;
+      $type      = strtolower($type);
+      $subType   = strtolower($options['subType']) ?: 'default';
+      $keyId     = strtolower($options['keyId']) ?: 'id';
+      $varName   = sprintf("%s-%s-%s-%s",$type,$subType,$keyId,"list");
+
+      if (!$type) { $this->error('No type specified for list fetch'); return false; }
+
+      if (!$skipCache && $this->var($varName)) { return true; }
+
+      if ($type == 'itemgear') {
+         $gearTypes = $this->obj('constants')->gearTypes();
+         $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\-]/','',$value)."'"; },
+                                            array_unique(array_filter(array_keys($gearTypes)))));
+         $result    = $this->db()->query("select * from item where type in ($typeList) and active = 1 order by tier asc, name asc",
+                                         array('keyid' => $keyId));
+
+         foreach ($result as $resultId => $resultInfo) {
+            if ($subType == 'bytype') { $listData[$resultInfo['type']][$resultId] = $resultInfo; }
+            else { $listData[$resultId] = $resultInfo; }
+         }
+      }
+      else if ($type == 'runeword') {
+         $result = $this->db()->query("select rw.*, i.name as item_name from runeword rw left join item i on rw.item_id = i.id ".
+                                      "where rw.active = 1 order by rw.name asc",array('keyid' => $keyId));
+
+         foreach ($result as $resultId => $resultInfo) {
+            $itemName = $resultInfo['item_name'] ?: '';
+            $listData[$itemName][$resultId] = $resultInfo;
+         }
+      }
+      else if ($type == 'playergear') {
+         $userId = $this->userId;
+         $result = $this->db()->query(sprintf("select g.*,i.*, g.id as id from gear g, item i where g.item_id = i.id and profile_id = '%s'",
+                                              $this->db()->escapeString($userId)),array('keyid' => $keyId));
+
+         if ($result === false) { $this->error('Could not query gear list'); return false; }
+
+         foreach ($result as $resultId => $resultInfo) {
+            if ($subType == 'bytype') { $listData[$resultInfo['type']][$resultId] = $resultInfo; }
+            else { $listData[$resultId] = $resultInfo; }
+         }
+      }
+      else if ($type == 'player') {
+         $userId   = $this->userId;
+         $listData = $this->db()->query(sprintf("select * from player where profile_id = '%s'",$this->db()->escapeString($userId)),array('keyid' => $keyId));
+
+         if ($listData === false) { $this->error('Could not query player list'); return false; }
+      }
+      else if ($type == 'playerbuild') {
+         $userId   = $this->userId;
+         $listData = $this->db()->query(sprintf("select pb.*, p.profile_id, p.name as player_name from player_build pb, player p where pb.player_id = p.id and p.profile_id = '%s'",
+                                                $this->db()->escapeString($userId)),array('keyid' => $keyId));
+
+         if ($listData === false) { $this->error('Could not query player build list'); return false; }
+      }
+      else if ($type == 'monster') {
+         $area  = $options['area'] ?: null;
+         $query = (is_null($area)) ? "select l.*,m.* from monster m left join location l on m.location_id = l.id"
+                                   : sprintf("select l.*,m.* from monster m, location l where m.location_id = l.id and l.area = '%s'",$this->db()->escapeString($area));
+
+         $listData = $this->db()->query($query,array('keyid' => $keyId));
+
+         if ($listData === false) { $this->error('Could not query monster list'); return false; }
+      }
+
+      $this->var($varName,$listData);
 
       return true;
    }
-   
-   public function fetchPlayerList()
+
+   public function getItemById($itemId)
    {
-      $userId     = $this->userId;
-      $playerList = $this->db()->query(sprintf("select * from player where profile_id = '%s'",$this->db()->escapeString($userId)),array('keyid' => 'name'));
-   
-      if ($playerList === false) { $this->error('Could not query player list'); return false; }
-   
-      $this->var('playerList',$playerList);
-   
-      return true;
-   }
+      $result = $this->db()->query(sprintf("select * from item where id = %d and active = 1",$itemId),array('multi' => false));
 
-   public function fetchPlayerGearList()
-   {
-      $userId   = $this->userId;
-      $gearList = $this->db()->query(sprintf("select g.*,i.*, g.id as id from gear g, item i where g.item_id = i.id and profile_id = '%s'",$this->db()->escapeString($userId)),array('keyid' => 'id'));
+      if ($result === false) { $this->error('Could not query item list'); return false; }
 
-      if ($gearList === false) { $this->error('Could not query gear list'); return false; }
-
-      $this->var('playerGearList',$gearList);
-
-      return true;
+      return $result;
    }
 
    public function getItemByName($itemName)
@@ -221,42 +301,12 @@ class MinersMain extends Main
       return $result;
    }
 
-   public function fetchRunewordList()
-   {
-      $result       = $this->db()->query("select rw.*, i.name as item_name from runeword rw left join item i on rw.item_id = i.id where rw.active = 1 order by rw.name asc",array('keyid' => 'id'));
-      $runewordList = array();
-
-      foreach ($result as $resultId => $resultInfo) {
-         $itemName = $resultInfo['item_name'] ?: '';
-         $runewordList[$itemName][$resultId] = $resultInfo;
-      }
-
-      $this->var('runewordList',$runewordList);
-
-      return true;
-   }
-
-   public function fetchGearList()
-   {
-      $gearTypes = $this->obj('constants')->gearTypes();
-      $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\-]/','',$value)."'"; },
-                                         array_unique(array_filter(array_keys($gearTypes)))));
-
-      $result   = $this->db()->query("select * from item where type in ($typeList) and active = 1 order by tier asc, name asc",array('keyid' => 'id'));
-      $gearList = array();
-
-      foreach ($result as $resultId => $resultInfo) {
-         $gearList[$resultInfo['type']][$resultId] = $resultInfo;
-      }
-
-      $this->var('gearList',$gearList);
-
-      return true;
-   }
-
-   public function getPlayerGearHashList() { return $this->getHashList('playergear'); }
-   public function getGearHashList()       { return $this->getHashList('gear'); }
-   public function getMonsterHashList()    { return $this->getHashList('monster'); }
+   // hash encode/decode is used to obscure database ids/values to prevent information leak and/or lowers the known data to attack
+   public function getPlayerBuildHashList() { return $this->getHashList('playerbuild'); }
+   public function getPlayerGearHashList()  { return $this->getHashList('playergear'); }
+   public function getItemGearHashList()    { return $this->getHashList('itemgear'); }
+   public function getPlayerHashList()      { return $this->getHashList('player'); }
+   public function getMonsterHashList()     { return $this->getHashList('monster'); }
 
    public function getHashList($type) 
    {
@@ -266,30 +316,11 @@ class MinersMain extends Main
       
       if (!$prefix) { return false; }  // even if a type is defined, we don't want the non-prefixed types
 
-      if ($type == 'gear') {
-         if (!$this->var('gearList')) { $this->fetchGearList(); }
+      $listData = $this->getList($type);
 
-         foreach ($this->var('gearList') as $gearType => $gearTypeList) {
-            foreach ($gearTypeList as $itemId => $itemInfo) {
-               $return[$this->generateLookupHash($type,$itemId)] = $itemInfo['name'];
-            }
-         }
-      } 
-      else if ($type == 'playergear') {
-         if (!$this->var('playerGearList')) { $this->fetchPlayerGearList(); }
-
-         foreach ($this->var('playerGearList') as $gearId => $gearInfo) {
-            $return[$this->generateLookupHash($type,$gearId)] = $gearInfo['name'];
-         }
+      foreach ($listData as $entryId => $entryInfo) {
+         $return[$this->generateLookupHash($type,$entryId)] = $entryId;
       }
-      else if ($type == 'monster') {
-         if (!$this->var('monsterList')) { $this->fetchMonsterList(); }
-
-         foreach ($this->var('monsterList') as $monsterId => $monsterInfo) {
-            $return[$this->generateLookupHash($type,$monsterId)] = $monsterInfo['name'];
-         }
-      }
-
 
       return $return;
    }
@@ -299,8 +330,10 @@ class MinersMain extends Main
    public function hashItemLink($itemName,$itemData) { return $this->generateLookupHash('itemlink',$this->uniqueItemData($itemName,$itemData)); }
    public function hashSaveGear($itemName,$itemData) { return $this->generateLookupHash('playergear',$this->uniqueItemData($itemName,$itemData)); }
    public function hashPlayerGearId($itemId)         { return $this->generateLookupHash('playergear',$itemId); }
-   public function hashGearId($itemId)               { return $this->generateLookupHash('gear',$itemId); }
+   public function hashPlayerBuildId($buildId)       { return $this->generateLookupHash('playerbuild',$buildId); }
+   public function hashItemGearId($itemId)           { return $this->generateLookupHash('itemgear',$itemId); }
    public function hashMonsterId($monsterId)         { return $this->generateLookupHash('monster',$monsterId); }
+   public function hashPlayerId($playerId)           { return $this->generateLookupHash('player',$playerId); }
 
    // lookup hashes are used to obscure item ids and names in the database when passing between client and server
    public function generateLookupHash($type, $data)
@@ -315,20 +348,6 @@ class MinersMain extends Main
    public function uniqueItemData($itemName, $itemData)
    {
       return json_encode(array('item_name' => $itemName, 'stats' => $this->normalizeItemData($itemData)));
-   }
-
-   public function fetchMonsterList($area = null)
-   {
-      $query = (is_null($area)) ? "select l.*,m.* from monster m left join location l on m.location_id = l.id" 
-                                : sprintf("select l.*,m.* from monster m, location l where m.location_id = l.id and l.area = '%s'",$this->db()->escapeString($area));
-
-      $monsterList = $this->db()->query($query,array('keyid' => 'id'));
-
-      if ($monsterList === false) { $this->error('Could not query monster list'); return false; }
-
-      $this->var('monsterList',$monsterList);
-
-      return true;
    }
 
    public function normalizeItemData($itemData)
