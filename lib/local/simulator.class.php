@@ -14,7 +14,6 @@ class Simulator extends Base
    public  $elements       = array();
    public  $gearTypes      = array();
    public  $primaryAttribs = array();
-   public  $errors         = array();
    private $db             = null;
 
    public function __construct($debug = null, $options = null)
@@ -27,6 +26,7 @@ class Simulator extends Base
       $this->elements       = $this->constants->elements();
       $this->gearTypes      = $this->constants->gearTypes();
       $this->primaryAttribs = $this->constants->primaryAttribs();
+      $this->elementAttribs = $this->constants->elementAttribs();
 
       $this->db = $options['db'] ?: null;
    }
@@ -105,6 +105,7 @@ class Simulator extends Base
                if ($itemInfo['attributes']) { $equipData[$itemName] = array_merge($itemInfo,json_decode($itemInfo['attributes'],true)); }
             }
             foreach ($runeData as $runeName => $runeInfo) {
+               if ($runeInfo['requires'])   { $runeData[$runeName]['requires']   = json_decode($runeInfo['requires'],true); }
                if ($runeInfo['attributes']) { $runeData[$runeName]['attributes'] = json_decode($runeInfo['attributes'],true); }
                if ($runeInfo['cost'])       { $runeData[$runeName]['cost']       = json_decode($runeInfo['cost'],true); }
             }
@@ -166,7 +167,10 @@ class Simulator extends Base
 
       while ($iterations-- > 0) {
          $iterCount++;
-         $results     = $battle->start($attacker,$defender,$battleOpts);
+         $results = $battle->start($attacker,$defender,$battleOpts);
+
+         if ($results === false) { $this->error($battle->error()); return false; }
+
          $resultStats = $results['info']['stats'];
          $duration    = $resultStats['duration'];
          $iterDamage  = $resultStats['attacker']['damage']['total'];
@@ -204,7 +208,11 @@ class Simulator extends Base
                   $stats[$role]['gear'][$gearType] = (is_null($gearItem)) ? null : $gearItem->export();
                }
 
-               $stats[$role]['power'] = $results['info'][$role]['power'];
+               $stats[$role]['power'] = $results['info'][$role]['power'];   // used to display base/effective power to user
+               $stats['input'][$role] = $results['info']['base'][$role];    // used for machine learning input layer
+
+               $stats['settings']['allow.revive'] = $results['info']['settings']['allow.revive'];
+               $stats['settings']['timer.max']    = $results['info']['timer']['max'];
             }
 
             //var_dump("<pre>",json_encode($results['info'],JSON_PRETTY_PRINT),"</pre>");
@@ -262,6 +270,50 @@ class Simulator extends Base
       $stats['time']['total'] = $stats['time']['end'] - $stats['time']['start'];
    
       return $stats;
+   }
+
+   public function formatResultsTraining($results, $options = null)
+   {
+      $inputData   = $results['input'];
+      $trainingRow = array();
+
+       $effectMatrix = array(
+          'myself' => array('speed' => false, 'lifesteal' => false, 'stun-resist' => false, 'extra-defense' => true, 'critical-hit' => true),
+          'enemy'  => array('speed' => false, 'defense' => false, 'stun' => true),
+       );
+
+      foreach (array('attacker','defender') as $role) {
+         foreach ($this->primaryAttribs as $attribName => $attribInfo) {
+            $trainingRow[] = $inputData[$role][$attribName];
+         }
+         foreach ($this->elementAttribs as $attribName => $attribInfo) {
+            $trainingRow[] = $inputData[$role][$attribName];
+         }
+         foreach ($effectMatrix as $impactRole => $impactAttribs) {
+            $effectsData = $inputData[$role]['effects'][$impactRole];
+
+            foreach ($impactAttribs as $effectName => $includeChance) {
+               $effectChance = $effectsData[$effectName]['pChance'] ?: 0;
+               $effectValue  = ($effectsData[$effectName]['pAdjust'] ?: $effectsData[$effectName]['fAdjust']) ?: 0;
+
+               if ($includeChance) { $trainingRow[] = $effectChance; }
+
+               $trainingRow[] = $effectValue;
+            }
+
+            if ($impactRole == 'myself') { 
+               foreach ($this->elementAttribs as $attribName => $attribInfo) {
+                  $trainingRow[] = $effectsData[$attribName]['fAdjust'] ?: 0;
+               }
+            }
+         }
+      }
+
+      $trainingRow[] = $results['settings']['timer.max'];
+      $trainingRow[] = $results['settings']['allow.revive'];
+      $trainingRow[] = str_replace('%','',$results['attacker']['chance.win']);
+      
+      var_dump($trainingRow);
    }
 
    public function formatResults($results, $options = null)
@@ -524,19 +576,6 @@ class Simulator extends Base
       if ($elementList['resist']) { $output .= sprintf(" | %s",implode(' ',$elementList['resist'])); }
 
       return $output;
-   }
-
-   public function error($errorMessage = null)
-   {
-      if (!is_null($errorMessage)) { $this->errors[] = $errorMessage; }
-      else {
-         $this->debug(8,"returning ".count($this->errors)." error(s)");
-
-         $errors = implode('; ',$this->errors);
-         $this->errors = array();
-
-         return $errors;
-      }
    }
 }
 
