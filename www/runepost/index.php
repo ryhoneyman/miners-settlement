@@ -62,7 +62,6 @@ function areaDisplay($main, $areaName, $areaPosts)
              '<div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">'.
              '<div class="card card-outline card-success">'.
              '<div class="card-header"><b class="text-xl" id="area-'.strtolower(preg_replace('/\W/','-',$areaName)).'">'.$areaName.'</b>'.
-             '<div class="card-tools"><a href="#"><button type="button" class="btn btn-tool"><i class="fas fa-level-up"></i></button></a></div>'.
              '</div>'.
              '<div class="card-body">'.
              '<div class="row">';
@@ -84,7 +83,9 @@ function runepostDisplay($main, $postName, $postInfo)
 {
    $return = '<div class="col-12">'.
              '<div class="card card-outline card-warning">'.
-             '<div class="card-header"><b class="text-lg">'.$postName.'</b></div>'.
+             '<div class="card-header"><b class="text-lg">'.$postName.'</b>'.
+             '<div class="card-tools"><a href="#"><button type="button" class="btn btn-tool"><i class="fas fa-level-up"></i></button></a></div>'.
+             '</div>'.
              '<div class="card-body">'.
              '<table class="table table-striped table-hover" border=0 cellpadding=10>'.
              '<thead><tr class="text-yellow"><th style="width:25%">Name</th><th style="width:25%">Gear</th><th style="width:35%">Effects</th><th style="width:15%">Required Runes</th></tr></thead><tbody>';
@@ -172,7 +173,7 @@ function getRunewords($main)
 {
    $runewordList = array();
 
-   $results = $main->db()->query("select rw.*, rp.label as runepost_label, l.area as location_area, l.section as location_section ".
+   $results = $main->db()->query("select rw.*, rp.label as runepost_label, rp.attributes as runepost_attributes, l.area as location_area, l.section as location_section ".
                                  "from runeword rw, runepost rp, location l ".
                                  "where rw.runepost_id = rp.id and rp.location_id = l.id and rw.active = 1 and rp.active = 1 and l.active = 1");
 
@@ -180,6 +181,11 @@ function getRunewords($main)
       $areaName    = $resultInfo['location_area'];
       $sectionName = $resultInfo['location_section'];
       $postLabel   = $resultInfo['runepost_label'];
+      $postAttribs = json_decode($resultInfo['runepost_attributes'],true);
+
+      if (!is_null($postAttribs)) { 
+         if ($postAttribs['exclusive']) { $postLabel .= " <span class='text-yellow text-sm'>(only applies in this area)</span>"; }
+      }
 
       $runewordList[$areaName][$postLabel][$resultId] = $resultInfo;
    }    
