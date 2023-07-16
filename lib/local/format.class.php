@@ -59,11 +59,11 @@ class Format extends Base
 
    public function effects($effectList, $web = false)
    {
-      $return         = '';
-      $lineBreak      = ($web) ? "<br>\n" : "\n";
-      $effectDesc     = $this->constants->effectDesc();
-      $effectDepth    = $this->arrays->arrayDepth($effectList);
-      $elementAttribs = $this->constants->elementAttribs();
+      $return      = '';
+      $lineBreak   = ($web) ? "<br>\n" : "\n";
+      $effectDesc  = $this->constants->effectDesc();
+      $effectDepth = $this->arrays->arrayDepth($effectList);
+      $attribs     = $this->constants->attribs();
 
       foreach ($effectList as $affects => $effectAttribList) {
          foreach ($effectAttribList as $attribName => $attribList) {
@@ -88,8 +88,8 @@ class Format extends Base
                // We don't need the negative numbers here, the descriptions will say slower or faster
                $effectInfo['percent.adjust'] = abs($effectInfo['percent.adjust']);
 
-               $effectInfo['color'] = $elementAttribs[$attribName]['color'];
-               $effectInfo['icon']  = $elementAttribs[$attribName]['icon'];
+               $effectInfo['color'] = $attribs[$attribName]['color'];
+               $effectInfo['icon']  = $attribs[$attribName]['icon'];
 
                $formatFill = array();
                foreach ($vars as $var) { $formatFill[$var] = $effectInfo[$var]; }
