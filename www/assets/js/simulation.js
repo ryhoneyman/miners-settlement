@@ -24,7 +24,7 @@ function updateScalableGear(gearType, clearStats = false, refreshRunes = false)
 
    $.ajax({url:'/simulation/scalable/gearstats.php?clear='+clearStats+'&type='+gearType+'&hash='+gearHash, async:true}).done(function(data) { $('#'+gearType+'-stats').html(data); $('.stats').select2(statsOptions); });
 
-   if (refreshRunes) { updateRunes('scalable'); }
+   if (refreshRunes) { updateRunes('scalablesim'); }
 }
 
 function loadScalableSimulationResults() 
