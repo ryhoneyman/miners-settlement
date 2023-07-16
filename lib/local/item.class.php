@@ -250,7 +250,7 @@ class Item extends Base
    {
       $this->debug(8,"called");
 
-      if ($this->is_json($itemInfo)) { $itemInfo = json_decode($itemInfo,true); }
+      if ($this->isJson($itemInfo)) { $itemInfo = json_decode($itemInfo,true); }
 
       if (!is_array($itemInfo)) { $this->debug(7,"invalid info provided"); return false; }
 

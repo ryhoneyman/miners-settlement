@@ -14,7 +14,6 @@ include_once 'base.class.php';
 class Random extends Base
 {
    protected $version  = 1.0;
-   private   $errors   = array();
 
    //===================================================================================================
    // Description: Creates the class object
@@ -138,19 +137,6 @@ class Random extends Base
       $bytes = random_bytes(ceil($length/2));
 
       return substr(bin2hex($bytes),0,$length);
-   }
-
-   public function error($errorMessage = null)
-   {
-      if (!is_null($errorMessage)) { $this->errors[] = $errorMessage; }
-      else {
-         $this->debug(8,"returning ".count($this->errors)." error(s)");
-
-         $errors = implode('; ',$this->errors);
-         $this->errors = array();
-
-         return $errors;
-      }
    }
 }
 

@@ -222,7 +222,7 @@ class Entity extends Base
    {
       $this->debug(9,"called");
 
-      if ($this->is_json($entityInfo)) { $entityInfo = json_decode($entityInfo,true); }
+      if ($this->isJson($entityInfo)) { $entityInfo = json_decode($entityInfo,true); }
 
       if (!is_array($entityInfo)) { $this->debug(7,"invalid entity info provided"); return false; }
 

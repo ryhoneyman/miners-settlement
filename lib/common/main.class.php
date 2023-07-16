@@ -19,7 +19,6 @@ class Main extends Base
    public    $autoLoad    = false;
    public    $cliApp      = null;
    public    $webApp      = null;
-   public    $errors      = array();
 
    public function __construct($options = null)
    {
@@ -359,19 +358,6 @@ class Main extends Base
    }
 
    public function obj($name) { return $this->objects[$name]; }
-
-   public function error($errorMessage = null)
-   {
-      if (!is_null($errorMessage)) { $this->errors[] = $errorMessage; }
-      else {
-         $this->debug(8,"returning ".count($this->errors)." error(s)");
-
-         $errors = implode('; ',$this->errors);
-         $this->errors = array();
-
-         return $errors;
-      }
-   }
 }
 
 ?>

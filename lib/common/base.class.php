@@ -35,6 +35,7 @@ class Base
    protected $debug     = null;
    protected $options   = array();
    protected $vars      = array();
+   protected $errors    = array();
 
    //===================================================================================================
    // Description: Returns version of this class.
@@ -97,14 +98,24 @@ class Base
    // Input: array(array), Name of array to check
    // Output: boolean(value), True if array was associative
    //===================================================================================================
-   public function is_assoc($array) {
+   public function isAssoc($array) {
        return (is_array($array) && 0 !== count(array_diff_key($array, array_keys(array_keys($array)))));
    }
 
-   public function is_json($string) {
+   public function isJson($string) {
       return (!empty($string) && is_string($string) && is_array(json_decode($string,true)) && json_last_error() == 0);
    }
 
+   public function error($errorMessage = null)
+   {
+      if (!is_null($errorMessage)) { $this->errors[] = $errorMessage; }
+      else {
+         $errors = implode('; ',$this->errors);
+         $this->errors = array();
+
+         return $errors;
+      }
+   }
 }
 
 ?>

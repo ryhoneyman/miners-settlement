@@ -440,7 +440,7 @@ class HTML extends Base
          else { $selected[$select] = 1; }
       }
 
-      if (!$this->is_assoc($values) && !$assoc) {
+      if (!$this->isAssoc($values) && !$assoc) {
          foreach ($values as $item) { $options[$item] = $item; }
       }
       else { $options = $values; }

@@ -32,10 +32,12 @@ class Battle extends Base
          $this->debug(9,"Detected fast start, loading pre-calculated data from previous run!");
       }
       else {
-         $this->initBattleInfo(array(
+         $initResult = $this->initBattleInfo(array(
             'attacker' => $attacker,
             'defender' => $defender,
          ),$options);
+
+         if ($initResult === false) { $this->error("Could not initialize battle system"); return false; }
       }
 
       $this->debug(7,"MAIN BATTLEINFO: ".json_encode($this->battleInfo,JSON_UNESCAPED_SLASHES));
@@ -118,10 +120,10 @@ class Battle extends Base
       foreach ($entityList as $role => $entity) {
          $this->debug(9,"initialize battle info for $role");
 
-         if (!is_a($entity,'Entity')) { $this->debug(9,"valid entity not provided"); return false; }
+         if (!is_a($entity,'Entity')) { $this->error("valid entity not provided"); return false; }
 
          $entityName  = $entity->name();
-         $entityItems = $entity->items('name');
+         $entityItems = $entity->items('id');
          $entityRunes = $entity->runes();
          $runeList    = array();
 
@@ -130,20 +132,21 @@ class Battle extends Base
          $this->debug(9,"found ".count($entityRunes)." runes for $role");
 
          // decode rune attribs 
-         foreach ($entityRunes as $runeName => $rune) {
-            $itemRequired = $rune->requires();
+         foreach ($entityRunes as $runeName => $runeObj) {
+            $requiredItems = $runeObj->requires();
 
-            if ($itemRequired) {
-               $this->debug(9,"processing $runeName for $entityName (requires $itemRequired)");
+            if ($requiredItems) {
+               $this->debug(9,"processing $runeName for $entityName (requires ".json_encode($requiredItems).")");
 
-               if (!array_key_exists($rune->requires(),$entityItems)) {
-                  $this->debug(9,"required item $itemRequired not equipped, will not use rune");
-                  print "REQUIRED ITEM NOT EQUIPED FOR $runeName (needs $itemRequired)\n";
-                  exit;
+               foreach ($requiredItems as $requiredItem) {
+                  if (!array_key_exists($requiredItem,$entityItems)) {
+                     $this->error("required item $requiredItem not equipped, will not use rune $runeName");
+                     return false;
+                  }
                }
             }
  
-            $runeList[$runeName] = $rune->attribs();
+            $runeList[$runeName] = $runeObj->attribs();
          }
 
          // add any extra innate effects (monsters don't use runes, so this is typically used with monsters)
@@ -258,6 +261,11 @@ class Battle extends Base
       $this->battleInfo['fast.start'] = $this->battleInfo;
 
       return $this->battleInfo;
+   }
+
+   public function generateFastStart($data)
+   {
+      
    }
 
    public function entityTurn($role)

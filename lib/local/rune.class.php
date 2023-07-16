@@ -19,7 +19,7 @@ class Rune extends Base
    {
       $this->debug(8,"called");
 
-      if ($this->is_json($runeInfo)) { $runeInfo = json_decode($runeInfo,true); }
+      if ($this->isJson($runeInfo)) { $runeInfo = json_decode($runeInfo,true); }
 
       if (is_array($runeInfo)) { foreach ($runeInfo as $name => $value) { $this->var($name,$value); } }
 
