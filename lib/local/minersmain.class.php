@@ -229,10 +229,12 @@ class MinersMain extends Main
          $result    = $this->db()->query("select * from item where type in ($typeList) and active = 1 order by tier asc, name asc",
                                          array('keyid' => $keyId));
 
-         foreach ($result as $resultId => $resultInfo) {
-            if ($subType == 'bytype') { $listData[$resultInfo['type']][$resultId] = $resultInfo; }
-            else { $listData[$resultId] = $resultInfo; }
+         if ($result === false) { $this->error('Could not query item list'); return false; }
+
+         if ($subType == 'bytype') {
+            foreach ($result as $resultId => $resultInfo) { $listData[$resultInfo['type']][$resultId] = $resultInfo; }
          }
+         else { $listData = $result; }
       }
       else if ($type == 'runeword') {
          $listData = $this->db()->query("select * from runeword where active = 1 order by name asc",array('keyid' => $keyId));
@@ -246,10 +248,10 @@ class MinersMain extends Main
 
          if ($result === false) { $this->error('Could not query gear list'); return false; }
 
-         foreach ($result as $resultId => $resultInfo) {
-            if ($subType == 'bytype') { $listData[$resultInfo['type']][$resultId] = $resultInfo; }
-            else { $listData[$resultId] = $resultInfo; }
+         if ($subType == 'bytype') {
+            foreach ($result as $resultId => $resultInfo) { $listData[$resultInfo['type']][$resultId] = $resultInfo; }
          }
+         else { $listData = $result; }
       }
       else if ($type == 'player') {
          $userId   = $this->userId;
