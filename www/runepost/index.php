@@ -96,9 +96,16 @@ function runepostDisplay($main, $postName, $postInfo)
       $runewordName  = $entryInfo['label'];
       $entryCost     = json_decode($entryInfo['cost'],true);
       $entryAttrib   = json_decode($entryInfo['attributes'],true);
-      $itemLabel     = $gearInfo[$entryInfo['item_id']]['label'] ?: 'None';
-      $itemImage     = $gearInfo[$entryInfo['item_id']]['image'];
-      $itemInsert    = ($itemImage) ? sprintf("<img src='%s' height=50 data-toggle='tooltip' title=\"%s\"> <span class='text-green'>$itemLabel</span>",$itemImage,$itemLabel) : $itemLabel;
+      $itemRequired  = json_decode($entryInfo['requires'],true) ?: array('');
+      $itemList      = array();
+
+      foreach ($itemRequired as $itemName) {
+         $itemLabel  = $gearInfo[$itemName]['label'] ?: 'None';
+         $itemImage  = $gearInfo[$itemName]['image'];
+         $itemList[] = ($itemImage) ? sprintf("<div class='mb-1'><img src='%s' height=50 data-toggle='tooltip' title=\"%s\"> <span class='text-green'>$itemLabel</span></div>",$itemImage,$itemLabel) : $itemLabel;
+      }
+
+      $itemInsert    = implode('',$itemList);
       $requiredRunes = array();
       $runeEffects   = '';
 
@@ -133,20 +140,23 @@ function getSupportingGearInfo($main)
 
    if (!$runewordList) { return array(); }
 
-   $gearIds = array();
+   $gearNames = array();
 
    foreach ($runewordList as $areaName => $areaPosts) {
       foreach ($areaPosts as $postName => $postInfo) {
          foreach ($postInfo as $runewordId => $runewordInfo) {
-            $gearId = $runewordInfo['item_id'] ?: null;
-            if (!is_null($gearId)) { $gearIds[$gearId]++; }
+            $gearRequired = json_decode($runewordInfo['requires'],true) ?: null;
+
+            if (!is_null($gearRequired)) { foreach ($gearRequired as $gearName) { $gearNames[$gearName]++; } }
          }
       }
    }
 
-   if (!$gearIds) { return array();; }
+   if (!$gearNames) { return array();; }
 
-   $itemList = $main->db()->query("select * from item where id in (".implode(',',array_keys($gearIds)).")");
+   $nameList = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\-]/','',$value)."'"; },
+                              array_unique(array_filter(array_keys($gearNames)))));
+   $itemList = $main->db()->query("select * from item where name in ($nameList)",array('keyid' => 'name'));
 
    return $itemList;
 }
