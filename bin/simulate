@@ -20,7 +20,7 @@ $main->buildClass('simulator','Simulator',array('db' => $main->db()),'local/simu
 
 $simulator = $main->obj('simulator');
 
-$opts = getopt(null,array('verbose','short','debug:','type:','area:','attacker:','aname:','defender:','iterations:','godroll','enhance:','adjust:','equip:','runes:'));
+$opts = getopt(null,array('verbose','short','debug:','type:','area:','attacker:','aname:','defender:','iterations:','godroll','enhance:','adjust:','equip:','runes:','ml'));
 
 $debugLevel    = $opts['debug'] ?: 0;
 $verbose       = (isset($opts['verbose'])) ? true : false;
@@ -35,8 +35,10 @@ $uAdjust       = $opts['adjust'] ?: null;
 $uEnhance      = $opts['enhance'] ?: null;
 $uEquip        = $opts['equip'] ?: null;
 $uRunes        = $opts['runes'] ?: null;
+$trainML       = (isset($opts['ml'])) ? true : false;
 
-if ($uArea) { $simulateType = 'area'; }
+if ($uArea)   { $simulateType = 'area'; }
+if ($trainML) { $simulateType = 'ml'; }
 
 $main->debug->level($debugLevel);
 
@@ -61,6 +63,29 @@ if (preg_match('/^(pve|pvp)$/i',$simulateType) && $defenderName) {
    if ($verbose) { print json_encode($results,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)."\n"; }
 
    print "\n".$simulator->formatResults($results,array('short' => $shortResults, 'name' => $testName))."\n\n\n";
+}
+else if (preg_match('/^ml$/i',$simulateType) && $defenderName) {
+   $simParams = $baseConfig;
+
+   $gearRanges = array('level' => range(0,10,5), 'enhance' => range(0,100,50));
+   $gearPerms  = array();
+   $equipPerms = array();
+
+   foreach (generatePermutations($gearRanges,false) as $permutation) { $gearPerms[] = implode(':',$permutation); }
+
+   $equipRanges = array('weapon' => $gearPerms, 'shield' => $gearPerms, 'amulet' => $gearPerms, 'ring' => $gearPerms, 'weapon-skin' => $gearPerms, 'shield-skin' => $gearPerms);
+
+   foreach (generatePermutations($equipRanges,true) as $permutation) { $equipPerms[] = $permutation; } 
+
+   print count($equipPerms)."\n";
+
+   //var_dump($equipPerms);
+
+   exit;
+
+   $results   = $simulator->start($simParams);
+
+   $simulator->formatResultsTraining($results);
 }
 /*
 else if (preg_match('/^(tower)/i',$simulateType) && $attackerBuild) {
@@ -212,5 +237,26 @@ else if (preg_match('/^(minimum)/i',$simulateType) && $uEquip) {
 
 ?>
 <?php
+
+function generatePermutations(array $array, bool $preserveKeys = false): Generator
+{
+    if ($preserveKeys) {
+        end($array);
+        $key = key($array);
+    }
+
+    foreach (array_pop($array) as $value) {
+        $item = isset($key) ? [$key => $value] : [$value];
+
+        if (!count($array)) {
+            yield $item;
+            continue;
+        }
+
+        foreach (generatePermutations($array, $preserveKeys) as $combination) {
+            yield array_merge($item, $combination);
+        }
+    }
+}
 
 ?>
