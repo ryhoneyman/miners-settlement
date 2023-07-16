@@ -31,8 +31,10 @@ $versionList = array(
       </div>
       <div class="card-body">
         <ul>
+          <li><span class='text-green'>Frontend:</span> Fixed runeword selection on Scalable Simulation</li>
           <li><span class='text-green'>Frontend:</span> Runewords can now recognize multiple items to activate</li>
           <li><span class='text-red'>Backend:</span> Updated all runeword requirement structures</li>
+          <li><span class='text-red'>Backend:</span> Added runeposts with area-exclusive runewords</li>
         </ul>
       </div>
     </div>
