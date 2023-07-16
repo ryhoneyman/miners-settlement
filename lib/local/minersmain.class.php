@@ -235,13 +235,9 @@ class MinersMain extends Main
          }
       }
       else if ($type == 'runeword') {
-         $result = $this->db()->query("select rw.*, i.name as item_name from runeword rw left join item i on rw.item_id = i.id ".
-                                      "where rw.active = 1 order by rw.name asc",array('keyid' => $keyId));
+         $listData = $this->db()->query("select * from runeword where active = 1 order by name asc",array('keyid' => $keyId));
 
-         foreach ($result as $resultId => $resultInfo) {
-            $itemName = $resultInfo['item_name'] ?: '';
-            $listData[$itemName][$resultId] = $resultInfo;
-         }
+         if ($listData === false) { $this->error('Could not query runeword list'); return false; }
       }
       else if ($type == 'playergear') {
          $userId = $this->userId;
