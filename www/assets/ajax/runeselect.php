@@ -53,29 +53,31 @@ function pageDisplay($main)
       $gearLookup = $main->getPlayerGearList();
    }
 
-   $runeList     = array();
-   $gearRuneList = array('' => 'General');
-   $runewordList = $main->getRunewordList();
+   $runeSelectList = array();
+   $runewordList   = $main->getRunewordList();
 
+   $gearNames = array();
    foreach ($main->obj('constants')->gearTypes() as $gearType => $gearTypeLabel) {
-      if (!preg_match('/^(none|)$/i',$gearState[$gearType])) { $gearRuneList[$gearState[$gearType]] = $gearTypeLabel; }
-   }
-
-   // Load all item non-specific runes
-   foreach ($runewordList[''] as $runeId => $runeInfo) {
-      $runeList[$gearRuneList['']][$runeInfo['name']] = $runeInfo['label'];
-   }
-
-   foreach ($gearRuneList as $gearHash => $gearTypeLabel) {
-      $gearId    = $hashLookup[$gearHash];
-      $gearName  = $gearLookup[$gearId]['name'];
-      $gearRunes = $runewordList[$gearName];
-
-      if (!$gearName || !$gearRunes) { continue; }
-
-      foreach ($gearRunes as $runeId => $runeInfo) { 
-         $runeList[$gearTypeLabel][$runeInfo['name']] = $runeInfo['label']; 
+      if (!preg_match('/^(none|)$/i',$gearState[$gearType])) { 
+         $gearHash = $gearState[$gearType]; 
+         $gearId   = $hashLookup[$gearHash];
+         $gearName = $gearLookup[$gearId]['name'];
+ 
+         if ($gearName) { $gearNames[$gearName] = $gearTypeLabel; }
       }
+   }
+
+   foreach ($runewordList as $runeId => $runeInfo) {
+      $runeRequires = json_decode($runeInfo['requires'],true);
+
+      if ($runeRequires) {
+         $runeCheck = array_values(array_intersect_key($gearNames,array_flip($runeRequires)));
+         if (count($runeRequires) > count($runeCheck)) { continue; }
+      }
+
+      $runeSection = (!$runeRequires) ? 'General' : implode(' and ',$runeCheck);
+
+      $runeList[$runeSection][$runeInfo['name']] = $runeInfo['label'];
    }
 
    $selectOpts = array('id' => 'runes', 'class' => 'form-control runes', 'multi' => true);
