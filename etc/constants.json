@@ -294,6 +294,12 @@
     },
     "effectDesc": {
         "myself": {
+            "health": {
+                "format": "HEALTH POINTS: %d",
+                "vars": ["flat.adjust"],
+                "web-format": "<span class='%s'>{{format}} <i class='fas %s'></i></span>",
+                "web-vars": ["color","flat.adjust","icon"]
+            },
             "stun-resist": {
                 "format": "STUN RESIST: %d%%", 
                 "vars": ["percent.adjust"]
