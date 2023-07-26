@@ -33,6 +33,7 @@ $enhanceCosts = array(
    '11' => array('coin' => 50, 'sacred-soul-stone' => 250, 'material' => array('rune-vii' => 3), 'shard' => 500, 'chance' => 0.2),
    '12' => array('coin' => 100, 'sacred-soul-stone' => 500, 'material' => array('rune-viii' => 3), 'shard' => 1000, 'chance' => 0.1),
    '13' => array('coin' => 250, 'sacred-soul-stone' => 1250, 'material' => array('rune-ix' => 3), 'shard' => 2000, 'chance' => 0.08),
+   '14' => array('coin' => 0, 'sacred-soul-stone' => 2500, 'material' => array('rune-x' => 1, 'rune-xi' => 1, 'rune-xii' => 1), 'shard' => 0, 'chance' => 0.05),
 );
 
 $runeBoosts = array(
@@ -121,10 +122,17 @@ function enhanceDisplay($main)
    $enhanceCosts = $main->var('enhanceCosts');
 
    $itemList = array("'trade-coin'","'sacred-soul-stone'","'shard'");
-   foreach ($enhanceCosts as $enhanceLevel => $enhanceInfo) { $itemList[] = "'".key($enhanceInfo['material'])."'"; }
+   foreach ($enhanceCosts as $enhanceLevel => $enhanceInfo) { 
+      if (is_array($enhanceInfo['material'])) { 
+         foreach ($enhanceInfo['material'] as $materialName => $materialCount) {
+            $itemList[] = "'$materialName'"; 
+         }
+      }
+   }
 
    $itemResults = $main->db()->query("select name,label,image from item where name in (".implode(',',$itemList).")");
    $imageFormat = "<img src='%s' height=20 data-toggle='tooltip' title='%s'>";
+   $countFormat = "<span class='text-%s'>x %s</span>";
 
    $coinImage      = sprintf($imageFormat,$itemResults['trade-coin']['image'],$itemResults['trade-coin']['label']);
    $soulstoneImage = sprintf($imageFormat,$itemResults['sacred-soul-stone']['image'],$itemResults['sacred-soul-stone']['label']);
@@ -136,17 +144,23 @@ function enhanceDisplay($main)
       $coinCount      = $enhanceInfo['coin'];
       $soulstoneCount = $enhanceInfo['sacred-soul-stone'];
       $shardCount     = $enhanceInfo['shard'];
-      $materialImage  = ($itemResults[$materialName]['image']) ? sprintf("<img src='%s' height=35 data-toggle='tooltip' title='%s'>",$itemResults[$materialName]['image'],$itemResults[$materialName]['label']) : '';
 
-      if (!$coinCount || !$soulstoneCount || !$shardCount) { continue; }
+      $materialList = array();
+      foreach ($enhanceInfo['material'] as $materialName => $materialCount) {
+         $materialResult = $itemResults[$materialName];
+         $materialList[] = ($materialResult['image']) ? sprintf("<img src='%s' height=35 data-toggle='tooltip' title='%s'> %s",
+                                                                $materialResult['image'],$materialResult['label'],sprintf($countFormat,'white',$format->numericReducer($materialCount))) : '';
+      }
 
-      $countFormat = "<span class='text-%s'>x %s</span>";
+      var_dump($materialList);
+
+      if (!$soulstoneCount) { continue; }
 
       $levelDisplay     = "<span class='text-lg text-bold'>+".$enhanceLevel."<span>";
       $coinDisplay      = "$coinImage ".sprintf($countFormat,'white',$format->numericReducer($coinCount));
       $soulstoneDisplay = "$soulstoneImage ".sprintf($countFormat,'white',$format->numericReducer($soulstoneCount));
       $shardDisplay     = "$shardImage ".sprintf($countFormat,'white',$format->numericReducer($shardCount));
-      $materialDisplay  = "$materialImage ".sprintf($countFormat,'white',$format->numericReducer($materialCount));
+      $materialDisplay  = implode('<br>',$materialList);
       $successDisplay   = sprintf("<span class='text-green text-lg text-bold'>%s%%</span>",$enhanceInfo['chance']);
 
       $return .= sprintf("<tr><td>%s</td><td>%s</td><td class='text-center'>%s</td><td>%s</td><td>%s</td><td class='text-right'>%s</td></tr>",
