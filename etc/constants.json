@@ -1,5 +1,5 @@
 {
-    "maxEnhanceLevel": 15,
+    "maxEnhanceLevel": 14,
     "baseAttribs": {
         "attack": {"innateGear": "weapon", "innateValue": 1},
         "speed": {"innateGear": "weapon", "innateValue": 1},
