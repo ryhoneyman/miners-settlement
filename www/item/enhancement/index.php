@@ -152,8 +152,6 @@ function enhanceDisplay($main)
                                                                 $materialResult['image'],$materialResult['label'],sprintf($countFormat,'white',$format->numericReducer($materialCount))) : '';
       }
 
-      var_dump($materialList);
-
       if (!$soulstoneCount) { continue; }
 
       $levelDisplay     = "<span class='text-lg text-bold'>+".$enhanceLevel."<span>";
