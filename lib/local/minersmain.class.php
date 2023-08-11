@@ -226,7 +226,7 @@ class MinersMain extends Main
          $gearTypes = $this->obj('constants')->gearTypes();
          $typeList  = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\-]/','',$value)."'"; },
                                             array_unique(array_filter(array_keys($gearTypes)))));
-         $result    = $this->db()->query("select * from item where type in ($typeList) and active = 1 order by tier asc, name asc",
+         $result    = $this->db()->query("select * from item where type in ($typeList) and active = 1 order by tier asc, ranking asc, name asc",
                                          array('keyid' => $keyId));
 
          if ($result === false) { $this->error('Could not query item list'); return false; }
