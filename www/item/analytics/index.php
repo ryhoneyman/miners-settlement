@@ -561,9 +561,9 @@ function buildItemInfo($itemInfo, $itemInput)
       $levelMax     = $attribMax + (($attribMax * $enhanceCalc['percent']/100) * $itemLevel);
 
       if ($enhanceCalc['round']) { 
-         $attribEMax   = round($attribEMax,0,PHP_ROUND_HALF_DOWN); 
-         $levelMin     = round($levelMin,0,PHP_ROUND_HALF_DOWN);
-         $levelMax     = round($levelMax,0,PHP_ROUND_HALF_DOWN);
+         $attribEMax   = $main->fvRound($attribEMax); 
+         $levelMin     = $main->fvRound($levelMin);
+         $levelMax     = $main->fvRound($levelMax);
       }
 
       $levelPercent = ($levelMin == $levelMax) ? 100 : 
