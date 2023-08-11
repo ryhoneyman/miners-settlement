@@ -427,6 +427,11 @@ class MinersMain extends Main
       return $success;
    }
 
+   public function fvRound($value, $options = null)
+   {
+      return round($value,0,PHP_ROUND_HALF_ODD);
+   }
+
    public function logger($name, $data, $options = null)
    {
       $userId   = $this->userId;
