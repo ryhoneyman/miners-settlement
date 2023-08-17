@@ -434,7 +434,7 @@ class MinersMain extends Main
 
    public function logger($name, $data, $options = null)
    {
-      $userId   = $this->userId;
+      $userId   = $this->userId ?: 'none';
       $dbResult = $this->db()->bindExecute("insert into log (profile_id,remote_addr,name,data,created) value (?,?,?,?,now())",
                                            "ssss",array($userId,$_SERVER['REMOTE_ADDR'],$name,json_encode($data,JSON_UNESCAPED_SLASHES)));
 
