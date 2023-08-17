@@ -55,14 +55,14 @@ class Main extends Base
 
       if ($options['memoryLimit']) { $this->setMemoryLimit($options['memoryLimit']); }
 
+      // Class initialization
+      $this->initialize($options);
+
       // Pre-initialize startup hooks
       if ($this->webApp) { 
          $this->setDefaultTimezone($options['timezone']);
          $this->webhookInit();
       }
-
-      // Class initialization
-      $this->initialize($options);
 
       if ($options['sendCookies']) { $this->sendCookies($options['sendCookies']); }
       if ($options['sendHeaders']) { $this->sendHeaders($options['sendHeaders']); }
