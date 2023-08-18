@@ -18,6 +18,13 @@ include 'ui/header.php';
 
 ?>
 
+<div class="row mb-4">
+   <div class="col-12">
+      <h1>Welcome to Miners Tools!</h1>
+      <h3>This site offers a comprehensive collection of information and resources for players of the <a href='https://funventure.eu/miners_settlement/'>Miners Settlement</a> game.</h3>
+   </div>
+</div>
+
 <div class="row">
 
    <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">

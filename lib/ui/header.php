@@ -9,9 +9,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="description" content="Miners Tools offers informative resources for players of the game Miners Settlement.">
+  <meta name="robots" content="index, follow">
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 
-  <title><?php print 'Miners Tools: '.$main->title(); ?></title>
+  <title><?php print 'Miners Tools: '.($main->title() ?: 'Miners Settlement Information'); ?></title>
 <!-- REQUIRED SCRIPTS -->
 <!-- jQuery -->
 <script src="/assets/alte/current/plugins/jquery/jquery.min.js"></script>
