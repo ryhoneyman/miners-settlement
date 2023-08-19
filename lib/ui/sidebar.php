@@ -69,52 +69,15 @@
                </a>
             </li>
 
-
-<!--
-            <li class="nav-header"><b>MONSTERS</b></li>
+            <li class="nav-header"><b>TOOLS</b></li>
 
             <li class="nav-item">
-               <a href="//" class="nav-link<?php if(preg_match("~^//~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fa fa-skull"></i>
-                  <p> Dungeon </p>
+               <a href="/tools/colorpicker" class="nav-link<?php if (preg_match('~^/tools/colorpicker/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
+                  <i class="nav-icon fa fa-palette"></i>
+                  <p> Color Picker </p>
                </a>
             </li>
 
-            <li class="nav-item">
-               <a href="//" class="nav-link<?php if(preg_match("~^//~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fa fa-skull"></i>
-                  <p> Caves </p>
-               </a>
-            </li>
-
-            <li class="nav-item">
-               <a href="//" class="nav-link<?php if(preg_match("~^//~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fa fa-skull"></i>
-                  <p> Mitar </p>
-               </a>
-            </li>
-
-            <li class="nav-item">
-               <a href="//" class="nav-link<?php if(preg_match("~^//~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fa fa-skull"></i>
-                  <p> Einlor </p>
-               </a>
-            </li>
-
-            <li class="nav-item">
-               <a href="//" class="nav-link<?php if(preg_match("~^//~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fa fa-skull"></i>
-                  <p> Scrolls </p>
-               </a>
-            </li>
-
-            <li class="nav-item">
-               <a href="//" class="nav-link<?php if(preg_match("~^//~i",$_SERVER['PHP_SELF'])){ echo " active"; } ?>">
-                  <i class="nav-icon fa fa-skull"></i>
-                  <p> Dragons </p>
-               </a>
-            </li>
--->
             <li class="nav-header mt-3"><b></b></li>
 
             <li class="nav-item">
