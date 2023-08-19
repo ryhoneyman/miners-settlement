@@ -39,7 +39,7 @@ function guideDisplay($main)
    $request = $main->obj('request');
 
    $baseURL        = 'https://minersettlementguide.github.io/zero2hero';
-   $containerClass = 'col-12 col-xl-6 col-lg-9';
+   $containerClass = 'col-12 col-xl-6 col-lg-9 mx-auto';
 
    $return    = '';
    $result    = $request->get(sprintf("%s/data/guide.json",$baseURL));
