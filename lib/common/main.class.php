@@ -196,6 +196,10 @@ class Main extends Base
          $this->loadConstantsFromDB($options['constants']);
       }
 
+      if ($options['request']) {
+         if (!$this->buildClass('request','Request',null,'request.class.php')) { exit; }
+      }
+
       if ($options['input']) {
          if (!$this->buildClass('input','Input',null,'input.class.php')) { exit; }
       }
