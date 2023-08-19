@@ -1,0 +1,93 @@
+/* 3 Digit Hex Color Picker - Containers */
+.grid-color-picker-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    gap: 0px 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid #000000;
+    border-collapse: collapse;
+}
+
+.flex-color-picker-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-color: #121212;
+}
+
+.flex-color-picker-column:nth-child(2) {
+    padding-bottom: 35px;
+}
+
+/* 3 Digit Hex Color Picker - Output Row */
+.output-color-box {
+    height: 150px;
+    width: 200px;
+    margin: 25px;
+    background-color: #F00;
+    border: 2px solid #000000;
+}
+
+.output-color-text {
+    height: 42px;
+    width: 120px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 17px;
+    letter-spacing: 1px;
+    color: #FFF;
+    background-color: #363636;
+    border: 1px solid #000000;
+}
+
+.output-color-text:focus {
+    outline: none;
+}
+
+/* 3 Digit Hex Color Picker - Selection Row */
+.flex-color-sliders {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 15px;
+}
+
+.color-slider-box {
+    height: 25px;
+    width: 25px;
+    margin-right: 25px;
+    border: 1px solid #000000;
+}
+
+.input-slider {
+    width: 150px;
+}
+
+/* 3 Digit Hex Color Picker - Background Colors */
+.red-bg {
+    background-color: #F00;
+}
+
+.green-bg {
+    background-color: #0F0;
+}
+
+.blue-bg {
+    background-color: #00F;
+}
+
+.gray-bg {
+    background-color: #454545;
+}
+
+/* 3 Digit Hex Color Picker - Background Colors */
+.picker-validation-border {
+    border: 2px solid #FF0000;
+    border-collapse: collapse;
+}
