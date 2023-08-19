@@ -84,7 +84,6 @@ function guideDisplay($main)
                                     </div>
                                 </div>
                             </div>
-                            <img class="mb-2" src="'.$baseURL.'/data/img/start/character_creation.png" width=100% alt="character creation">
                         ',array('title' => 'Name - Color Picker', 'container' => $containerClass)));
 
    foreach ($guideData['content'] as $sectionInfo) {
