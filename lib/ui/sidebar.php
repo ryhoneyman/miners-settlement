@@ -33,7 +33,7 @@
             <li class="nav-header"><b>ITEMS</b></li>
 
             <li class="nav-item">
-               <a href="/item/crafting" class="nav-link<?php if (preg_match('~^/item/crafting/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
+               <a href="/item/crafting/scheme/" class="nav-link<?php if (preg_match('~^/item/crafting/sceheme/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
                   <i class="nav-icon fa fa-puzzle-piece"></i>
                   <p> Scheme Crafting </p>
                </a>
