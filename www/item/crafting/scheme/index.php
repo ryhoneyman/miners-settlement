@@ -58,7 +58,7 @@ function craftingDisplay($main)
    foreach ($craftingList['scheme'] as $entryId => $entryInfo) {
       $entryName  = $entryInfo['label'];
       $entryImage = ($entryInfo['image']) ? sprintf("<img src='%s' height=25>",$entryInfo['image']) : '';;
-      $entryCost  = json_decode($entryInfo['cost'],true);
+      $entryCost  = $entryInfo['details']['cost'];
 
       $entryComponents = array();
       foreach ($entryCost['item'] as $itemName => $itemCount) {
@@ -87,12 +87,13 @@ function getCrafting($main)
    $return     = array();
 
    foreach ($result as $entryId => $entryInfo) {
-      $entryDetails = json_decode($entryInfo['details'],true);
-      $entryCost    = $entryDetails['cost'];
+      $entryInfo['details'] = json_decode($entryInfo['details'],true);
+
+      $entryCostItems = $entryInfo['details']['cost']['item'];
 
       // We need to get the info (label, image) for the components that make up the scheme
-      if (is_array($entryCost['item'])) {
-         foreach ($entryCost['item'] as $componentName => $componentCount) { $components[$componentName]++; }
+      if (is_array($entryCostItems)) {
+         foreach ($entryCostItems as $componentName => $componentCount) { $components[$componentName]++; }
       }
 
       $return['scheme'][$entryId] = $entryInfo;
