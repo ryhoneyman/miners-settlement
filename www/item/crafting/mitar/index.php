@@ -43,7 +43,7 @@ function dataDisplay($main)
 
 function craftEntry($craftList = null)
 {
-   $tdSize        = 75;
+   $tdSize        = 50;
    $tdItemFormat  = "<td width={$tdSize}px height={$tdSize}px style='background-image:url(\"/images/craft-border.png\"); background-size:contain; background-repeat:no-repeat; ".
                     "text-align:center; vertical-align:middle;'><img src='%s' width=".($tdSize-12)."px data-toggle='tooltip' title='%s'></td>";
    $tdCountFormat = "<td width=50px style='text-align:center; font-weight:bold;'>%s</a>";
