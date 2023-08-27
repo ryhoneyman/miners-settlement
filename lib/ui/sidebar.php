@@ -30,7 +30,7 @@
                </a>
             </li>
 
-            <li class="nav-header"><b>ITEMS</b></li>
+            <li class="nav-header"><b>CRAFTING</b></li>
 
             <li class="nav-item">
                <a href="/item/crafting/scheme/" class="nav-link<?php if (preg_match('~^/item/crafting/sceheme/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
@@ -38,6 +38,8 @@
                   <p> Scheme Crafting </p>
                </a>
             </li>
+
+            <li class="nav-header"><b>ITEMS</b></li>
 
             <li class="nav-item">
                <a href="/item/gear/list" class="nav-link<?php if (preg_match('~^/item/gear/list/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
