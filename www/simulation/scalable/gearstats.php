@@ -48,7 +48,7 @@ function pageDisplay($main)
 
    if (!$itemInfo) { return ''; }
 
-   $itemStats = json_decode($itemInfo['attributes'],true);
+   $itemStats = $itemInfo['attributes'];
 
    $percentList = range(0,100,10);
    $statList    = array();
