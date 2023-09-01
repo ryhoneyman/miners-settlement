@@ -283,7 +283,7 @@ class MinersMain extends Main
 
    public function getItemById($itemId)
    {
-      $result = $this->db()->query(sprintf("select * from item where id = %d and active = 1",$itemId),array('multi' => false));
+      $result = $this->getItem('id',$itemId,false);
 
       if ($result === false) { $this->error('Could not query item list'); return false; }
 
@@ -292,9 +292,47 @@ class MinersMain extends Main
 
    public function getItemByName($itemName)
    {
-      $result = $this->db()->query(sprintf("select * from item where name = '%s' and active = 1",$this->db()->escapeString($itemName)),array('multi' => false));
+      $result = $this->getItem('name',$itemName,false);
 
       if ($result === false) { $this->error('Could not query item list'); return false; }
+
+      return $result;
+   }
+
+   public function getItem($byColumn = 'name', $columnList = null, $multiSelect = true, $keyId = 'id')
+   {
+      if (!is_null($columnList) && !is_array($columnList)) { $columnList = array($columnList); }
+
+      $columnSelect = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\-]/','',$value)."'"; },
+                                            array_unique(array_filter($columnList))));
+
+      $result = $this->db()->query(sprintf("select * from item where $byColumn in (%s) and active = 1",$columnSelect),array('keyid' => $keyId, 'multi' => $multiSelect));
+
+      if ($result === false) { $this->error('Could not query item list'); return false; }
+
+      if ($multiSelect) {
+         foreach ($result as $resultId => $resultData) { $result[$resultId]['attributes'] = json_decode($resultData['attributes'],true); }
+      } 
+      else { $result['attributes'] = json_decode($result['attributes'],true); }
+
+      return $result;
+   }
+
+   public function getItemCrafting($byColumn = 'type', $columnList = null, $multiSelect = true, $keyId = 'id')
+   {
+      if (!is_null($columnList) && !is_array($columnList)) { $columnList = array($columnList); }
+
+      $columnSelect = implode(',',array_map(function($value) { return "'".preg_replace('/[^\w\-]/','',$value)."'"; },
+                                            array_unique(array_filter($columnList))));
+
+      $result = $this->db()->query(sprintf("select * from item_crafting where $byColumn in (%s) and active = 1",$columnSelect),array('keyid' => $keyId, 'multi' => $multiSelect));
+
+      if ($result === false) { $this->error('Could not query item crafting list'); return false; }
+
+      if ($multiSelect) {
+         foreach ($result as $resultId => $resultData) { $result[$resultId]['details'] = json_decode($resultData['details'],true); }
+      } 
+      else { $result['details'] = json_decode($result['details'],true); }
 
       return $result;
    }
