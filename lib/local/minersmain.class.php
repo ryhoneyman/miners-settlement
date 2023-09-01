@@ -9,7 +9,7 @@ class MinersMain extends Main
 {
    public $userId         = null;
    public $hashTypes      = null;
-   public $currentVersion = '1.6.1';
+   public $currentVersion = '1.6.2';
 
    public function __construct($options = null)
    {
