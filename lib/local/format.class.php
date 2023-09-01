@@ -102,6 +102,73 @@ class Format extends Base
       return $return;
    }
 
+   public function craftEntry($craftList = null)
+   {
+      $tdItemFormat  = "<td class='crafting-slot' style='background-image:url(\"/images/craft-border.png\"); background-size:contain; background-repeat:no-repeat; ".
+                        "text-align:center; vertical-align:middle;'><a href='%s'><img src='%s' class='crafting-image' data-toggle='tooltip' title='%s'></a></td>";
+      $tdCountFormat  = "<td width=50px style='text-align:center; font-weight:bold;'>%s</a>";
+      $itemLinkFormat = "/item/analytics/?item=%s";
+   
+      $return = '';
+   
+      $maxRequires = null;
+   
+      foreach ($craftList as $craftData) {
+         $requiredCount = count($craftData['input']);
+         if ($requiredCount > $maxRequires) { $maxRequires = $requiredCount; }
+      }
+   
+      foreach ($craftList as $craftData) {
+         $return .= "<tr><td colspan=7 style='background-color:#222222; text-align:left;'><b>".implode(", ",array_column($craftData['output'],'label'))."</b> (".$craftData['limit'].")</td></tr>";
+         $return .= "<tr>";
+   
+         $itemCount = count($craftData['input']);
+   
+         for ($gap = 0; $gap < ($maxRequires - $itemCount); $gap++) { $return .= "<td></td>"; }
+   
+   
+         foreach ($craftData['input'] as $itemData) {
+            $itemLabel = $itemData['label'];
+            $itemName  = $itemData['name'] ?: preg_replace('/\W/','-',str_replace("'",'',strtolower(trim($itemLabel))));
+            $itemImage = $itemData['image'];
+            $itemLink  = ($itemData['link']) ? sprintf($itemLinkFormat,$itemName) : '#0';
+            $return .= sprintf($tdItemFormat,$itemLink,$itemImage,str_replace("'","&apos;",$itemLabel));
+         }
+   
+         $return .= "<td style='font-weight:bold; font-size:30px; color:#e1c675; text-align:center;'>&#10142;</td>";
+   
+         foreach ($craftData['output'] as $itemData) {
+            $itemLabel = $itemData['label'];
+            $itemName  = $itemData['name'] ?: preg_replace('/\W/','-',str_replace("'",'',strtolower(trim($itemLabel))));
+            $itemImage = $itemData['image'];
+            $itemLink  = ($itemData['link']) ? sprintf($itemLinkFormat,$itemName) : '#0';
+            $return .= sprintf($tdItemFormat,$itemLink,$itemImage,str_replace("'","&apos;",$itemLabel));
+         }
+   
+         $return .= "</tr>".
+                    "<tr>";
+   
+         for ($gap = 0; $gap < ($maxRequires - $itemCount); $gap++) { $return .= "<td></td>"; }
+   
+         foreach ($craftData['input'] as $itemData) {
+            $itemCount    = $itemData['count'];
+            $countDisplay = $this->numericReducer($itemCount);
+            $return .= sprintf($tdCountFormat,$countDisplay ?: '');
+         }
+   
+         foreach ($craftData['output'] as $itemData) {
+            $itemCount = $itemData['count'];
+            $return .= sprintf($tdCountFormat,$itemCount ?: '');
+         }
+   
+   
+         $return .= "</tr>".
+                    "<tr><td colspan=7 height=25px></td></tr>";
+      }
+   
+      return $return;
+   }
+
    public function numericReducer($value, $format = null)
    {
       if (is_null($format)) { $format = '%d'; }
