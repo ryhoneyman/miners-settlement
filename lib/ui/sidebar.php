@@ -39,6 +39,13 @@
                </a>
             </li>
 
+            <li class="nav-item">
+               <a href="/item/crafting/mitar/" class="nav-link<?php if (preg_match('~^/item/crafting/mitar/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
+                  <i class="nav-icon fa fa-store-alt"></i>
+                  <p> Mitar Forge </p>
+               </a>
+            </li>
+
             <li class="nav-header"><b>ITEMS</b></li>
 
             <li class="nav-item">
