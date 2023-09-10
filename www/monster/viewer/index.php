@@ -53,7 +53,7 @@ function monsterDisplay($main)
       if ($monsterHash == $selectedHash) { $selectedId = $monsterId; }
    }
 
-   $selectContents = $html->select('monster',$monsterSelect,$selectedHash,array('style' => 'width:300px;')).
+   $selectContents = $html->select('monster',$monsterSelect,$selectedHash,array('script' => 'onchange="autoChange(this.value);"', 'style' => 'width:300px;')).
                      $html->submitButton('select','','Go');
 
    $monsterContents = '';
