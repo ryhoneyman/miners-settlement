@@ -33,7 +33,7 @@ $save         = ($input->get('save')) ? true : false;
 $godRoll      = ($input->get('godroll')) ? true : false;
 $randomRoll   = ($input->get('randomRoll')) ? true : false;
 $itemSubmit   = ($calculate || $godRoll || $randomRoll || $share || $save);
-$itemInput    = ($select) ? array() : getItemInput();
+$itemInput    = (!$itemSubmit) ? array() : getItemInput();
 $inputErrors  = array();
 
 // Allow inbound item link and player gear decoding for quick hash
@@ -56,7 +56,7 @@ $main->var('itemList',$itemList);
 
 // Build the pulldown list of items
 $selectItem = array('' => 'Select an Item');
-$selectOpts = array('class' => 'form-control gear', 'style' => 'width:80%%;');
+$selectOpts = array('class' => 'form-control gear', 'script' => 'onchange="autoChange(this.value);"');
 $gearTypes  = $main->obj('constants')->gearTypes();
 
 foreach ($itemList as $itemName => $itemData) { 
@@ -120,7 +120,7 @@ print $html->startForm(array('method' => 'post'));
    <div class='col-12 col-sm-9 col-md-6 col-lg-6 col-xl-3 mb-3'>
    <?php
       print $html->startForm(array('method' => 'post'));
-      print "<div class='input-group'>";
+      print "<div class='input-group' style='width:fit-content;'>";
       print $html->select('item',$selectItem,$selectedItem,$selectOpts);
       print "<span class='input-group-append'>";
       print $html->submit('select','Select',array('class' => 'btn btn-primary btn-sm'));
