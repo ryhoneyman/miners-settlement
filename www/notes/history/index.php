@@ -17,7 +17,7 @@ $versionList = array(
       'changes' => array(
          'frontend' => array(
             'Added item filter to Runeposts',
-            'Added item links back to Item Aanlytics from Gear List',
+            'Added item links back to Item Analytics from Gear List',
             'Enabled auto-submit for pulldowns in Monster Viewer, Item Analytics, and Runeposts',
          ),
          'backend' => array(
