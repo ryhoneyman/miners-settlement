@@ -55,6 +55,8 @@ function gearDisplay($main, $gearType, $gearTypeList)
 {
    $gearTypeLabel = ($main->obj('constants')->gearTypes())[$gearType];
 
+   $itemLink = "<a href='/item/analytics/?item=%s' style='text-decoration:unset; color:inherit;'>%s</a>";
+
    $return = '<div class="row">'.
              '<div class="col-12 col-xl-9 col-lg-10 col-md-12 col-sm-12">'.
              '<div class="card card-outline card-success">'.
@@ -66,7 +68,8 @@ function gearDisplay($main, $gearType, $gearTypeList)
              '<thead><tr class="text-yellow"><th></th><th>Name</th><th>Primary Stats</th><th>Elemental Stats</th></tr></thead><tbody>';
 
    foreach ($gearTypeList as $entryId => $entryInfo) {
-      $gearName    = $entryInfo['label'];
+      $gearName    = $entryInfo['name'];
+      $gearLabel   = $entryInfo['label'];
       $gearImage   = ($entryInfo['image']) ? sprintf("<img src='%s' height=50>",$entryInfo['image']) : '';;
       $gearAttribs = json_decode($entryInfo['attributes'],true);
       $gearPrimary = '';
@@ -87,7 +90,7 @@ function gearDisplay($main, $gearType, $gearTypeList)
                                  $gearAttribs["$elementName.max"],$elementInfo['icon']);
       }
 
-      $return .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$gearImage,$gearName,$gearPrimary,$gearElement);
+      $return .= sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",sprintf($itemLink,$gearName,$gearImage),sprintf($itemLink,$gearName,$gearLabel),$gearPrimary,$gearElement);
    }
 
    $return .= '</tbody></table>'.
