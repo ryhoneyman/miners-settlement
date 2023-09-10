@@ -43,4 +43,7 @@ function select2_template(obj)
    return template;
 }
 
-
+function autoChange(value, form = 'form')
+{
+   if (value != 0) { $(form).submit(); }
+}
