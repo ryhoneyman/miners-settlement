@@ -20,6 +20,9 @@ $versionList = array(
             'Added item links back to Item Aanlytics from Gear List',
             'Enabled auto-submit for pulldowns in Monster Viewer, Item Analytics, and Runeposts',
          ),
+         'backend' => array(
+            'Added boss monsters from Maze of Champions',
+         ),
       ),
    ),
    array(
