@@ -46,6 +46,13 @@
                </a>
             </li>
 
+            <li class="nav-item">
+               <a href="/item/crafting/einlor/" class="nav-link<?php if (preg_match('~^/item/crafting/einlor/~i',$_SERVER['REQUEST_URI'])) { echo " active"; } ?>">
+                  <i class="nav-icon fa fa-store-alt"></i>
+                  <p> Einlor Forge </p>
+               </a>
+            </li>
+
             <li class="nav-header"><b>ITEMS</b></li>
 
             <li class="nav-item">
