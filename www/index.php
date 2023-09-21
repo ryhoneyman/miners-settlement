@@ -29,9 +29,24 @@ include 'ui/header.php';
 
    <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
       <div class="info-box">
-         <span class="info-box-icon bg-warning elevation-1"><a href="/item/crafting/mitar/"><i class="fas fa-store-alt" aria-hidden="true"></i></a></span>
+         <span class="info-box-icon bg-warning elevation-1"><a href="/item/crafting/einlor/"><i class="fas fa-store-alt" aria-hidden="true"></i></a></span>
          <div class="ribbon-wrapper">
             <div class="ribbon bg-danger">NEW</div>
+         </div>
+         <div class="info-box-content">
+            <span class="info-box-text"> <a href="/item/crafting/einlor/"><b>Einlor Forge</b></a></span>
+            <span class="info-box-number" style="font-weight:normal;">
+               Crafting recipes in the Einlor Forge
+            </span>
+         </div>
+      </div>
+   </div>
+
+   <div class="col-10 col-sm-6 col-md-4 col-lg-4 col-xl-4">
+      <div class="info-box">
+         <span class="info-box-icon bg-warning elevation-1"><a href="/item/crafting/mitar/"><i class="fas fa-store-alt" aria-hidden="true"></i></a></span>
+         <div class="ribbon-wrapper">
+            <!--<div class="ribbon bg-danger">NEW</div>-->
          </div>
          <div class="info-box-content">
             <span class="info-box-text"> <a href="/item/crafting/mitar/"><b>Mitar Forge</b></a></span>
@@ -46,7 +61,7 @@ include 'ui/header.php';
       <div class="info-box">
          <span class="info-box-icon bg-purple elevation-1"><a href="/tools/colorpicker"><i class="fas fa-palette" aria-hidden="true"></i></a></span>
          <div class="ribbon-wrapper">
-            <div class="ribbon bg-danger">NEW</div>
+            <!--<div class="ribbon bg-danger">NEW</div>-->
          </div>
          <div class="info-box-content">
             <span class="info-box-text"> <a href="/tools/colorpicker"><b>Color Picker</b></a></span>
