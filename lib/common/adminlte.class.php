@@ -99,14 +99,18 @@ class AdminLTE extends Base
       $cardClass      = $cardProps['card'] ?: 'card-primary';
       $cardTitle      = $cardProps['title'] ?: '';
       $cardId         = $cardProps['id'] ?: 'tabcard';
+      $cardControl    = $cardProps['control'] ?: null;
    
       $headerContent = array();
       $bodyContent   = array();
    
       foreach ($content as $position => $tabInfo) {
          $tabName   = $tabInfo['name'];
+         $tabImage  = $tabInfo['image'];
          $tabData   = $tabInfo['data'];
          $tabActive = ($position === 0) ? true : false;
+
+         if ($tabImage) { $tabName = sprintf("<img src='%s' style='height:50px;'>",$tabImage); }
    
          $headerContent[] = "             <li class='nav-item'><a class='nav-link".(($tabActive) ? ' active' : '')."' id='$cardId-$position-tab' ".
                                              "data-toggle='pill' href='#$cardId-$position' role='tab' aria-controls='$cardId-$position' ".
@@ -121,6 +125,7 @@ class AdminLTE extends Base
              "          <ul class='nav nav-tabs' id='$cardId' role='tablist'>\n".
              "             <li class='pt-2 px-3'><h3 class='card-title text-bold'>$cardTitle</h3></li>\n".
              implode('',$headerContent).
+             (($cardControl) ? $cardControl."\n" : '').
              "          </ul>\n".
              "       </div>\n".
              "       <div class='card-body'>\n".
