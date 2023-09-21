@@ -12,6 +12,15 @@ include 'ui/header.php';
 
 $versionList = array(
    array(
+      'version' => '1.6.4',
+      'datetime' => '2023-09-21 20:00 UTC',
+      'changes' => array(
+         'frontend' => array(
+            'Added Einlor Forge Crafting page',
+         ),
+      ),
+   ),
+   array(
       'version' => '1.6.3',
       'datetime' => '2023-09-10 20:00 UTC',
       'changes' => array(

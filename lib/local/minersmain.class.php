@@ -9,7 +9,7 @@ class MinersMain extends Main
 {
    public $userId         = null;
    public $hashTypes      = null;
-   public $currentVersion = '1.6.3';
+   public $currentVersion = '1.6.4';
 
    public function __construct($options = null)
    {
@@ -383,7 +383,7 @@ class MinersMain extends Main
 
    public function uniqueItemData($itemName, $itemData)
    {
-      return json_encode(array('item_name' => $itemName, 'stats' => $this->normalizeItemData($itemData)));
+      return json_encode(array('item_name' => $itemName, 'data' => $this->normalizeItemData($itemData)));
    }
 
    public function normalizeItemData($itemData)
@@ -441,7 +441,8 @@ class MinersMain extends Main
    public function saveGear($itemId, $itemName, $itemData)
    {
       $userId    = $this->userId;
-      $itemHash  = $this->hashSaveGear($itemName,$itemData);
+      $saveData  = array_merge($itemData,array('userId' => $userId, 'ts' => time()));  // add entropy to the data for uniqueness
+      $itemHash  = $this->hashSaveGear($itemName,$saveData);
       $itemData  = $this->normalizeItemData($itemData);
       $itemStats = json_encode($itemData,JSON_UNESCAPED_SLASHES);
       $dbResult  = $this->db()->bindExecute("insert into gear (profile_id,item_hash,item_id,stats,created,updated) values (?,?,?,?,now(),now()) ".
@@ -451,6 +452,20 @@ class MinersMain extends Main
       $success = ($dbResult) ? true : false;
 
       $this->logger('saveGear',array('itemId' => $itemId, 'itemName' => $itemName, 'success' => $success));
+
+      return $success;
+   }
+
+   public function updateGear($itemHash, $itemData)
+   {
+      $userId    = $this->userId;
+      $itemData  = $this->normalizeItemData($itemData);
+      $itemStats = json_encode($itemData,JSON_UNESCAPED_SLASHES);
+      $dbResult  = $this->db()->bindExecute("update gear set stats = ?, updated = now() where item_hash = ? and profile_id = ?","sss",array($itemStats,$itemHash,$userId));
+ 
+      $success = ($dbResult) ? true : false;
+
+      $this->logger('updateGear',array('itemHash' => $itemHash, 'success' => $success));
 
       return $success;
    }
