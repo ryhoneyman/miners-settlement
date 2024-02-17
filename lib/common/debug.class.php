@@ -82,7 +82,7 @@ class Debug extends Base
       $func  = $trace[$caller]['function'];
       $line  = $trace[$caller]['line'];
       $file  = preg_replace('/^.*\//','',$trace[$caller]['file']);
-      $class = ($trace[1]['class']) ? $trace[$caller]['class'] : "Main";
+      $class = ($trace[$caller]['class']) ? $trace[$caller]['class'] : "Main";
 
       printf("%s[%s] %s (%s, %s, %s:%s) %s%s\n",
              ($this->comment()) ? "<!-- " : "",$date,$level,$class,$func,$file,$line,$mesg,
