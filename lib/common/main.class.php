@@ -184,16 +184,16 @@ class Main extends Base
 
       $this->debug(8,"called");
 
-      // if constants are not in array format, convert them to array
-      if (!is_array($options['constants'])) { $options['constants'] = ($options['constants']) ? array($options['constants']) : array(); }
+      // if define is not in array format, convert it to array
+      if (!is_array($options['define'])) { $options['define'] = ($options['define']) ? array($options['define']) : array(); }
 
       if ($options['database']) {
          if (!$this->connectDatabase()) { $this->debug(0,"Could not establish connection to database"); exit; }
       }
 
-      // load constants.  we have to do this directly because no data providers are loaded yet.
-      if ($options['constants']) {
-         $this->loadConstantsFromDB($options['constants']);
+      // load defines.  we have to do this directly because no data providers are loaded yet.
+      if ($options['define']) {
+         $this->loadDefinesFromDB($options['define']);
       }
 
       if ($options['request']) {
@@ -225,19 +225,19 @@ class Main extends Base
       }
    }
 
-   public function loadConstantsFromDB($list = null)
+   public function loadDefinesFromDB($list = null)
    {
       if ($this->connectDatabase() === false) { return false; }
 
-      // load constants.  we have to do this directly because no data providers are loaded yet.
-      $constantList = array_map(function($value) { return "name like '".preg_replace('/[^\w\_\%]/','',$value)."'"; },array_unique($list));
+      // load defines.  we have to do this directly because no data providers are loaded yet.
+      $defineList = array_map(function($value) { return "name like '".preg_replace('/[^\w\_\%]/','',$value)."'"; },array_unique($list));
 
-      $query     = "SELECT name,value FROM settings WHERE (".implode(' OR ',$constantList).")";
-      $constants = $this->db()->query($query);
+      $query   = "SELECT name,value FROM define WHERE (".implode(' OR ',$defineList).")";
+      $defines = $this->db()->query($query);
 
-      if (!$constants) { return false; }
+      if (!$defines) { return false; }
 
-      foreach ($constants as $id => $info) {
+      foreach ($defines as $id => $info) {
          if (!defined($info['name'])) { define($info['name'],$info['value']); }
       }
 
