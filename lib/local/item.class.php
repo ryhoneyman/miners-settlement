@@ -109,7 +109,7 @@ class Item extends Base
          $enhanceRound   = $attribInfo['enhance']['round'];
 
          $adjustedValue = $currentValue / ((100 + ($currentLevel*$enhancePercent))/100) * ((100 + ($level*$enhancePercent))/100);
-         
+
          if ($enhanceRound) { $adjustedValue = round($adjustedValue,0,PHP_ROUND_HALF_ODD); }
 
          $this->debug(9,"  $attribName: $currentValue -> $adjustedValue");
