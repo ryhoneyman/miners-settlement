@@ -1,0 +1,90 @@
+#!/usr/bin/php
+<?php
+include_once 'miners-settlement-init.php';
+
+include_once 'common/debug.class.php';
+
+$debug = new Debug(9,DEBUG_CLI);
+
+/*
+
+    "name": "Thief | Tower LVL 262",
+    "type": "monster",
+    "location": {},
+    "loot": {},
+    "xp": 40,
+    "respawn": null,
+    "health": 341058,
+    "defense": 225,
+    "attack": 3286,
+    "speed": 0.7,
+    "water.resist": 10000,
+    "fire.resist": 10000,
+    "wind.resist": 10000,
+    "earth.resist": 10000,
+    "lightning.resist": 10000,
+    "effects": {
+        "myself": {
+            "stun.resist": {
+                "percent.chance": 100,
+                "percent.adjust": 100
+            },
+            "lifesteal": {
+                "percent.chance": 100,
+                "percent.adjust": 10
+            }
+        },
+        "enemy": {
+            "speed": {
+                "percent.chance": 100,
+                "percent.adjust": -15
+            }
+        }
+    }
+
+*/
+
+$monsterList = getMonsters();
+
+$attribs = array(
+   'health','attack','defense','speed',
+   'fire.damage','fire.resist',
+   'water.damage','water.resist',
+   'wind.damage','wind.resist',
+   'earth.damage','earth.resist',
+   'lightning.damage','lightning.resist',
+   'effects',
+);
+
+foreach ($monsterList as $monsterName => $monsterInfo) {
+   $monsterLabel = $monsterInfo['name'];
+   $allowRevive  = (array_key_exists('allow.revive',$monsterInfo) && !$monsterInfo['allow.revive']) ? '0' : 'NULL';
+   $battleTimer  = $monsterInfo['max.timer'] ?: 'NULL';
+   $xp           = $monsterInfo['xp'] ?: 'NULL';
+   $attributes   = array_intersect_key($monsterInfo,array_flip($attribs));
+
+   printf("(0,'%s','%s','monster',0,'%s',%s,%s,%s,now(),now()),\n",$monsterName,$monsterLabel,json_encode($attributes,JSON_UNESCAPED_SLASHES),$allowRevive,$battleTimer,$xp);
+}
+
+?>
+<?php
+function getMonsters()
+{
+   $monsterList = array();
+
+   $fileList = glob(APP_CONFIGDIR."/entity/*.json");
+
+   foreach ($fileList as $fileName) {
+       $monsterName = basename($fileName,".json");
+       $monsterData = json_decode(file_get_contents($fileName),true);
+
+       if (is_null($monsterData)) { continue; }
+
+       if ($monsterData['type'] != 'monster') { continue; }
+
+       $monsterList[$monsterName] = $monsterData;
+   }
+
+   return $monsterList;
+}
+?>
