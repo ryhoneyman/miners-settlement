@@ -2,10 +2,10 @@
 
 //    Copyright 2023 - Ryan Honeyman
 
-include_once 'common/main.class.php';
+include_once 'common/mainbase.class.php';
 include_once 'common/random.class.php';
 
-class MinersMain extends Main
+class MinersMain extends MainBase
 {
    public $userId         = null;
    public $hashTypes      = null;
