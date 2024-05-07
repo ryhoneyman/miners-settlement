@@ -9,7 +9,7 @@ class MinersMain extends MainBase
 {
    public $userId         = null;
    public $hashTypes      = null;
-   public $currentVersion = '1.6.4';
+   public $currentVersion = '1.6.5';
 
    public function __construct($options = null)
    {
@@ -152,7 +152,7 @@ class MinersMain extends MainBase
    
       $success = ($dbResult) ? true : false;
    
-      if (!$success) { $main->this('Cannot delete player, database error.'); }
+      if (!$success) { $this->error('Cannot delete player, database error.'); }
       else { $this->fetchPlayerList(array('skipCache' => true)); }
    
       return $success;
@@ -212,7 +212,7 @@ class MinersMain extends MainBase
    public function fetchList($type, $options = null)
    {
       $listData  = array();
-      $skipCache = ($option['skipCache']) ? true : false;
+      $skipCache = ($options['skipCache']) ? true : false;
       $type      = strtolower($type);
       $subType   = strtolower($options['subType']) ?: 'default';
       $keyId     = strtolower($options['keyId']) ?: 'id';
@@ -496,4 +496,3 @@ class MinersMain extends MainBase
       return $success;
    }
 }
-?>

@@ -11,6 +11,17 @@ $main->title('Patch Notes History');
 include 'ui/header.php';
 
 $versionList = array(
+  array(
+     'version' => '1.6.5',
+     'datetime' => '2024-05-07 05:00 UTC',
+     'changes' => array(
+        'backend' => array(
+           'Added Nightwing Runepost and Runewords',
+           'Added Rune XIII (R13)',
+           'Added Naturesong Edge and Terraflora Shield'
+        ),
+     ),
+  ),
    array(
       'version' => '1.6.4',
       'datetime' => '2023-09-21 20:00 UTC',
