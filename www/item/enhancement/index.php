@@ -49,6 +49,7 @@ $runeBoosts = array(
    'rune-x'    => 800,
    'rune-xi'   => 1000,
    'rune-xii'  => 1200,
+   'rune-xiii' => 2500,
 );
 
 $main->var('enhanceCosts',$enhanceCosts);
